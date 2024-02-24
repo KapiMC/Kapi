@@ -3,6 +3,7 @@ package me.kyren223.kapi.particles;
 import org.bukkit.Location;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Sphere {
@@ -12,7 +13,7 @@ public class Sphere {
     private double radius;
     private int points;
     private boolean filled;
-    private List<Location> cachedLocations;
+    private final List<Location> cachedLocations;
     
     public Sphere(KParticle particle, Location location, double radius, int points, boolean filled) {
         this.particle = particle.clone();
@@ -20,6 +21,7 @@ public class Sphere {
         this.radius = radius;
         this.points = points;
         this.filled = filled;
+        this.cachedLocations = new ArrayList<>();
         if (radius <= 0) {
             throw new IllegalArgumentException("Radius must be greater than 0");
         }
@@ -45,7 +47,7 @@ public class Sphere {
     
     public void setCenter(Location center) {
         this.center = center;
-        cachedLocations = null;
+        cachedLocations.clear();
     }
     
     public double getRadius() {
@@ -54,7 +56,7 @@ public class Sphere {
     
     public void setRadius(double radius) {
         this.radius = radius;
-        cachedLocations = null;
+        cachedLocations.clear();
     }
     
     public int getPoints() {
@@ -63,7 +65,7 @@ public class Sphere {
     
     public void setPoints(int points) {
         this.points = points;
-        cachedLocations = null;
+        cachedLocations.clear();
     }
     
     public boolean isFilled() {
@@ -72,7 +74,7 @@ public class Sphere {
     
     public void setFilled(boolean filled) {
         this.filled = filled;
-        cachedLocations = null;
+        cachedLocations.clear();
     }
     
     private void generateLocations() {
@@ -105,14 +107,14 @@ public class Sphere {
     }
     
     public List<Location> getShapePoints() {
-        if (cachedLocations == null) {
+        if (cachedLocations.isEmpty()) {
             generateLocations();
         }
         return cachedLocations;
     }
     
     public void draw() {
-        if (cachedLocations == null) {
+        if (cachedLocations.isEmpty()) {
             generateLocations();
         }
         

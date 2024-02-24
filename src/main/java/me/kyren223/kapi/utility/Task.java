@@ -33,12 +33,40 @@ public class Task extends BukkitRunnable {
         }, delay, period);
     }
     
+    public static void runTaskFor(Consumer<BukkitRunnable> task, Consumer<BukkitRunnable> onEnd, long delay, long period, long duration) {
+        AtomicLong ticks = new AtomicLong(0);
+        Task.runRepeatedly(t -> {
+            ticks.addAndGet(1);
+            if (ticks.get() >= duration) {
+                t.cancel();
+            }
+            task.accept(t);
+            if (t.isCancelled()) {
+                onEnd.accept(t);
+            }
+        }, delay, period);
+    }
+    
     public static void runTaskWhile(Consumer<BukkitRunnable> task, long delay, long period, Supplier<Boolean> predicate) {
         Task.runRepeatedly(t -> {
             if (!predicate.get()) {
                 t.cancel();
             }
             task.accept(t);
+        }, delay, period);
+    }
+    
+    public static void runTaskWhile(Consumer<BukkitRunnable> task, Consumer<BukkitRunnable> onEnd, long delay, long period, long duration, Supplier<Boolean> predicate) {
+        AtomicLong ticks = new AtomicLong(0);
+        Task.runRepeatedly(t -> {
+            ticks.addAndGet(period);
+            if (ticks.get() >= duration || !predicate.get()) {
+                t.cancel();
+            }
+            task.accept(t);
+            if (t.isCancelled()) {
+                onEnd.accept(t);
+            }
         }, delay, period);
     }
     
