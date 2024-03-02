@@ -1,7 +1,6 @@
 package me.kyren223.kapi.particles;
 
 import org.bukkit.Location;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +87,32 @@ public class Sphere {
     private void generateFilledSphere() {
         final double phi = Math.PI * (Math.sqrt(5) - 1); // golden angle in radians
         
+        int rows = (int) Math.sqrt(points);
+        double dPhi = Math.PI / rows;
+        double dTheta = phi;
+        
+        for (int i = 0; i < rows; i++) {
+            double y = Math.cos((i * dPhi) - (Math.PI / 2)); // y goes from 1 to -1
+            double radiusAtY = Math.sin((i * dPhi) - (Math.PI / 2));
+            
+            int pointsInRow = (int) (2 * Math.PI * radiusAtY * points / 2);
+            double dThetaForRow = (2 * Math.PI) / pointsInRow;
+            
+            for (int j = 0; j < pointsInRow; j++) {
+                double theta = j * dThetaForRow; // golden angle increment
+                
+                double x = Math.cos(theta) * radiusAtY;
+                double z = Math.sin(theta) * radiusAtY;
+                
+                Location location = center.clone().add(x * radius, y * radius, z * radius);
+                cachedLocations.add(location);
+            }
+        }
+    }
+    
+    private void generateHollowSphere() {
+        final double phi = Math.PI * (Math.sqrt(5) - 1); // golden angle in radians
+        
         for (int i = 0; i < points; i++) {
             double y = 1 - (i / (double) (points - 1)) * 2; // y goes from 1 to -1
             double radiusAtY = Math.sqrt(1 - y * y);
@@ -99,11 +124,6 @@ public class Sphere {
             Location location = center.clone().add(x * radius, y * radius, z * radius);
             cachedLocations.add(location);
         }
-    }
-    
-    private void generateHollowSphere() {
-        // TODO
-        throw new NotImplementedException();
     }
     
     public List<Location> getShapePoints() {

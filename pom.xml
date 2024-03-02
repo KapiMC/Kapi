@@ -6,7 +6,7 @@
 
     <groupId>me.kyren223</groupId>
     <artifactId>Kapi</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.24</version>
     <packaging>jar</packaging>
 
     <name>Kapi</name>
@@ -23,8 +23,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>9</source>
+                    <target>9</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -66,6 +66,12 @@
             <artifactId>spigot-api</artifactId>
             <version>1.20-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>24.0.1</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

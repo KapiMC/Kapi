@@ -22,7 +22,7 @@ public class Task extends BukkitRunnable {
         new Task(task).runTaskTimer(KPlugin.i, delay, period);
     }
     
-    public static void runTaskFor(Consumer<BukkitRunnable> task, long delay, long period, long duration) {
+    public static void runFor(long duration, Consumer<BukkitRunnable> task, long delay, long period) {
         AtomicLong ticks = new AtomicLong(0);
         Task.runRepeatedly(t -> {
             ticks.addAndGet(period);
@@ -33,7 +33,7 @@ public class Task extends BukkitRunnable {
         }, delay, period);
     }
     
-    public static void runTaskFor(Consumer<BukkitRunnable> task, Consumer<BukkitRunnable> onEnd, long delay, long period, long duration) {
+    public static void runFor(long duration, Consumer<BukkitRunnable> task, Consumer<BukkitRunnable> onEnd, long delay, long period) {
         AtomicLong ticks = new AtomicLong(0);
         Task.runRepeatedly(t -> {
             ticks.addAndGet(1);
@@ -47,7 +47,7 @@ public class Task extends BukkitRunnable {
         }, delay, period);
     }
     
-    public static void runTaskWhile(Consumer<BukkitRunnable> task, long delay, long period, Supplier<Boolean> predicate) {
+    public static void runWhile(Supplier<Boolean> predicate, Consumer<BukkitRunnable> task, long delay, long period) {
         Task.runRepeatedly(t -> {
             if (!predicate.get()) {
                 t.cancel();
@@ -56,7 +56,7 @@ public class Task extends BukkitRunnable {
         }, delay, period);
     }
     
-    public static void runTaskWhile(Consumer<BukkitRunnable> task, Consumer<BukkitRunnable> onEnd, long delay, long period, long duration, Supplier<Boolean> predicate) {
+    public static void runWhile(Supplier<Boolean> predicate, Consumer<BukkitRunnable> task, Consumer<BukkitRunnable> onEnd, long delay, long period, long duration) {
         AtomicLong ticks = new AtomicLong(0);
         Task.runRepeatedly(t -> {
             ticks.addAndGet(period);
