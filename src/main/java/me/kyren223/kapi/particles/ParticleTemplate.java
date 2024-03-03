@@ -2,18 +2,23 @@ package me.kyren223.kapi.particles;
 
 import me.kyren223.kapi.utility.Pair;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class ParticleTemplate {
     private final List<Point> points;
-    private HashMap<String, Pair<Transform, ParticleTemplate>> children;
+    private final HashMap<String, Pair<Transform, ParticleTemplate>> children;
+    private final List<Pair<Consumer<ParticleObject>, Integer>> behaviors;
     
     public ParticleTemplate(List<Point> points) {
         this.points = points;
+        this.children = new HashMap<>();
+        this.behaviors = new ArrayList<>();
     }
     
     public Stream<Point> getPoints() {
@@ -53,8 +58,24 @@ public class ParticleTemplate {
         return children.entrySet().stream();
     }
     
-    public ParticleObject newInstance(Transform transform) {
-        return new ParticleObject(this, transform);
+    public Pair<Transform, ParticleTemplate> getChild(String name) {
+        return children.get(name);
     }
     
+    public void addBehavior(Consumer<ParticleObject> behavior, int interval) {
+        behaviors.add(new Pair<>(behavior, interval));
+    }
+    
+    // Package-private getter for access in ParticleObject
+    List<Pair<Consumer<ParticleObject>, Integer>> getBehaviors() {
+        return behaviors;
+    }
+    
+    public ParticleObject newInstance(Transform transform, ParticleObject parent) {
+        return new ParticleObject(this, transform, parent);
+    }
+    
+    public ParticleObject newInstance(Transform transform) {
+        return newInstance(transform, null);
+    }
 }

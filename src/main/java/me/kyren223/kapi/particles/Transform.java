@@ -205,4 +205,29 @@ public class Transform {
         return new Transform(newX, newY, newZ, eulerAngles[0], eulerAngles[1], eulerAngles[2], newScaleX, newScaleY, newScaleZ);
     }
     
+    public double[] applyToPoint(Point point) {
+        // Convert rotation to radians
+        double yawRad = Math.toRadians(yaw);
+        double pitchRad = Math.toRadians(pitch);
+        double rollRad = Math.toRadians(roll);
+        
+        // Calculate rotation matrix
+        double[][] rotationMatrix = new double[][] {
+                {Math.cos(yawRad) * Math.cos(pitchRad), Math.cos(yawRad) * Math.sin(pitchRad) * Math.sin(rollRad) - Math.sin(yawRad) * Math.cos(rollRad), Math.cos(yawRad) * Math.sin(pitchRad) * Math.cos(rollRad) + Math.sin(yawRad) * Math.sin(rollRad)},
+                {Math.sin(yawRad) * Math.cos(pitchRad), Math.sin(yawRad) * Math.sin(pitchRad) * Math.sin(rollRad) + Math.cos(yawRad) * Math.cos(rollRad), Math.sin(yawRad) * Math.sin(pitchRad) * Math.cos(rollRad) - Math.cos(yawRad) * Math.sin(rollRad)},
+                {-Math.sin(pitchRad), Math.cos(pitchRad) * Math.sin(rollRad), Math.cos(pitchRad) * Math.cos(rollRad)}
+        };
+        
+        // Apply rotation
+        double rotatedX = point.getX() * rotationMatrix[0][0] + point.getY() * rotationMatrix[0][1] + point.getZ() * rotationMatrix[0][2];
+        double rotatedY = point.getX() * rotationMatrix[1][0] + point.getY() * rotationMatrix[1][1] + point.getZ() * rotationMatrix[1][2];
+        double rotatedZ = point.getX() * rotationMatrix[2][0] + point.getY() * rotationMatrix[2][1] + point.getZ() * rotationMatrix[2][2];
+        
+        // Apply translation
+        double translatedX = rotatedX + x;
+        double translatedY = rotatedY + y;
+        double translatedZ = rotatedZ + z;
+        
+        return new double[] {translatedX, translatedY, translatedZ};
+    }
 }
