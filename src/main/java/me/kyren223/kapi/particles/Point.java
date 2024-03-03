@@ -1,29 +1,28 @@
 package me.kyren223.kapi.particles;
 
-import org.bukkit.Particle;
+import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.util.Vector;
 
 public class Point {
     private World world;
     private double x, y, z;
-    private Particle particle;
-    private int count;
-    private double spreadX, spreadY, spreadZ;
-    private double extra;
-    private Object data;
+    private ParticleData particle;
     
-    public Point(World world, double x, double y, double z, Particle particle, int count, double spreadX, double spreadY, double spreadZ, double extra, Object data) {
+    public Point(World world, double x, double y, double z, ParticleData particle) {
         this.world = world;
         this.x = x;
         this.y = y;
         this.z = z;
         this.particle = particle;
-        this.count = count;
-        this.spreadX = spreadX;
-        this.spreadY = spreadY;
-        this.spreadZ = spreadZ;
-        this.extra = extra;
-        this.data = data;
+    }
+    
+    public Point(Location location, ParticleData particle) {
+        this(location.getWorld(), location.getX(), location.getY(), location.getZ(), particle);
+    }
+    
+    public Point(World world, Vector vector, ParticleData particle) {
+        this(world, vector.getX(), vector.getY(), vector.getZ(), particle);
     }
     
     public World getWorld() {
@@ -58,72 +57,33 @@ public class Point {
         this.z = z;
     }
     
-    public Particle getParticle() {
+    public void setLocation(Location location) {
+        this.world = location.getWorld();
+        this.x = location.getX();
+        this.y = location.getY();
+        this.z = location.getZ();
+    }
+    
+    public Location getLocation() {
+        return new Location(world, x, y, z);
+    }
+    
+    public Vector getVector() {
+        return new Vector(x, y, z);
+    }
+    
+    public void setVector(Vector vector) {
+        this.x = vector.getX();
+        this.y = vector.getY();
+        this.z = vector.getZ();
+    }
+    
+    public ParticleData getParticle() {
         return particle;
     }
     
-    public void setParticle(Particle particle) {
+    public void setParticle(ParticleData particle) {
         this.particle = particle;
-    }
-    
-    public int getCount() {
-        return count;
-    }
-    
-    public void setCount(int count) {
-        this.count = count;
-    }
-    
-    public double getSpreadX() {
-        return spreadX;
-    }
-    
-    public void setSpreadX(double spreadX) {
-        this.spreadX = spreadX;
-    }
-    
-    public double getSpreadY() {
-        return spreadY;
-    }
-    
-    public void setSpreadY(double spreadY) {
-        this.spreadY = spreadY;
-    }
-    
-    public double getSpreadZ() {
-        return spreadZ;
-    }
-    
-    public void setSpreadZ(double spreadZ) {
-        this.spreadZ = spreadZ;
-    }
-    
-    public double getExtra() {
-        return extra;
-    }
-    
-    public void setExtra(double extra) {
-        this.extra = extra;
-    }
-    
-    public Object getData() {
-        return data;
-    }
-    
-    public void setData(Object data) {
-        this.data = data;
-    }
-    
-    public void setXYZ(double x, double y, double z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-    
-    public void setSpreadXYZ(double spreadX, double spreadY, double spreadZ) {
-        this.spreadX = spreadX;
-        this.spreadY = spreadY;
-        this.spreadZ = spreadZ;
     }
 }
 
