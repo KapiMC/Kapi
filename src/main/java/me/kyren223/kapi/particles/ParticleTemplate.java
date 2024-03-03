@@ -1,6 +1,8 @@
 package me.kyren223.kapi.particles;
 
 import me.kyren223.kapi.utility.Pair;
+import org.bukkit.Location;
+import org.bukkit.World;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,11 +73,15 @@ public class ParticleTemplate {
         return behaviors;
     }
     
-    public ParticleObject newInstance(Transform transform, ParticleObject parent) {
-        return new ParticleObject(this, transform, parent);
+    public ParticleObject newInstance(World world, Transform transform, ParticleObject parent) {
+        return new ParticleObject(this, world, transform, parent);
     }
     
-    public ParticleObject newInstance(Transform transform) {
-        return newInstance(transform, null);
+    public ParticleObject newInstance(World world, Transform transform) {
+        return newInstance(world, transform, null);
+    }
+    
+    public ParticleObject newInstance(Location location) {
+        return newInstance(location.getWorld(), Transform.fromTranslation(location.toVector()), null);
     }
 }

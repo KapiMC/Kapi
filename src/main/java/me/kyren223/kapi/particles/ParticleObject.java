@@ -2,6 +2,7 @@ package me.kyren223.kapi.particles;
 
 import me.kyren223.kapi.utility.Pair;
 import me.kyren223.kapi.utility.Task;
+import org.bukkit.World;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class ParticleObject {
+    private final World world;
     private final Transform transform;
     private final List<Point> points;
     private @Nullable ParticleObject parent;
@@ -24,8 +26,9 @@ public class ParticleObject {
     private int renderInterval;
     private Visibility visibility;
     
-    public ParticleObject(ParticleTemplate template, Transform transform, @Nullable ParticleObject parent) {
+    public ParticleObject(ParticleTemplate template, World world, Transform transform, @Nullable ParticleObject parent) {
         this.parent = parent;
+        this.world = world;
         this.transform = transform;
         this.points = new ArrayList<>(template.getPoints().toList());
         this.behaviors = new ArrayList<>(template.getBehaviors());
@@ -33,7 +36,7 @@ public class ParticleObject {
         this.visibility = parent == null ? Visibility.VISIBLE : Visibility.INHERIT;
         template.getChildren().forEach(entry -> {
             Pair<Transform, ParticleTemplate> value = entry.getValue();
-            ParticleObject child = value.second.newInstance(value.first, this);
+            ParticleObject child = value.second.newInstance(world, value.first, this);
             children.put(entry.getKey(), child);
         });
     }
@@ -76,13 +79,13 @@ public class ParticleObject {
     
     public void addChild(String name, ParticleTemplate child) {
         Transform transform = Transform.fromTranslation(0, 0, 0);
-        ParticleObject object = new ParticleObject(child, transform, this);
+        ParticleObject object = new ParticleObject(child, world, transform, this);
         object.parent = this;
         children.put(name, object);
     }
     
     public void addChild(String name, ParticleTemplate child, Transform transform) {
-        ParticleObject object = new ParticleObject(child, transform, this);
+        ParticleObject object = new ParticleObject(child, world, transform, this);
         object.parent = this;
         children.put(name, object);
     }
@@ -134,7 +137,7 @@ public class ParticleObject {
             double y = xyz[1];
             double z = xyz[2];
             
-            point.getWorld().spawnParticle(
+            this.world.spawnParticle(
                 particle.getParticle(),
                 x, y, z,
                 particle.getCount(),
