@@ -6,6 +6,6 @@ import org.bukkit.event.Listener;
 public class EventRegistry {
     
     public void register(Listener listener) {
-        KPlugin.i.getServer().getPluginManager().registerEvents(listener, KPlugin.i);
+        KPlugin.get().getServer().getPluginManager().registerEvents(listener, KPlugin.get());
     }
 }

@@ -8,7 +8,7 @@ import org.bukkit.command.TabCompleter;
 public class CommandRegistry {
     
     public void register(String name, CommandExecutor executor) {
-        PluginCommand command = KPlugin.i.getCommand(name);
+        PluginCommand command = KPlugin.get().getCommand(name);
         if (command == null) {
             throw new IllegalArgumentException("Command " + name + " does not exist!");
         }
@@ -16,7 +16,7 @@ public class CommandRegistry {
     }
     
     public void register(String name, CommandExecutor executor, TabCompleter completer) {
-        PluginCommand command = KPlugin.i.getCommand(name);
+        PluginCommand command = KPlugin.get().getCommand(name);
         if (command == null) {
             throw new IllegalArgumentException("Command " + name + " does not exist!");
         }

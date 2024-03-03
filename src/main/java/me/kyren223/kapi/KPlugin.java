@@ -6,15 +6,22 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class KPlugin extends JavaPlugin {
     
-    public static KPlugin i;
+    private static KPlugin instance;
     protected CommandRegistry commands;
     protected EventRegistry events;
     
     @Override
     public void onEnable() {
-        i = this;
+        instance = this;
         commands = new CommandRegistry();
         events = new EventRegistry();
+    }
+    
+    public static KPlugin get() {
+        if (instance == null) {
+            throw new IllegalStateException("Plugin has not been enabled yet!");
+        }
+        return instance;
     }
     
 }

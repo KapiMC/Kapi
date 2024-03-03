@@ -15,11 +15,11 @@ public class Task extends BukkitRunnable {
     }
     
     public static void runLater(Consumer<BukkitRunnable> task, long delay) {
-        new Task(task).runTaskLater(KPlugin.i, delay);
+        new Task(task).runTaskLater(KPlugin.get(), delay);
     }
     
     public static void runRepeatedly(Consumer<BukkitRunnable> task, long delay, long period) {
-        new Task(task).runTaskTimer(KPlugin.i, delay, period);
+        new Task(task).runTaskTimer(KPlugin.get(), delay, period);
     }
     
     public static void runFor(long duration, Consumer<BukkitRunnable> task, long delay, long period) {
