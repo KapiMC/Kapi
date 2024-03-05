@@ -20,6 +20,8 @@ public class ParticleObject {
     private @Nullable ParticleObject parent;
     private final HashMap<String, ParticleObject> children;
     private final List<Pair<Consumer<ParticleObject>, Integer>> behaviors;
+    private final @Nullable Consumer<ParticleObject> onSpawn;
+    private final @Nullable Consumer<ParticleObject> onDespawn;
     private int ticks;
     private boolean force;
     private boolean cancel;
@@ -32,6 +34,8 @@ public class ParticleObject {
         this.transform = transform;
         this.points = new ArrayList<>(template.getPoints().toList());
         this.behaviors = new ArrayList<>(template.getBehaviors());
+        this.onSpawn = template.getOnSpawn();
+        this.onDespawn = template.getOnDespawn();
         this.children = new HashMap<>();
         this.visibility = parent == null ? Visibility.VISIBLE : Visibility.INHERIT;
         template.getChildren().forEach(entry -> {
@@ -170,7 +174,6 @@ public class ParticleObject {
         Transform absoluteTransform = getWorldTransform();
         getPoints().forEach(point -> {
             ParticleData particle = point.getParticle();
-//            Vector vector = absoluteTransform.applyToPoint(point);
             Vector absolutePosition = absoluteTransform.transformPoint(point.getVector());
             
             this.world.spawnParticle(
@@ -197,6 +200,7 @@ public class ParticleObject {
         this.force = false;
         this.renderInterval = renderInterval;
         this.cancel = false;
+        if (onSpawn != null) this.onSpawn.accept(this);
         Task.runWhile(this::shouldContinue, task -> {
             tick();
             if (isVisible()) render();
@@ -220,6 +224,7 @@ public class ParticleObject {
     public void despawn() {
         this.cancel = true;
         children.values().forEach(ParticleObject::despawn);
+        if (onDespawn != null) this.onDespawn.accept(this);
     }
     
     public void reset(boolean force, int renderInterval) {

@@ -17,6 +17,9 @@ public class ParticleTemplate {
     private final List<Point> points;
     private final HashMap<String, Pair<Transform, ParticleTemplate>> children;
     private final List<Pair<Consumer<ParticleObject>, Integer>> behaviors;
+    private Consumer<ParticleObject> onSpawn;
+    private Consumer<ParticleObject> onDespawn;
+    
     
     public ParticleTemplate(List<Point> points) {
         this.points = points;
@@ -69,10 +72,28 @@ public class ParticleTemplate {
         behaviors.add(new Pair<>(behavior, interval));
     }
     
-    // Package-private getter for access in ParticleObject
+    public void onSpawn(Consumer<ParticleObject> onSpawn) {
+        this.onSpawn = onSpawn;
+    }
+    
+    public void onDespawn(Consumer<ParticleObject> onDespawn) {
+        this.onDespawn = onDespawn;
+    }
+    
+    // Package-private getters for access in ParticleObject
     List<Pair<Consumer<ParticleObject>, Integer>> getBehaviors() {
         return behaviors;
     }
+    
+    Consumer< ParticleObject> getOnSpawn() {
+        return onSpawn;
+    }
+    
+    Consumer<ParticleObject> getOnDespawn() {
+        return onDespawn;
+    }
+    
+    
     
     public ParticleObject newInstance(World world, Transform transform, ParticleObject parent) {
         return new ParticleObject(this, world, transform, parent);
