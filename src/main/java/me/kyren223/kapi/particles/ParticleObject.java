@@ -1,14 +1,13 @@
 package me.kyren223.kapi.particles;
 
+import me.kyren223.kapi.math.Transform;
 import me.kyren223.kapi.utility.Pair;
 import me.kyren223.kapi.utility.Task;
 import org.bukkit.World;
+import org.bukkit.util.Vector;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -16,6 +15,7 @@ import java.util.stream.Stream;
 public class ParticleObject {
     private final World world;
     private final Transform transform;
+    private Transform cachedWorldTransform;
     private final List<Point> points;
     private @Nullable ParticleObject parent;
     private final HashMap<String, ParticleObject> children;
@@ -41,16 +41,54 @@ public class ParticleObject {
         });
     }
     
+    /**
+     * Creates a new instance of this object's transform
+     * <p>
+     * If you wish to modify the transform, use the method
+     * {@link #transform(Consumer)}
+     * @return A cloned version of this object's transform
+     */
     public Transform getTransform() {
-        return transform;
+        return transform.clone();
     }
     
-    public Transform getAbsoluteTransform() {
-        Transform absolute = new Transform(transform);
+    /**
+     * Modifies this object's transform
+     * <p>
+     * Note: this method invalidates the cached world transform,
+     * for more info see {@link #getWorldTransform()}
+     * @param consumer The consumer that modifies the transform
+     */
+    public void transform(Consumer<Transform> consumer) {
+        consumer.accept(transform);
+        invalidateCachedWorldTransform();
+    }
+    
+    /**
+     * Get the world transform of this object
+     * <p></p>
+     * Calculates by recursively calling the parent's transform and
+     * multiplying it by this object's transform.<p>
+     * Until the parent is null where the transform is just a cloned
+     * version of this object's transform
+     * <p></p>
+     * Note: this method is cached, so it's safe to call it multiple times
+     * @return A cloned world transform
+     */
+    public Transform getWorldTransform() {
+        if (cachedWorldTransform != null) return cachedWorldTransform.clone();
+        
+        Transform worldTransform;
         if (parent != null) {
-            absolute = parent.getAbsoluteTransform().combine(absolute);
+            // No need to clone the parent's world transform, as it's already cloned
+            // By the signature and Java docs of getWorldTransform
+            worldTransform = parent.getWorldTransform().multiply(transform);
+        } else {
+            worldTransform = transform.clone();
         }
-        return absolute;
+        
+        cachedWorldTransform = worldTransform;
+        return worldTransform;
     }
     
     public Stream<Point> getPoints() {
@@ -129,17 +167,15 @@ public class ParticleObject {
     
     private void render() {
         // Render this
-        Transform absoluteTransform = getAbsoluteTransform();
+        Transform absoluteTransform = getWorldTransform();
         getPoints().forEach(point -> {
             ParticleData particle = point.getParticle();
-            double[] xyz = absoluteTransform.applyToPoint(point);
-            double x = xyz[0];
-            double y = xyz[1];
-            double z = xyz[2];
+//            Vector vector = absoluteTransform.applyToPoint(point);
+            Vector absolutePosition = absoluteTransform.transformPoint(point.getVector());
             
             this.world.spawnParticle(
                 particle.getParticle(),
-                x, y, z,
+                absolutePosition.getX(), absolutePosition.getY(), absolutePosition.getZ(),
                 particle.getCount(),
                 particle.getSpreadX(), particle.getSpreadY(), particle.getSpreadZ(),
                 particle.getExtra(),
@@ -152,8 +188,8 @@ public class ParticleObject {
         children.values().forEach(ParticleObject::render);
     }
     
-    private boolean shouldCancel() {
-        return cancel;
+    private boolean shouldContinue() {
+        return !cancel;
     }
     
     public void spawn(boolean force, int renderInterval) {
@@ -161,7 +197,7 @@ public class ParticleObject {
         this.force = false;
         this.renderInterval = renderInterval;
         this.cancel = false;
-        Task.runWhile(this::shouldCancel, task -> {
+        Task.runWhile(this::shouldContinue, task -> {
             tick();
             if (isVisible()) render();
             ticks++;
@@ -216,5 +252,9 @@ public class ParticleObject {
         if (visibility == Visibility.VISIBLE) return true;
         if (parent != null) return parent.isVisible();
         return true;
+    }
+    
+    private void invalidateCachedWorldTransform() {
+        cachedWorldTransform = null;
     }
 }

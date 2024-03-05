@@ -1,5 +1,6 @@
 package me.kyren223.kapi.particles;
 
+import me.kyren223.kapi.math.Transform;
 import me.kyren223.kapi.utility.Pair;
 import org.bukkit.Location;
 import org.bukkit.World;
