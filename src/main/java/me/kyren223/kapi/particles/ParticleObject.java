@@ -28,8 +28,7 @@ public class ParticleObject {
     private int renderInterval;
     private Visibility visibility;
     
-    public ParticleObject(ParticleTemplate template, World world, Transform transform, @Nullable ParticleObject parent) {
-        this.parent = parent;
+    public ParticleObject(ParticleTemplate template, World world, Transform transform, @Nullable ParticleObject parent) {this.parent = parent;
         this.world = world;
         this.transform = transform;
         this.points = new ArrayList<>(template.getPoints().toList());
@@ -41,6 +40,7 @@ public class ParticleObject {
         template.getChildren().forEach(entry -> {
             Pair<Transform, ParticleTemplate> value = entry.getValue();
             ParticleObject child = value.second.newInstance(world, value.first, this);
+            child.parent = this;
             children.put(entry.getKey(), child);
         });
     }
@@ -146,6 +146,13 @@ public class ParticleObject {
     
     public ParticleObject getChild(String name) {
         return children.get(name);
+    }
+    
+    public String getNameOfChild(ParticleObject child) {
+        for (Map.Entry<String, ParticleObject> entry : children.entrySet()) {
+            if (entry.getValue() == child) return entry.getKey();
+        }
+        return null;
     }
     
     public boolean isForce() {
