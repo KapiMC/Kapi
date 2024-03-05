@@ -93,17 +93,16 @@ public class ParticleTemplate {
         return onDespawn;
     }
     
-    
-    
     public ParticleObject newInstance(World world, Transform transform, ParticleObject parent) {
         return new ParticleObject(this, world, transform, parent);
     }
     
-    public ParticleObject newInstance(World world, Transform transform) {
-        return newInstance(world, transform, null);
-    }
-    
     public ParticleObject newInstance(Location location) {
-        return newInstance(location.getWorld(), Transform.fromTranslation(location.toVector()), null);
+        return new ParticleObject(
+                this,
+                location.getWorld(),
+                Transform.fromTranslation(location.toVector()),
+                null
+        );
     }
 }

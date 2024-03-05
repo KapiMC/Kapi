@@ -17,7 +17,7 @@ public class ParticleObject {
     private final Transform transform;
     private Transform cachedWorldTransform;
     private final List<Point> points;
-    private @Nullable ParticleObject parent;
+    private final @Nullable ParticleObject parent;
     private final HashMap<String, ParticleObject> children;
     private final List<Pair<Consumer<ParticleObject>, Integer>> behaviors;
     private final @Nullable Consumer<ParticleObject> onSpawn;
@@ -28,7 +28,8 @@ public class ParticleObject {
     private int renderInterval;
     private Visibility visibility;
     
-    public ParticleObject(ParticleTemplate template, World world, Transform transform, @Nullable ParticleObject parent) {this.parent = parent;
+    public ParticleObject(ParticleTemplate template, World world, Transform transform, @Nullable ParticleObject parent) {
+        this.parent = parent;
         this.world = world;
         this.transform = transform;
         this.points = new ArrayList<>(template.getPoints().toList());
@@ -40,8 +41,7 @@ public class ParticleObject {
         template.getChildren().forEach(entry -> {
             Pair<Transform, ParticleTemplate> value = entry.getValue();
             ParticleObject child = value.second.newInstance(world, value.first, this);
-            child.parent = this;
-            children.put(entry.getKey(), child);
+            this.children.put(entry.getKey(), child);
         });
     }
     
@@ -121,14 +121,12 @@ public class ParticleObject {
     
     public void addChild(String name, ParticleTemplate child) {
         Transform transform = Transform.fromTranslation(0, 0, 0);
-        ParticleObject object = new ParticleObject(child, world, transform, this);
-        object.parent = this;
+        ParticleObject object = child.newInstance(world, transform, this);
         children.put(name, object);
     }
     
     public void addChild(String name, ParticleTemplate child, Transform transform) {
-        ParticleObject object = new ParticleObject(child, world, transform, this);
-        object.parent = this;
+        ParticleObject object = child.newInstance(world, transform, this);
         children.put(name, object);
     }
     
