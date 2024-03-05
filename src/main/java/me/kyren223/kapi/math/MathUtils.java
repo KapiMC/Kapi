@@ -29,11 +29,16 @@ public class MathUtils {
     }
     
     public static Color lerp(Color a, Color b, double t) {
-        return Color.fromRGB((int) lerp(a.asRGB(), b.asRGB(), t));
+        return Color.fromRGB(
+                (int) lerp(a.getRed(), b.getRed(), t),
+                (int) lerp(a.getGreen(), b.getGreen(), t),
+                (int) lerp(a.getBlue(), b.getBlue(), t)
+        );
     }
     
     public static double iLerp(double a, double b, double v) {
-        if (a == b) throw new IllegalArgumentException("a and b cannot be the same, as it would result in division by zero");
+        if (a == b)
+            throw new IllegalArgumentException("a and b cannot be the same, as it would result in division by zero");
         return (v - a) / (b - a);
     }
     
