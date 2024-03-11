@@ -12,6 +12,7 @@ public class ParticleBuilder {
     private double spreadZ;
     private double extra;
     private Object data;
+    private boolean force;
     
     public static ParticleBuilder create(Particle particle) {
         ParticleBuilder builder = new ParticleBuilder();
@@ -59,8 +60,13 @@ public class ParticleBuilder {
         return this;
     }
     
+    public ParticleBuilder force(boolean force) {
+        this.force = force;
+        return this;
+    }
+    
     public ParticleData build() {
-        return new ParticleData(particle, count, spreadX, spreadY, spreadZ, extra, data);
+        return new ParticleData(particle, count, spreadX, spreadY, spreadZ, extra, data, force);
     }
     
 }
