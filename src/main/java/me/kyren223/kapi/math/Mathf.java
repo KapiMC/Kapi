@@ -3,6 +3,8 @@ package me.kyren223.kapi.math;
 import org.bukkit.Color;
 import org.bukkit.util.Vector;
 
+import org.joml.Math;
+
 public class Mathf {
     
     private Mathf() {
@@ -16,8 +18,10 @@ public class Mathf {
      * @param a The first double
      * @param b The second double
      * @param t The interpolation factor, clamped to 0-1
+     * @deprecated Use {@link org.joml.Math#lerp(double, double, double)} instead
      * @return The interpolated double
      */
+    @Deprecated
     public static double lerp(double a, double b, double t) {
         return (1 - t) * a + b * t;
     }
@@ -32,9 +36,9 @@ public class Mathf {
     public static Vector lerp(Vector a, Vector b, double t) {
         t = clamp(t, 0, 1);
         return new Vector(
-                lerp(a.getX(), b.getX(), t),
-                lerp(a.getY(), b.getY(), t),
-                lerp(a.getZ(), b.getZ(), t)
+                Math.lerp(a.getX(), b.getX(), t),
+                Math.lerp(a.getY(), b.getY(), t),
+                Math.lerp(a.getZ(), b.getZ(), t)
         );
     }
     
@@ -65,10 +69,11 @@ public class Mathf {
      * @return The interpolated color
      */
     public static Color lerp(Color a, Color b, double t) {
+        t = clamp(t, 0, 1);
         return Color.fromRGB(
-                (int) lerp(a.getRed(), b.getRed(), t),
-                (int) lerp(a.getGreen(), b.getGreen(), t),
-                (int) lerp(a.getBlue(), b.getBlue(), t)
+                (int) Math.lerp(a.getRed(), b.getRed(), t),
+                (int) Math.lerp(a.getGreen(), b.getGreen(), t),
+                (int) Math.lerp(a.getBlue(), b.getBlue(), t)
         );
     }
     
@@ -93,8 +98,10 @@ public class Mathf {
      * @param value The value to clamp
      * @param min The minimum value
      * @param max The maximum value
+     * @deprecated Use {@link org.joml.Math#clamp(double, double, double)} instead
      * @return The clamped value, between min and max
      */
+    @Deprecated
     public static double clamp(double value, double min, double max) {
         return Math.max(min, Math.min(max, value));
     }
@@ -107,7 +114,9 @@ public class Mathf {
      * @param min The minimum value
      * @param max The maximum value
      * @return The clamped value, between min and max
+     * @deprecated Use {@link org.joml.Math#clamp(int, int, int)} instead
      */
+    @Deprecated
     public static int clamp(int value, int min, int max) {
         return Math.max(min, Math.min(max, value));
     }

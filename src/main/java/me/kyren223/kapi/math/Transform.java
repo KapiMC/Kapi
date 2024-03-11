@@ -1,7 +1,12 @@
 package me.kyren223.kapi.math;
 
 import org.bukkit.util.Vector;
+import org.joml.Math;
 
+/**
+ * @deprecated Use {@link org.joml.Matrix4f} instead
+ */
+@Deprecated
 public class Transform {
     private double[][] matrix;
     

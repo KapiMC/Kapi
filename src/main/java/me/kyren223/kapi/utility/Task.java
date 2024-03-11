@@ -4,8 +4,8 @@ import me.kyren223.kapi.KPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class Task extends BukkitRunnable {
     
@@ -47,20 +47,20 @@ public class Task extends BukkitRunnable {
         }, delay, period);
     }
     
-    public static void runWhile(Supplier<Boolean> predicate, Consumer<BukkitRunnable> task, long delay, long period) {
+    public static void runWhile(BooleanSupplier predicate, Consumer<BukkitRunnable> task, long delay, long period) {
         Task.runRepeatedly(t -> {
-            if (!predicate.get()) {
+            if (!predicate.getAsBoolean()) {
                 t.cancel();
             }
             task.accept(t);
         }, delay, period);
     }
     
-    public static void runWhile(Supplier<Boolean> predicate, Consumer<BukkitRunnable> task, Consumer<BukkitRunnable> onEnd, long delay, long period, long duration) {
+    public static void runWhile(BooleanSupplier predicate, Consumer<BukkitRunnable> task, Consumer<BukkitRunnable> onEnd, long delay, long period, long duration) {
         AtomicLong ticks = new AtomicLong(0);
         Task.runRepeatedly(t -> {
             ticks.addAndGet(period);
-            if (ticks.get() >= duration || !predicate.get()) {
+            if (ticks.get() >= duration || !predicate.getAsBoolean()) {
                 t.cancel();
             }
             task.accept(t);

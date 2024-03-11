@@ -2,6 +2,10 @@ package me.kyren223.kapi.math;
 
 import org.bukkit.util.Vector;
 
+/**
+ * @deprecated Use {@link org.joml.Quaternionf} instead
+ */
+@Deprecated
 public class Quaternion {
     private double w;
     private double x;

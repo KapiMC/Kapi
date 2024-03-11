@@ -1,10 +1,12 @@
 package me.kyren223.kapi.render;
 
-import me.kyren223.kapi.math.Transform;
 import me.kyren223.kapi.utility.Pair;
 import me.kyren223.kapi.utility.Task;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
+import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
+import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -14,8 +16,8 @@ import java.util.stream.Stream;
 
 public class Object3D {
     private final World world;
-    private final Transform transform;
-    private Transform cachedWorldTransform;
+    private final Matrix4f transform;
+    private Matrix4fc cachedWorldTransform;
     private final List<Point> points;
     private final @Nullable Object3D parent;
     private final HashMap<String, Object3D> children;
@@ -26,10 +28,17 @@ public class Object3D {
     private boolean cancel;
     private Visibility visibility;
     
-    public Object3D(Template3D template, World world, Transform transform, @Nullable Object3D parent) {
+    /**
+     * Creates a new instance of this object
+     * @param template The template to use for this object
+     * @param world The world to spawn this object in
+     * @param transform The transform of this object, cloned to prevent modification
+     * @param parent The parent of this object, null if this object has no parent
+     */
+    public Object3D(Template3D template, World world, Matrix4f transform, @Nullable Object3D parent) {
         this.parent = parent;
         this.world = world;
-        this.transform = transform;
+        this.transform = new Matrix4f(transform);
         this.points = new ArrayList<>(template.getPoints().toList());
         this.behaviors = new ArrayList<>(template.getBehaviors());
         this.onSpawn = template.getOnSpawn();
@@ -37,7 +46,7 @@ public class Object3D {
         this.children = new HashMap<>();
         this.visibility = parent == null ? Visibility.VISIBLE : Visibility.INHERIT;
         template.getChildren().forEach(entry -> {
-            Pair<Transform, Template3D> value = entry.getValue();
+            Pair<Matrix4f, Template3D> value = entry.getValue();
             Object3D child = value.second.newInstance(world, value.first, this);
             this.children.put(entry.getKey(), child);
         });
@@ -49,10 +58,27 @@ public class Object3D {
      * If you wish to modify the transform, use the method
      * {@link #transform(Consumer)}
      *
-     * @return A cloned version of this object's transform
+     * @return A read-only interface of this object's transform
      */
-    public Transform getTransform() {
-        return transform.clone();
+    public Matrix4fc getTransform() {
+        return transform;
+    }
+    
+    /**
+     * Get the transform of this object
+     * <p></p>
+     * Note: this method invalidates the cached world transform,
+     * as it's not possible to know if the transform was modified or not,
+     * for more info see {@link #getWorldTransform()}
+     * <p></p>
+     * If you don't need to modify the transform, use the method
+     * {@link #getTransform()} instead
+     *
+     * @return The mutable transform of this object
+     */
+    public Matrix4f getMutableTransform() {
+        invalidateCachedWorldTransform();
+        return transform;
     }
     
     /**
@@ -63,7 +89,7 @@ public class Object3D {
      *
      * @param consumer The consumer that modifies the transform
      */
-    public void transform(Consumer<Transform> consumer) {
+    public void transform(Consumer<Matrix4f> consumer) {
         consumer.accept(transform);
         invalidateCachedWorldTransform();
     }
@@ -78,22 +104,18 @@ public class Object3D {
      * <p></p>
      * Note: this method is cached, so it's safe to call it multiple times
      *
-     * @return A cloned world transform
+     * @return A read-only interface of this object's world transform
      */
-    public Transform getWorldTransform() {
-        if (cachedWorldTransform != null) return cachedWorldTransform.clone();
+    public Matrix4fc getWorldTransform() {
+        if (cachedWorldTransform != null) return cachedWorldTransform;
         
-        Transform worldTransform;
         if (parent != null) {
-            // No need to clone the parent's world transform, as it's already cloned
-            // By the signature and Java docs of getWorldTransform
-            worldTransform = parent.getWorldTransform().multiply(transform);
+            cachedWorldTransform = new Matrix4f(parent.getWorldTransform()).mul(transform);
         } else {
-            worldTransform = transform.clone();
+            cachedWorldTransform = new Matrix4f(transform);
         }
         
-        cachedWorldTransform = worldTransform;
-        return worldTransform;
+        return cachedWorldTransform;
     }
     
     public Stream<Point> getPoints() {
@@ -106,6 +128,10 @@ public class Object3D {
     
     public void addPoints(List<Point> points) {
         this.points.addAll(points);
+    }
+    
+    public void addPoints(Point... points) {
+        this.points.addAll(Arrays.asList(points));
     }
     
     public void removePointIf(Predicate<Point> predicate) {
@@ -121,12 +147,11 @@ public class Object3D {
     }
     
     public void addChild(String name, Template3D child) {
-        Transform childTransform = Transform.fromTranslation(0, 0, 0);
-        Object3D object = child.newInstance(world, childTransform, this);
+        Object3D object = child.newInstance(world, new Matrix4f(), this);
         children.put(name, object);
     }
     
-    public void addChild(String name, Template3D child, Transform transform) {
+    public void addChild(String name, Template3D child, Matrix4f transform) {
         Object3D object = child.newInstance(world, transform, this);
         children.put(name, object);
     }
@@ -147,6 +172,7 @@ public class Object3D {
         return children.get(name);
     }
     
+    @Nullable
     public String getNameOfChild(Object3D child) {
         for (Map.Entry<String, Object3D> entry : children.entrySet()) {
             if (entry.getValue() == child) return entry.getKey();
@@ -168,21 +194,29 @@ public class Object3D {
     }
     
     private void render() {
-        // Render this
-        Transform absoluteTransform = getWorldTransform();
-        getPoints().forEach(point -> {
-            Vector position = absoluteTransform.transformPoint(point.getVector());
-            point.getRenderable().render(world, position);
-        });
-        
         // Render children
         children.values().forEach(Object3D::render);
+        
+        // Children have render priority
+        if (!isVisible()) return;
+        Matrix4fc worldTransform = getWorldTransform();
+        getPoints().forEach(point -> {
+            Vector3f position = worldTransform.transformPosition(point.getVector().toVector3f());
+            point.getRenderable().render(world, Vector.fromJOML(position));
+        });
+        
     }
     
     private boolean shouldContinue() {
         return !cancel;
     }
     
+    /**
+     * Spawns this object and all of its children
+     *
+     * @param renderInterval The interval in ticks between each render call
+     *                       Note: Display entities are not affected by this interval
+     */
     public void spawn(int renderInterval) {
         this.ticks = 0;
         this.cancel = false;
@@ -195,23 +229,43 @@ public class Object3D {
         children.values().forEach(child -> child.spawn(renderInterval));
     }
     
+    /**
+     * Spawns this object and all of its children with a render interval of 1
+     * <p>
+     * See {@link #spawn(int)} for more info
+     */
     public void spawn() {
         spawn(1);
     }
     
+    /**
+     * Despawns this object and all of its children
+     */
     public void despawn() {
         this.cancel = true;
         children.values().forEach(Object3D::despawn);
         if (onDespawn != null) this.onDespawn.accept(this);
     }
     
-    public void reset(int renderInterval) {
+    /**
+     * Respawns this object and all of its children
+     * <p></p>
+     * Equivalent to calling {@link #despawn()} and then {@link #spawn(int)}
+     * @param renderInterval The interval in ticks between each render call
+     *                       Note: Display entities are not affected by this interval
+     */
+    public void respawn(int renderInterval) {
         despawn();
         spawn(renderInterval);
     }
     
-    public void reset() {
-        reset(1);
+    /**
+     * Respawns this object and all of its children with a render interval of 1
+     * <p>
+     * See {@link #respawn(int)} for more info
+     */
+    public void respawn() {
+        respawn(1);
     }
     
     public Visibility getVisibility() {
@@ -222,11 +276,24 @@ public class Object3D {
         this.visibility = visibility;
     }
     
+    /**
+     * Returns whether this object is visible or not
+     * <p></p>
+     * How visibility is determined:
+     * Visible: {@link Visibility#VISIBLE} - Always visible
+     * Hidden: {@link Visibility#HIDDEN} - Always hidden
+     * Inherit: {@link Visibility#INHERIT} - Inherits the visibility of the parent
+     * <p></p>
+     * If the visibility is set to inherit and the parent is null,
+     * the visibility will default to visible
+     * @return true if this object is visible, false otherwise
+     */
     public boolean isVisible() {
-        if (visibility == Visibility.HIDDEN) return false;
-        if (visibility == Visibility.VISIBLE) return true;
-        if (parent != null) return parent.isVisible();
-        return true;
+        if (visibility == Visibility.INHERIT) {
+            if (parent == null) return true;
+            return parent.isVisible();
+        }
+        return visibility == Visibility.VISIBLE;
     }
     
     private void invalidateCachedWorldTransform() {

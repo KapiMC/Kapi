@@ -1,9 +1,9 @@
 package me.kyren223.kapi.render;
 
-import me.kyren223.kapi.math.Transform;
 import me.kyren223.kapi.utility.Pair;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 public class Template3D {
     private final List<Point> points;
-    private final HashMap<String, Pair<Transform, Template3D>> children;
+    private final HashMap<String, Pair<Matrix4f, Template3D>> children;
     private final List<Pair<Consumer<Object3D>, Integer>> behaviors;
     private Consumer<Object3D> onSpawn;
     private Consumer<Object3D> onDespawn;
@@ -44,11 +44,10 @@ public class Template3D {
     }
     
     public void addChild(String name, Template3D child) {
-        Transform transform = Transform.fromTranslation(0, 0, 0);
-        children.put(name, new Pair<>(transform, child));
+        children.put(name, new Pair<>(new Matrix4f(), child));
     }
     
-    public void addChild(String name, Template3D child, Transform transform) {
+    public void addChild(String name, Template3D child, Matrix4f transform) {
         children.put(name, new Pair<>(transform, child));
     }
     
@@ -56,15 +55,15 @@ public class Template3D {
         return children.remove(name).second;
     }
     
-    public void removeChildIf(Predicate<Map.Entry<String, Pair<Transform, Template3D>>> predicate) {
+    public void removeChildIf(Predicate<Map.Entry<String, Pair<Matrix4f, Template3D>>> predicate) {
         children.entrySet().removeIf(predicate);
     }
     
-    public Stream<Map.Entry<String, Pair<Transform, Template3D>>> getChildren() {
+    public Stream<Map.Entry<String, Pair<Matrix4f, Template3D>>> getChildren() {
         return children.entrySet().stream();
     }
     
-    public Pair<Transform, Template3D> getChild(String name) {
+    public Pair<Matrix4f, Template3D> getChild(String name) {
         return children.get(name);
     }
     
@@ -93,15 +92,24 @@ public class Template3D {
         return onDespawn;
     }
     
-    public Object3D newInstance(World world, Transform transform, Object3D parent) {
+    public Object3D newInstance(World world, Matrix4f transform, Object3D parent) {
         return new Object3D(this, world, transform, parent);
+    }
+    
+    public Object3D newInstance(Location location, Object3D parent) {
+        return new Object3D(
+                this,
+                location.getWorld(),
+                new Matrix4f().translate(location.toVector().toVector3f()),
+                parent
+        );
     }
     
     public Object3D newInstance(Location location) {
         return new Object3D(
                 this,
                 location.getWorld(),
-                Transform.fromTranslation(location.toVector()),
+                new Matrix4f().translate(location.toVector().toVector3f()),
                 null
         );
     }
