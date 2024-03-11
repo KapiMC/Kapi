@@ -37,10 +37,12 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
         super(transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength, displayWidth, displayHeight, interpolationDelay, billboard, glowColorOverride, brightness, text, lineWidth, backgroundColor, textOpacity, shadowed, seeThrough, defaultBackground, alignment);
     }
     
+    @SuppressWarnings("deprecation")
     public TextDisplayRender(@NotNull TextDisplayData data) {
         super(data.getTransformation(), data.getInterpolationDuration(), data.getViewRange(), data.getShadowRadius(), data.getShadowStrength(), data.getDisplayWidth(), data.getDisplayHeight(), data.getInterpolationDelay(), data.getBillboard(), data.getGlowColorOverride(), data.getBrightness(), data.getText(), data.getLineWidth(), data.getBackgroundColor(), data.getTextOpacity(), data.isShadowed(), data.isSeeThrough(), data.isDefaultBackground(), data.getAlignment());
     }
     
+    @SuppressWarnings("deprecation")
     @Override
     public void spawn(World world, Vector point) {
         entity = world.spawn(point.toLocation(world), TextDisplay.class);
@@ -159,6 +161,7 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
      * @param color new background color
      * @deprecated API subject to change
      */
+    @SuppressWarnings("deprecation")
     @Deprecated
     @Override
     public void setBackgroundColor(@Nullable Color color) {

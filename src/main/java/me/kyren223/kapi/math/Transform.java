@@ -252,7 +252,7 @@ public class Transform {
      *     matrix[2][1] = 2 * (yz + xw);
      *     matrix[2][2] = 1 - 2 * (xx + yy);
      * </code></pre>
-     * @param q
+     * @param q A quaternion
      */
     public void setRotation(Quaternion q) {
         q.normalize(); // Ensure the quaternion represents a valid rotation
