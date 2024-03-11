@@ -1,17 +1,21 @@
-package me.kyren223.kapi.particles;
+package me.kyren223.kapi.render;
 
 import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
 public class ParticleData {
+    public static final String PARTICLE_IS_NOT_REDSTONE = "Particle is not REDSTONE";
     private Particle particle;
     private int count;
-    private double spreadX, spreadY, spreadZ;
+    private double spreadX;
+    private double spreadY;
+    private double spreadZ;
     private double extra;
     private Object data;
+    private boolean force;
     
-    public ParticleData(Particle particle, int count, double spreadX, double spreadY, double spreadZ, double extra, Object data) {
+    public ParticleData(Particle particle, int count, double spreadX, double spreadY, double spreadZ, double extra, Object data, boolean force) {
         this.particle = particle;
         this.count = count;
         this.spreadX = spreadX;
@@ -19,6 +23,7 @@ public class ParticleData {
         this.spreadZ = spreadZ;
         this.extra = extra;
         this.data = data;
+        this.force = force;
     }
     
     public Particle getParticle() {
@@ -95,29 +100,37 @@ public class ParticleData {
     
     public void setRedstoneData(Color color, float size) {
         if (particle != Particle.REDSTONE) {
-            throw new IllegalStateException("Particle is not REDSTONE");
+            throw new IllegalStateException(PARTICLE_IS_NOT_REDSTONE);
         }
         this.data = new Particle.DustOptions(color, size);
     }
     
     public Particle.DustOptions getRedstoneData() {
         if (particle != Particle.REDSTONE) {
-            throw new IllegalStateException("Particle is not REDSTONE");
+            throw new IllegalStateException(PARTICLE_IS_NOT_REDSTONE);
         }
         return (Particle.DustOptions) data;
     }
     
     public void setRedstoneColor(Color color) {
         if (particle != Particle.REDSTONE) {
-            throw new IllegalStateException("Particle is not REDSTONE");
+            throw new IllegalStateException(PARTICLE_IS_NOT_REDSTONE);
         }
         this.data = new Particle.DustOptions(color, getRedstoneData().getSize());
     }
     
     public void setRedstoneSize(float size) {
         if (particle != Particle.REDSTONE) {
-            throw new IllegalStateException("Particle is not REDSTONE");
+            throw new IllegalStateException(PARTICLE_IS_NOT_REDSTONE);
         }
         this.data = new Particle.DustOptions(getRedstoneData().getColor(), size);
+    }
+    
+    public boolean isForce() {
+        return force;
+    }
+    
+    public void setForce(boolean force) {
+        this.force = force;
     }
 }

@@ -1,4 +1,4 @@
-package me.kyren223.kapi.particles;
+package me.kyren223.kapi.render;
 
 import org.bukkit.Color;
 import org.bukkit.Particle;
@@ -7,7 +7,9 @@ import org.bukkit.util.Vector;
 public class ParticleBuilder {
     private Particle particle;
     private int count;
-    private double spreadX, spreadY, spreadZ;
+    private double spreadX;
+    private double spreadY;
+    private double spreadZ;
     private double extra;
     private Object data;
     

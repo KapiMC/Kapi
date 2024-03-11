@@ -1,4 +1,4 @@
-package me.kyren223.kapi.particles;
+package me.kyren223.kapi.render;
 
 public enum Visibility {
     VISIBLE,

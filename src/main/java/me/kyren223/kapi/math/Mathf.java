@@ -3,7 +3,11 @@ package me.kyren223.kapi.math;
 import org.bukkit.Color;
 import org.bukkit.util.Vector;
 
-public class MathUtils {
+public class Mathf {
+    
+    private Mathf() {
+        // Prevent instantiation
+    }
     
     public static final double TAU = Math.PI * 2;
     

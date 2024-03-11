@@ -1,20 +1,22 @@
-package me.kyren223.kapi.particles;
+package me.kyren223.kapi.render;
 
 import org.bukkit.util.Vector;
 
 public class Point {
-    private double x, y, z;
-    private ParticleData particle;
+    private double x;
+    private double y;
+    private double z;
+    private Renderable renderable;
     
-    public Point(double x, double y, double z, ParticleData particle) {
+    public Point(double x, double y, double z, Renderable renderable) {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.particle = particle;
+        this.renderable = renderable;
     }
     
-    public Point(Vector vector, ParticleData particle) {
-        this(vector.getX(), vector.getY(), vector.getZ(), particle);
+    public Point(Vector vector, Renderable renderable) {
+        this(vector.getX(), vector.getY(), vector.getZ(), renderable);
     }
     
     public double getX() {
@@ -51,12 +53,12 @@ public class Point {
         this.z = vector.getZ();
     }
     
-    public ParticleData getParticle() {
-        return particle;
+    public Renderable getRenderable() {
+        return renderable;
     }
     
-    public void setParticle(ParticleData particle) {
-        this.particle = particle;
+    public void setRenderable(Renderable renderable) {
+        this.renderable = renderable;
     }
 }
 

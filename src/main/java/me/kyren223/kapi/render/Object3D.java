@@ -1,4 +1,4 @@
-package me.kyren223.kapi.particles;
+package me.kyren223.kapi.render;
 
 import me.kyren223.kapi.math.Transform;
 import me.kyren223.kapi.utility.Pair;
@@ -12,23 +12,21 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class ParticleObject {
+public class Object3D {
     private final World world;
     private final Transform transform;
     private Transform cachedWorldTransform;
     private final List<Point> points;
-    private final @Nullable ParticleObject parent;
-    private final HashMap<String, ParticleObject> children;
-    private final List<Pair<Consumer<ParticleObject>, Integer>> behaviors;
-    private final @Nullable Consumer<ParticleObject> onSpawn;
-    private final @Nullable Consumer<ParticleObject> onDespawn;
+    private final @Nullable Object3D parent;
+    private final HashMap<String, Object3D> children;
+    private final List<Pair<Consumer<Object3D>, Integer>> behaviors;
+    private final @Nullable Consumer<Object3D> onSpawn;
+    private final @Nullable Consumer<Object3D> onDespawn;
     private int ticks;
-    private boolean force;
     private boolean cancel;
-    private int renderInterval;
     private Visibility visibility;
     
-    public ParticleObject(ParticleTemplate template, World world, Transform transform, @Nullable ParticleObject parent) {
+    public Object3D(Template3D template, World world, Transform transform, @Nullable Object3D parent) {
         this.parent = parent;
         this.world = world;
         this.transform = transform;
@@ -39,8 +37,8 @@ public class ParticleObject {
         this.children = new HashMap<>();
         this.visibility = parent == null ? Visibility.VISIBLE : Visibility.INHERIT;
         template.getChildren().forEach(entry -> {
-            Pair<Transform, ParticleTemplate> value = entry.getValue();
-            ParticleObject child = value.second.newInstance(world, value.first, this);
+            Pair<Transform, Template3D> value = entry.getValue();
+            Object3D child = value.second.newInstance(world, value.first, this);
             this.children.put(entry.getKey(), child);
         });
     }
@@ -50,6 +48,7 @@ public class ParticleObject {
      * <p>
      * If you wish to modify the transform, use the method
      * {@link #transform(Consumer)}
+     *
      * @return A cloned version of this object's transform
      */
     public Transform getTransform() {
@@ -61,6 +60,7 @@ public class ParticleObject {
      * <p>
      * Note: this method invalidates the cached world transform,
      * for more info see {@link #getWorldTransform()}
+     *
      * @param consumer The consumer that modifies the transform
      */
     public void transform(Consumer<Transform> consumer) {
@@ -77,6 +77,7 @@ public class ParticleObject {
      * version of this object's transform
      * <p></p>
      * Note: this method is cached, so it's safe to call it multiple times
+     *
      * @return A cloned world transform
      */
     public Transform getWorldTransform() {
@@ -115,53 +116,45 @@ public class ParticleObject {
         return parent != null;
     }
     
-    public @Nullable ParticleObject getParent() {
+    public @Nullable Object3D getParent() {
         return parent;
     }
     
-    public void addChild(String name, ParticleTemplate child) {
-        Transform transform = Transform.fromTranslation(0, 0, 0);
-        ParticleObject object = child.newInstance(world, transform, this);
+    public void addChild(String name, Template3D child) {
+        Transform childTransform = Transform.fromTranslation(0, 0, 0);
+        Object3D object = child.newInstance(world, childTransform, this);
         children.put(name, object);
     }
     
-    public void addChild(String name, ParticleTemplate child, Transform transform) {
-        ParticleObject object = child.newInstance(world, transform, this);
+    public void addChild(String name, Template3D child, Transform transform) {
+        Object3D object = child.newInstance(world, transform, this);
         children.put(name, object);
     }
     
-    public ParticleObject removeChild(String name) {
+    public Object3D removeChild(String name) {
         return children.remove(name);
     }
     
-    public void removeChildIf(Predicate<Map.Entry<String, ParticleObject>> predicate) {
+    public void removeChildIf(Predicate<Map.Entry<String, Object3D>> predicate) {
         children.entrySet().removeIf(predicate);
     }
     
-    public Stream<Map.Entry<String, ParticleObject>> getChildren() {
+    public Stream<Map.Entry<String, Object3D>> getChildren() {
         return children.entrySet().stream();
     }
     
-    public ParticleObject getChild(String name) {
+    public Object3D getChild(String name) {
         return children.get(name);
     }
     
-    public String getNameOfChild(ParticleObject child) {
-        for (Map.Entry<String, ParticleObject> entry : children.entrySet()) {
+    public String getNameOfChild(Object3D child) {
+        for (Map.Entry<String, Object3D> entry : children.entrySet()) {
             if (entry.getValue() == child) return entry.getKey();
         }
         return null;
     }
     
-    public boolean isForce() {
-        return force;
-    }
-    
-    public void setForce(boolean force) {
-        this.force = force;
-    }
-    
-    public void addBehavior(Consumer<ParticleObject> behavior, int interval) {
+    public void addBehavior(Consumer<Object3D> behavior, int interval) {
         behaviors.add(new Pair<>(behavior, interval));
     }
     
@@ -171,39 +164,27 @@ public class ParticleObject {
                 pair.first.accept(this);
             }
         });
-        children.values().forEach(ParticleObject::tick);
+        children.values().forEach(Object3D::tick);
     }
     
     private void render() {
         // Render this
         Transform absoluteTransform = getWorldTransform();
         getPoints().forEach(point -> {
-            ParticleData particle = point.getParticle();
-            Vector absolutePosition = absoluteTransform.transformPoint(point.getVector());
-            
-            this.world.spawnParticle(
-                particle.getParticle(),
-                absolutePosition.getX(), absolutePosition.getY(), absolutePosition.getZ(),
-                particle.getCount(),
-                particle.getSpreadX(), particle.getSpreadY(), particle.getSpreadZ(),
-                particle.getExtra(),
-                particle.getData(),
-                force
-            );
+            Vector position = absoluteTransform.transformPoint(point.getVector());
+            point.getRenderable().render(world, position);
         });
         
         // Render children
-        children.values().forEach(ParticleObject::render);
+        children.values().forEach(Object3D::render);
     }
     
     private boolean shouldContinue() {
         return !cancel;
     }
     
-    public void spawn(boolean force, int renderInterval) {
+    public void spawn(int renderInterval) {
         this.ticks = 0;
-        this.force = false;
-        this.renderInterval = renderInterval;
         this.cancel = false;
         if (onSpawn != null) this.onSpawn.accept(this);
         Task.runWhile(this::shouldContinue, task -> {
@@ -211,42 +192,26 @@ public class ParticleObject {
             if (isVisible()) render();
             ticks++;
         }, 1, 1);
-        children.values().forEach(child -> child.spawn(force, renderInterval));
-    }
-    
-    public void spawn(boolean force) {
-        spawn(force, 1);
-    }
-    
-    public void spawn(int renderInterval) {
-        spawn(false, renderInterval);
+        children.values().forEach(child -> child.spawn(renderInterval));
     }
     
     public void spawn() {
-        spawn(false);
+        spawn(1);
     }
     
     public void despawn() {
         this.cancel = true;
-        children.values().forEach(ParticleObject::despawn);
+        children.values().forEach(Object3D::despawn);
         if (onDespawn != null) this.onDespawn.accept(this);
     }
     
-    public void reset(boolean force, int renderInterval) {
-        despawn();
-        spawn(force, renderInterval);
-    }
-    
-    public void reset(boolean force) {
-        reset(force, renderInterval);
-    }
-    
     public void reset(int renderInterval) {
-        reset(false, renderInterval);
+        despawn();
+        spawn(renderInterval);
     }
     
     public void reset() {
-        reset(false);
+        reset(1);
     }
     
     public Visibility getVisibility() {
