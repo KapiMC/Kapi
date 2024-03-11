@@ -1,4 +1,4 @@
-package me.kyren223.kapi.render;
+package me.kyren223.kapi.render.renderable;
 
 import org.bukkit.World;
 import org.bukkit.util.Vector;

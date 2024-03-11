@@ -1,4 +1,4 @@
-package me.kyren223.kapi.render;
+package me.kyren223.kapi.render.data;
 
 import org.bukkit.Color;
 import org.bukkit.Particle;

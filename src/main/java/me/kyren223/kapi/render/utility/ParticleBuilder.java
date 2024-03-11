@@ -1,5 +1,6 @@
-package me.kyren223.kapi.render;
+package me.kyren223.kapi.render.utility;
 
+import me.kyren223.kapi.render.data.ParticleData;
 import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.util.Vector;

@@ -1,5 +1,6 @@
 package me.kyren223.kapi.render;
 
+import me.kyren223.kapi.render.renderable.Renderable;
 import org.bukkit.util.Vector;
 
 public class Point {

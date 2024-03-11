@@ -1,7 +1,6 @@
 package me.kyren223.kapi.render.renderable;
 
-import me.kyren223.kapi.render.ParticleData;
-import me.kyren223.kapi.render.Renderable;
+import me.kyren223.kapi.render.data.ParticleData;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
