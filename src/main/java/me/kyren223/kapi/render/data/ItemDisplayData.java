@@ -8,6 +8,7 @@ import org.bukkit.util.Transformation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("ALL")
 public class ItemDisplayData extends DisplayData {
     
     private @Nullable ItemStack itemStack;

@@ -2,14 +2,25 @@ package me.kyren223.kapi.math;
 
 import org.bukkit.util.Vector;
 
-public class Quaternion implements Cloneable {
-    private double w, x, y, z;
+public class Quaternion {
+    private double w;
+    private double x;
+    private double y;
+    private double z;
     
     public Quaternion(double w, double x, double y, double z) {
         this.w = w;
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+    
+    public Quaternion(Quaternion other) {
+        this(other.w, other.x, other.y, other.z);
+    }
+    
+    public Quaternion() {
+        this(1, 0, 0, 0);
     }
     
     public double getW() {
@@ -126,19 +137,5 @@ public class Quaternion implements Cloneable {
         double q3 = axis.getZ() * sinHalfAngleConstant;
         
         return multiply(new Quaternion(q0, q1, q2, q3));
-    }
-    
-    @Override
-    public Quaternion clone() {
-        try {
-            Quaternion clone = (Quaternion) super.clone();
-            clone.w = w;
-            clone.x = x;
-            clone.y = y;
-            clone.z = z;
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            return new Quaternion(w, x, y, z);
-        }
     }
 }
