@@ -4,11 +4,13 @@ public class SystemTrigger {
     
     public static final String SPAWN_EVENT = "spawn";
     public static final String DESPAWN_EVENT = "despawn";
+    public static final String SCALE_CHANGED_EVENT = "scale_changed";
     
     // Built-in triggers
-    public static final SystemTrigger SPAWN = event(SPAWN_EVENT);
-    public static final SystemTrigger DESPAWN = event(DESPAWN_EVENT);
+    public static final SystemTrigger ON_SPAWN = event(SPAWN_EVENT);
+    public static final SystemTrigger ON_DESPAWN = event(DESPAWN_EVENT);
     public static final SystemTrigger TICK = interval(1);
+    public static final SystemTrigger ON_SCALE_CHANGED = event(SCALE_CHANGED_EVENT);
     
     private final int delay;
     private final int period;

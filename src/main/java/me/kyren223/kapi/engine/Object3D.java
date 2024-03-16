@@ -79,6 +79,12 @@ public class Object3D implements EcsEntity {
      * <p></p>
      * If you don't need to modify the transform, use the method
      * {@link #getTransform()} instead
+     * <p></p>
+     * If you modify the scale, please use the method
+     * {@link #transform(Consumer)} instead so the event
+     * {@link SystemTrigger#SCALE_CHANGED_EVENT} is triggered<p>
+     * This method won't trigger the event, and can be used if you don't
+     * want the overhead of checking if the scale was modified
      *
      * @return The mutable transform of this object
      */
@@ -89,15 +95,30 @@ public class Object3D implements EcsEntity {
     
     /**
      * Modifies this object's transform
-     * <p>
+     * <p></p>
      * Note: this method invalidates the cached world transform,
      * for more info see {@link #getWorldTransform()}
+     * <p></p>
+     * If the scale is modified, the event {@link SystemTrigger#SCALE_CHANGED_EVENT}
+     * will be triggered<p>
+     * If you don't modify the scale and don't want the overhead of
+     * checking if the scale was modified, use the method
+     * {@link #getMutableTransform()} instead
      *
      * @param consumer The consumer that modifies the transform
      */
     public void transform(Consumer<Matrix4f> consumer) {
+        Vector3f scale = new Vector3f();
+        transform.getScale(scale);
+        
         consumer.accept(transform);
         invalidateCachedWorldTransform();
+        
+        Vector3f newScale = new Vector3f();
+        transform.getScale(newScale);
+        if (!newScale.equals(scale, 0)) {
+            triggerEvent(SystemTrigger.SCALE_CHANGED_EVENT);
+        }
     }
     
     /**
@@ -220,6 +241,7 @@ public class Object3D implements EcsEntity {
         ));
         
         triggerEvent(SystemTrigger.SPAWN_EVENT);
+        triggerEvent(SystemTrigger.SCALE_CHANGED_EVENT);
         for (Pair<SystemTrigger, Consumer<Object3D>> task : tasks) {
             SystemTrigger trigger = task.first;
             Consumer<Object3D> system = task.second;

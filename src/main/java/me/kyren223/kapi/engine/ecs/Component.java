@@ -7,5 +7,5 @@ public class Component {
     }
     
     public static final String VELOCITY = "velocity";
-    
+    public static final String ACCELERATION = "acceleration";
 }
