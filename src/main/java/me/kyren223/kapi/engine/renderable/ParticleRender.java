@@ -1,6 +1,6 @@
-package me.kyren223.kapi.render.renderable;
+package me.kyren223.kapi.engine.renderable;
 
-import me.kyren223.kapi.render.data.ParticleData;
+import me.kyren223.kapi.engine.data.ParticleData;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
@@ -40,5 +40,10 @@ public class ParticleRender implements Renderable {
     
     public ParticleRender(ParticleData particle) {
         this.particle = particle;
+    }
+    
+    @Override
+    public Renderable clone() {
+        return new ParticleRender(new ParticleData(particle));
     }
 }

@@ -1,19 +1,21 @@
-package me.kyren223.kapi.render.renderable;
+package me.kyren223.kapi.engine.renderable;
 
-import me.kyren223.kapi.render.data.TextDisplayData;
+import me.kyren223.kapi.engine.data.ItemDisplayData;
 import org.bukkit.Color;
 import org.bukkit.World;
 import org.bukkit.entity.Display;
-import org.bukkit.entity.TextDisplay;
+import org.bukkit.entity.ItemDisplay;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Transformation;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class TextDisplayRender extends TextDisplayData implements Renderable {
-    private TextDisplay entity;
+public class ItemDisplayRender extends ItemDisplayData implements Renderable {
     
-    public TextDisplayRender(
+    private ItemDisplay entity;
+    
+    public ItemDisplayRender(
             @NotNull Transformation transformation,
             int interpolationDuration,
             float viewRange,
@@ -25,27 +27,19 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
             @NotNull Display.Billboard billboard,
             @NotNull Color glowColorOverride,
             @NotNull Display.Brightness brightness,
-            @Nullable String text,
-            int lineWidth,
-            @Nullable Color backgroundColor,
-            byte textOpacity,
-            boolean shadowed,
-            boolean seeThrough,
-            boolean defaultBackground,
-            @NotNull TextDisplay.TextAlignment alignment
+            @NotNull ItemStack itemStack,
+            @NotNull ItemDisplay.ItemDisplayTransform itemDisplayTransform
     ) {
-        super(transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength, displayWidth, displayHeight, interpolationDelay, billboard, glowColorOverride, brightness, text, lineWidth, backgroundColor, textOpacity, shadowed, seeThrough, defaultBackground, alignment);
+        super(transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength, displayWidth, displayHeight, interpolationDelay, billboard, glowColorOverride, brightness, itemStack, itemDisplayTransform);
     }
     
-    @SuppressWarnings("deprecation")
-    public TextDisplayRender(@NotNull TextDisplayData data) {
-        super(data.getTransformation(), data.getInterpolationDuration(), data.getViewRange(), data.getShadowRadius(), data.getShadowStrength(), data.getDisplayWidth(), data.getDisplayHeight(), data.getInterpolationDelay(), data.getBillboard(), data.getGlowColorOverride(), data.getBrightness(), data.getText(), data.getLineWidth(), data.getBackgroundColor(), data.getTextOpacity(), data.isShadowed(), data.isSeeThrough(), data.isDefaultBackground(), data.getAlignment());
+    public ItemDisplayRender(@NotNull ItemDisplayData data) {
+        super(data);
     }
     
-    @SuppressWarnings("deprecation")
     @Override
     public void spawn(World world, Vector point) {
-        entity = world.spawn(point.toLocation(world), TextDisplay.class);
+        entity = world.spawn(point.toLocation(world), ItemDisplay.class);
         entity.setTransformation(getTransformation());
         entity.setInterpolationDuration(getInterpolationDuration());
         entity.setViewRange(getViewRange());
@@ -57,14 +51,8 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
         entity.setBillboard(getBillboard());
         entity.setGlowColorOverride(getGlowColorOverride());
         entity.setBrightness(getBrightness());
-        entity.setText(getText());
-        entity.setLineWidth(getLineWidth());
-        entity.setBackgroundColor(getBackgroundColor());
-        entity.setTextOpacity(getTextOpacity());
-        entity.setShadowed(isShadowed());
-        entity.setSeeThrough(isSeeThrough());
-        entity.setDefaultBackground(isDefaultBackground());
-        entity.setAlignment(getAlignment());
+        entity.setItemStack(getItemStack());
+        entity.setItemDisplayTransform(getItemDisplayTransform());
     }
     
     @Override
@@ -144,58 +132,19 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
     }
     
     @Override
-    public void setText(@Nullable String text) {
-        super.setText(text);
-        entity.setText(text);
+    public void setItemStack(@Nullable ItemStack item) {
+        super.setItemStack(item);
+        entity.setItemStack(item);
     }
     
     @Override
-    public void setLineWidth(int width) {
-        super.setLineWidth(width);
-        entity.setLineWidth(width);
-    }
-    
-    /**
-     * Sets the text background color.
-     *
-     * @param color new background color
-     * @deprecated API subject to change
-     */
-    @SuppressWarnings("deprecation")
-    @Deprecated
-    @Override
-    public void setBackgroundColor(@Nullable Color color) {
-        super.setBackgroundColor(color);
-        entity.setBackgroundColor(color);
+    public void setItemDisplayTransform(ItemDisplay.@NotNull ItemDisplayTransform display) {
+        super.setItemDisplayTransform(display);
+        entity.setItemDisplayTransform(display);
     }
     
     @Override
-    public void setTextOpacity(byte opacity) {
-        super.setTextOpacity(opacity);
-        entity.setTextOpacity(opacity);
-    }
-    
-    @Override
-    public void setShadowed(boolean shadow) {
-        super.setShadowed(shadow);
-        entity.setShadowed(shadow);
-    }
-    
-    @Override
-    public void setSeeThrough(boolean seeThrough) {
-        super.setSeeThrough(seeThrough);
-        entity.setSeeThrough(seeThrough);
-    }
-    
-    @Override
-    public void setDefaultBackground(boolean defaultBackground) {
-        super.setDefaultBackground(defaultBackground);
-        entity.setDefaultBackground(defaultBackground);
-    }
-    
-    @Override
-    public void setAlignment(TextDisplay.@NotNull TextAlignment alignment) {
-        super.setAlignment(alignment);
-        entity.setAlignment(alignment);
+    public ItemDisplayRender clone() {
+        return new ItemDisplayRender(new ItemDisplayData(this));
     }
 }

@@ -1,6 +1,6 @@
-package me.kyren223.kapi.render;
+package me.kyren223.kapi.engine;
 
-import me.kyren223.kapi.render.renderable.Renderable;
+import me.kyren223.kapi.engine.renderable.Renderable;
 import org.bukkit.util.Vector;
 
 public class Point {
@@ -18,6 +18,14 @@ public class Point {
     
     public Point(Vector vector, Renderable renderable) {
         this(vector.getX(), vector.getY(), vector.getZ(), renderable);
+    }
+    
+    /**
+     * Copy constructor (makes a deep copy)
+     * @param point The point to copy
+     */
+    public Point(Point point) {
+        this(point.x, point.y, point.z, point.getRenderable().clone());
     }
     
     public double getX() {

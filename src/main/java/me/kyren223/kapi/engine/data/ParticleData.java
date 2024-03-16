@@ -1,4 +1,4 @@
-package me.kyren223.kapi.render.data;
+package me.kyren223.kapi.engine.data;
 
 import org.bukkit.Color;
 import org.bukkit.Particle;
@@ -24,6 +24,23 @@ public class ParticleData {
         this.extra = extra;
         this.data = data;
         this.force = force;
+    }
+    
+    /**
+     * Copy constructor
+     *<p></p>
+     * Note: This does not make a deep copy of the data object
+     * @param data The data to copy
+     */
+    public ParticleData(ParticleData data) {
+        this.particle = data.getParticle();
+        this.count = data.getCount();
+        this.spreadX = data.getSpreadX();
+        this.spreadY = data.getSpreadY();
+        this.spreadZ = data.getSpreadZ();
+        this.extra = data.getExtra();
+        this.data = data.getData();
+        this.force = data.isForce();
     }
     
     public Particle getParticle() {

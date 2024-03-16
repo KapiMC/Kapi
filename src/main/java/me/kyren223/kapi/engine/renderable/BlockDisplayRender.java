@@ -1,6 +1,6 @@
-package me.kyren223.kapi.render.renderable;
+package me.kyren223.kapi.engine.renderable;
 
-import me.kyren223.kapi.render.data.BlockDisplayData;
+import me.kyren223.kapi.engine.data.BlockDisplayData;
 import org.bukkit.Color;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
@@ -31,8 +31,12 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
         super(transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength, displayWidth, displayHeight, interpolationDelay, billboard, glowColorOverride, brightness, block);
     }
     
+    /**
+     * Copy constructor
+     * @param data The data to copy
+     */
     public BlockDisplayRender(@NotNull BlockDisplayData data) {
-        super(data.getTransformation(), data.getInterpolationDuration(), data.getViewRange(), data.getShadowRadius(), data.getShadowStrength(), data.getDisplayWidth(), data.getDisplayHeight(), data.getInterpolationDelay(), data.getBillboard(), data.getGlowColorOverride(), data.getBrightness(), data.getBlock());
+        super(data);
     }
     
     @Override
@@ -132,5 +136,10 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
     public void setBrightness(Display.@NotNull Brightness brightness) {
         super.setBrightness(brightness);
         entity.setBrightness(brightness);
+    }
+    
+    @Override
+    public Renderable clone() {
+        return new BlockDisplayRender(this);
     }
 }

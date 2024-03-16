@@ -1,4 +1,4 @@
-package me.kyren223.kapi.render.data;
+package me.kyren223.kapi.engine.data;
 
 import org.bukkit.Color;
 import org.bukkit.entity.Display;
@@ -48,6 +48,24 @@ public class TextDisplayData extends DisplayData {
         this.seeThrough = seeThrough;
         this.defaultBackground = defaultBackground;
         this.alignment = alignment;
+    }
+    
+    /**
+     * Copy constructor
+     *
+     * @param data The data to copy
+     */
+    public TextDisplayData(@NotNull TextDisplayData data) {
+        super(data);
+        this.text = data.getText();
+        this.lineWidth = data.getLineWidth();
+        this.backgroundColor = data.getBackgroundColor() == null ?
+                null :Color.fromARGB(data.getBackgroundColor().asARGB());
+        this.textOpacity = data.getTextOpacity();
+        this.shadowed = data.isShadowed();
+        this.seeThrough = data.isSeeThrough();
+        this.defaultBackground = data.isDefaultBackground();
+        this.alignment = data.getAlignment();
     }
     
     /**

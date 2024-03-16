@@ -1,5 +1,7 @@
-package me.kyren223.kapi.render;
+package me.kyren223.kapi.engine;
 
+import me.kyren223.kapi.engine.ecs.EcsEntity;
+import me.kyren223.kapi.engine.ecs.SystemTrigger;
 import me.kyren223.kapi.utility.Pair;
 import me.kyren223.kapi.utility.Task;
 import org.bukkit.World;
@@ -14,17 +16,16 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class Object3D {
+public class Object3D implements EcsEntity {
     private final World world;
     private final Matrix4f transform;
     private Matrix4fc cachedWorldTransform;
     private final List<Point> points;
     private final @Nullable Object3D parent;
     private final HashMap<String, Object3D> children;
-    private final List<Pair<Consumer<Object3D>, Integer>> behaviors;
-    private final @Nullable Consumer<Object3D> onSpawn;
-    private final @Nullable Consumer<Object3D> onDespawn;
-    private int ticks;
+    private final HashMap<String, Object> components;
+    private final HashMap<String, List<Consumer<Object3D>>> events;
+    private final List<Pair<SystemTrigger, Consumer<Object3D>>> tasks;
     private boolean cancel;
     private Visibility visibility;
     
@@ -39,10 +40,15 @@ public class Object3D {
         this.parent = parent;
         this.world = world;
         this.transform = new Matrix4f(transform);
-        this.points = new ArrayList<>(template.getPoints().toList());
-        this.behaviors = new ArrayList<>(template.getBehaviors());
-        this.onSpawn = template.getOnSpawn();
-        this.onDespawn = template.getOnDespawn();
+        this.points = new ArrayList<>();
+        template.getPoints().forEach(point ->
+                this.points.add(new Point(point))
+        );
+        
+        this.components = new HashMap<>();
+        this.events = new HashMap<>(template.getEvents());
+        this.tasks = new ArrayList<>(template.getTasks());
+        
         this.children = new HashMap<>();
         this.visibility = parent == null ? Visibility.VISIBLE : Visibility.INHERIT;
         template.getChildren().forEach(entry -> {
@@ -180,19 +186,6 @@ public class Object3D {
         return null;
     }
     
-    public void addBehavior(Consumer<Object3D> behavior, int interval) {
-        behaviors.add(new Pair<>(behavior, interval));
-    }
-    
-    private void tick() {
-        behaviors.forEach(pair -> {
-            if (ticks % pair.second == 0) {
-                pair.first.accept(this);
-            }
-        });
-        children.values().forEach(Object3D::tick);
-    }
-    
     private void render() {
         // Render children
         children.values().forEach(Object3D::render);
@@ -218,15 +211,23 @@ public class Object3D {
      *                       Note: Display entities are not affected by this interval
      */
     public void spawn(int renderInterval) {
-        this.ticks = 0;
         this.cancel = false;
-        if (onSpawn != null) this.onSpawn.accept(this);
-        Task.runWhile(this::shouldContinue, task -> {
-            tick();
-            if (isVisible()) render();
-            ticks++;
-        }, 1, 1);
+        
         children.values().forEach(child -> child.spawn(renderInterval));
+        
+        points.forEach(point -> point.getRenderable().spawn(
+                world, Vector.fromJOML(getWorldTransform().transformPosition(point.getVector().toVector3f()))
+        ));
+        
+        triggerEvent(SystemTrigger.SPAWN_EVENT);
+        for (Pair<SystemTrigger, Consumer<Object3D>> task : tasks) {
+            SystemTrigger trigger = task.first;
+            Consumer<Object3D> system = task.second;
+            assert !trigger.isEvent();
+            Task.runWhile(this::shouldContinue, t -> system.accept(this), trigger.getDelay(), trigger.getPeriod());
+        }
+        
+        Task.runWhile(this::shouldContinue, task -> render(), 1, 1);
     }
     
     /**
@@ -243,8 +244,12 @@ public class Object3D {
      */
     public void despawn() {
         this.cancel = true;
+        points.forEach(point -> point.getRenderable().despawn(
+                world, Vector.fromJOML(getWorldTransform().transformPosition(point.getVector().toVector3f()))
+        ));
         children.values().forEach(Object3D::despawn);
-        if (onDespawn != null) this.onDespawn.accept(this);
+        
+        triggerEvent(SystemTrigger.DESPAWN_EVENT);
     }
     
     /**
@@ -298,5 +303,53 @@ public class Object3D {
     
     private void invalidateCachedWorldTransform() {
         cachedWorldTransform = null;
+        // Invalidate children cached world transform
+        getChildren().forEach(entry -> entry.getValue().invalidateCachedWorldTransform());
+    }
+    
+    @Override
+    public void set(String key, Object value) {
+        components.put(key, value);
+    }
+    
+    @Override
+    public Object get(String key) {
+        return components.get(key);
+    }
+    
+    @Override
+    public boolean has(String key) {
+        return components.containsKey(key);
+    }
+    
+    @Override
+    public void remove(String key) {
+        components.remove(key);
+    }
+    
+    /**
+     * Adds a system to this object
+     * <p></p>
+     * If the system is not an event and the object has already been spawned,
+     * the system will be ignored until the object is respawned
+     * @param trigger The trigger for the system
+     * @param system The system to add
+     * @return this object for chaining
+     */
+    @Override
+    public Object3D addSystem(SystemTrigger trigger, Consumer<Object3D> system) {
+        if (trigger.isEvent()) {
+            events.computeIfAbsent(trigger.getEvent(), k -> new ArrayList<>()).add(system);
+        } else {
+            tasks.add(new Pair<>(trigger, system));
+        }
+        return this;
+    }
+    
+    @Override
+    public void triggerEvent(String event) {
+        List<Consumer<Object3D>> listeners = events.getOrDefault(event, null);
+        if (listeners == null) return;
+        listeners.forEach(listener -> listener.accept(this));
     }
 }

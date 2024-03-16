@@ -1,4 +1,4 @@
-package me.kyren223.kapi.render.data;
+package me.kyren223.kapi.engine.data;
 
 import org.bukkit.Color;
 import org.bukkit.block.data.BlockData;
@@ -26,6 +26,15 @@ public class BlockDisplayData extends DisplayData {
     ) {
         super(transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength, displayWidth, displayHeight, interpolationDelay, billboard, glowColorOverride, brightness);
         this.block = block;
+    }
+    
+    /**
+     * Copy constructor
+     * @param data The data to copy
+     */
+    public BlockDisplayData(@NotNull BlockDisplayData data) {
+        super(data);
+        this.block = data.getBlock().clone();
     }
     
     /**

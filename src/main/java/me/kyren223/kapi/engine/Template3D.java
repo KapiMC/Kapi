@@ -1,14 +1,12 @@
-package me.kyren223.kapi.render;
+package me.kyren223.kapi.engine;
 
+import me.kyren223.kapi.engine.ecs.SystemTrigger;
 import me.kyren223.kapi.utility.Pair;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.joml.Matrix4f;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -16,15 +14,17 @@ import java.util.stream.Stream;
 public class Template3D {
     private final List<Point> points;
     private final HashMap<String, Pair<Matrix4f, Template3D>> children;
-    private final List<Pair<Consumer<Object3D>, Integer>> behaviors;
-    private Consumer<Object3D> onSpawn;
-    private Consumer<Object3D> onDespawn;
+    private final HashMap<String, Object> components;
+    private final HashMap<String, List<Consumer<Object3D>>> events;
+    private final List<Pair<SystemTrigger, Consumer<Object3D>>> tasks;
     
     
     public Template3D(List<Point> points) {
         this.points = points;
         this.children = new HashMap<>();
-        this.behaviors = new ArrayList<>();
+        this.components = new HashMap<>();
+        this.events = new HashMap<>();
+        this.tasks = new ArrayList<>();
     }
     
     public Stream<Point> getPoints() {
@@ -37,6 +37,10 @@ public class Template3D {
     
     public void addPoints(List<Point> points) {
         this.points.addAll(points);
+    }
+    
+    public void addPoints(Point... points) {
+        this.points.addAll(Arrays.asList(points));
     }
     
     public void removePointIf(Predicate<Point> predicate) {
@@ -67,33 +71,32 @@ public class Template3D {
         return children.get(name);
     }
     
-    public void addBehavior(Consumer<Object3D> behavior, int interval) {
-        behaviors.add(new Pair<>(behavior, interval));
-    }
-    
-    public void onSpawn(Consumer<Object3D> onSpawn) {
-        this.onSpawn = onSpawn;
-    }
-    
-    public void onDespawn(Consumer<Object3D> onDespawn) {
-        this.onDespawn = onDespawn;
-    }
-    
-    // Package-private getters for access in ParticleObject
-    List<Pair<Consumer<Object3D>, Integer>> getBehaviors() {
-        return behaviors;
-    }
-    
-    Consumer<Object3D> getOnSpawn() {
-        return onSpawn;
-    }
-    
-    Consumer<Object3D> getOnDespawn() {
-        return onDespawn;
-    }
-    
     public Object3D newInstance(World world, Matrix4f transform, Object3D parent) {
         return new Object3D(this, world, transform, parent);
+    }
+    
+    public void setDefault(String key, Object value) {
+        components.put(key, value);
+    }
+    
+    public Template3D addSystem(SystemTrigger trigger, Consumer<Object3D> system) {
+        if (trigger.isEvent()) {
+            events.computeIfAbsent(trigger.getEvent(), k -> new ArrayList<>()).add(system);
+        } else {
+            tasks.add(new Pair<>(trigger, system));
+        }
+        return this;
+    }
+    
+    // Package-private
+    HashMap<String, List<Consumer<Object3D>>> getEvents() {
+        Consumer<Object3D> setDefaultsSystem = instance -> components.forEach(instance::set);
+        events.computeIfAbsent(SystemTrigger.SPAWN_EVENT, k -> new ArrayList<>()).add(setDefaultsSystem);
+        return events;
+    }
+    
+    List<Pair<SystemTrigger, Consumer<Object3D>>> getTasks() {
+        return tasks;
     }
     
     public Object3D newInstance(Location location, Object3D parent) {

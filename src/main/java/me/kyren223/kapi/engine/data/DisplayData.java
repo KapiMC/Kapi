@@ -1,9 +1,11 @@
-package me.kyren223.kapi.render.data;
+package me.kyren223.kapi.engine.data;
 
 import org.bukkit.Color;
 import org.bukkit.entity.Display;
 import org.bukkit.util.Transformation;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 @SuppressWarnings("ALL")
 public abstract class DisplayData {
@@ -44,6 +46,38 @@ public abstract class DisplayData {
         this.billboard = billboard;
         this.glowColorOverride = glowColorOverride;
         this.brightness = brightness;
+    }
+    
+    /**
+     * Copy constructor
+     *
+     * @param data The data to copy
+     */
+    protected DisplayData(@NotNull DisplayData data) {
+        Vector3f translation = new Vector3f();
+        Quaternionf leftRotation = new Quaternionf();
+        Vector3f scale = new Vector3f();
+        Quaternionf rightRotation = new Quaternionf();
+        data.getTransformation().getTranslation().get(translation);
+        data.getTransformation().getLeftRotation().get(leftRotation);
+        data.getTransformation().getScale().get(scale);
+        data.getTransformation().getRightRotation().get(rightRotation);
+        this.transformation = new Transformation(translation, leftRotation, scale, rightRotation);
+        
+        this.interpolationDuration = data.getInterpolationDuration();
+        this.viewRange = data.getViewRange();
+        this.shadowRadius = data.getShadowRadius();
+        this.shadowStrength = data.getShadowStrength();
+        this.displayWidth = data.getDisplayWidth();
+        this.displayHeight = data.getDisplayHeight();
+        this.interpolationDelay = data.getInterpolationDelay();
+        
+        this.billboard = data.getBillboard();
+        this.glowColorOverride = Color.fromARGB(data.getGlowColorOverride().asARGB());
+        this.brightness = new Display.Brightness(
+                data.getBrightness().getBlockLight(),
+                data.getBrightness().getSkyLight()
+        );
     }
     
     /**

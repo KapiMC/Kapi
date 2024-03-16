@@ -1,4 +1,4 @@
-package me.kyren223.kapi.render.data;
+package me.kyren223.kapi.engine.data;
 
 import org.bukkit.Color;
 import org.bukkit.entity.Display;
@@ -32,6 +32,17 @@ public class ItemDisplayData extends DisplayData {
         super(transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength, displayWidth, displayHeight, interpolationDelay, billboard, glowColorOverride, brightness);
         this.itemStack = itemStack;
         this.itemDisplayTransform = itemDisplayTransform;
+    }
+    
+    /**
+     * Copy constructor
+     *
+     * @param data The data to copy
+     */
+    public ItemDisplayData(@NotNull ItemDisplayData data) {
+        super(data);
+        this.itemStack = data.getItemStack().clone();
+        this.itemDisplayTransform = data.getItemDisplayTransform();
     }
     
     /**

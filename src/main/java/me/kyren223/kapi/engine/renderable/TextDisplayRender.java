@@ -1,21 +1,19 @@
-package me.kyren223.kapi.render.renderable;
+package me.kyren223.kapi.engine.renderable;
 
-import me.kyren223.kapi.render.data.ItemDisplayData;
+import me.kyren223.kapi.engine.data.TextDisplayData;
 import org.bukkit.Color;
 import org.bukkit.World;
 import org.bukkit.entity.Display;
-import org.bukkit.entity.ItemDisplay;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.entity.TextDisplay;
 import org.bukkit.util.Transformation;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ItemDisplayRender extends ItemDisplayData implements Renderable {
+public class TextDisplayRender extends TextDisplayData implements Renderable {
+    private TextDisplay entity;
     
-    private ItemDisplay entity;
-    
-    public ItemDisplayRender(
+    public TextDisplayRender(
             @NotNull Transformation transformation,
             int interpolationDuration,
             float viewRange,
@@ -27,19 +25,22 @@ public class ItemDisplayRender extends ItemDisplayData implements Renderable {
             @NotNull Display.Billboard billboard,
             @NotNull Color glowColorOverride,
             @NotNull Display.Brightness brightness,
-            @NotNull ItemStack itemStack,
-            @NotNull ItemDisplay.ItemDisplayTransform itemDisplayTransform
+            @Nullable String text,
+            int lineWidth,
+            @Nullable Color backgroundColor,
+            byte textOpacity,
+            boolean shadowed,
+            boolean seeThrough,
+            boolean defaultBackground,
+            @NotNull TextDisplay.TextAlignment alignment
     ) {
-        super(transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength, displayWidth, displayHeight, interpolationDelay, billboard, glowColorOverride, brightness, itemStack, itemDisplayTransform);
+        super(transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength, displayWidth, displayHeight, interpolationDelay, billboard, glowColorOverride, brightness, text, lineWidth, backgroundColor, textOpacity, shadowed, seeThrough, defaultBackground, alignment);
     }
     
-    public ItemDisplayRender(@NotNull ItemDisplayData data) {
-        super(data.getTransformation(), data.getInterpolationDuration(), data.getViewRange(), data.getShadowRadius(), data.getShadowStrength(), data.getDisplayWidth(), data.getDisplayHeight(), data.getInterpolationDelay(), data.getBillboard(), data.getGlowColorOverride(), data.getBrightness(), data.getItemStack(), data.getItemDisplayTransform());
-    }
-    
+    @SuppressWarnings("deprecation")
     @Override
     public void spawn(World world, Vector point) {
-        entity = world.spawn(point.toLocation(world), ItemDisplay.class);
+        entity = world.spawn(point.toLocation(world), TextDisplay.class);
         entity.setTransformation(getTransformation());
         entity.setInterpolationDuration(getInterpolationDuration());
         entity.setViewRange(getViewRange());
@@ -51,8 +52,18 @@ public class ItemDisplayRender extends ItemDisplayData implements Renderable {
         entity.setBillboard(getBillboard());
         entity.setGlowColorOverride(getGlowColorOverride());
         entity.setBrightness(getBrightness());
-        entity.setItemStack(getItemStack());
-        entity.setItemDisplayTransform(getItemDisplayTransform());
+        entity.setText(getText());
+        entity.setLineWidth(getLineWidth());
+        entity.setBackgroundColor(getBackgroundColor());
+        entity.setTextOpacity(getTextOpacity());
+        entity.setShadowed(isShadowed());
+        entity.setSeeThrough(isSeeThrough());
+        entity.setDefaultBackground(isDefaultBackground());
+        entity.setAlignment(getAlignment());
+    }
+    
+    public TextDisplayRender(@NotNull TextDisplayData data) {
+        super(data);
     }
     
     @Override
@@ -132,14 +143,63 @@ public class ItemDisplayRender extends ItemDisplayData implements Renderable {
     }
     
     @Override
-    public void setItemStack(@Nullable ItemStack item) {
-        super.setItemStack(item);
-        entity.setItemStack(item);
+    public void setText(@Nullable String text) {
+        super.setText(text);
+        entity.setText(text);
     }
     
     @Override
-    public void setItemDisplayTransform(ItemDisplay.@NotNull ItemDisplayTransform display) {
-        super.setItemDisplayTransform(display);
-        entity.setItemDisplayTransform(display);
+    public void setLineWidth(int width) {
+        super.setLineWidth(width);
+        entity.setLineWidth(width);
+    }
+    
+    /**
+     * Sets the text background color.
+     *
+     * @param color new background color
+     * @deprecated API subject to change
+     */
+    @SuppressWarnings("deprecation")
+    @Deprecated
+    @Override
+    public void setBackgroundColor(@Nullable Color color) {
+        super.setBackgroundColor(color);
+        entity.setBackgroundColor(color);
+    }
+    
+    @Override
+    public void setTextOpacity(byte opacity) {
+        super.setTextOpacity(opacity);
+        entity.setTextOpacity(opacity);
+    }
+    
+    @Override
+    public void setShadowed(boolean shadow) {
+        super.setShadowed(shadow);
+        entity.setShadowed(shadow);
+    }
+    
+    @Override
+    public void setSeeThrough(boolean seeThrough) {
+        super.setSeeThrough(seeThrough);
+        entity.setSeeThrough(seeThrough);
+    }
+    
+    @Override
+    public void setDefaultBackground(boolean defaultBackground) {
+        super.setDefaultBackground(defaultBackground);
+        entity.setDefaultBackground(defaultBackground);
+    }
+    
+    @Override
+    public void setAlignment(TextDisplay.@NotNull TextAlignment alignment) {
+        super.setAlignment(alignment);
+        entity.setAlignment(alignment);
+    }
+    
+    @Override
+    public TextDisplayRender clone() {
+        return new TextDisplayRender(new TextDisplayData(this));
     }
 }
