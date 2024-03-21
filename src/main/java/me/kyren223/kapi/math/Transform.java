@@ -161,8 +161,8 @@ public class Transform {
      * This calculation is done like this:
      * <pre><code>
      * double[][] result = new double[4][4];
-     * for (int i = 0; i < 4; i++) {
-     *     for (int j = 0; j < 4; j++) {
+     * for (int i = 0; i &lt; 4; i++) {
+     *     for (int j = 0; j &lt; 4; j++) {
      *         result[i][j] = 0;
      *         for (int k = 0; k < 4; k++) {
      *             result[i][j] += matrix[i][k] * other.matrix[k][j];

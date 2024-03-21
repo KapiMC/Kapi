@@ -1,5 +1,6 @@
 package me.kyren223.kapi;
 
+import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.utility.CommandRegistry;
 import me.kyren223.kapi.utility.DocumentStore;
 import me.kyren223.kapi.utility.EventRegistry;
@@ -14,6 +15,7 @@ public class KPlugin extends JavaPlugin {
     protected boolean debug = false;
     
     @Override
+    @Kapi
     public void onEnable() {
         instance = this;
         commands = new CommandRegistry();
@@ -24,11 +26,13 @@ public class KPlugin extends JavaPlugin {
     }
     
     @Override
+    @Kapi
     public void onDisable() {
         DocumentStore.saveDocuments();
         Log.info("KAPI has unloaded!");
     }
     
+    @Kapi
     public static KPlugin get() {
         if (instance == null) {
             throw new IllegalStateException("Plugin has not been enabled yet!");
@@ -36,6 +40,7 @@ public class KPlugin extends JavaPlugin {
         return instance;
     }
     
+    @Kapi
     public boolean isDebug() {
         return debug;
     }

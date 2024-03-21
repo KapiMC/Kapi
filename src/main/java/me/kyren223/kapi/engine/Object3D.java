@@ -1,5 +1,6 @@
 package me.kyren223.kapi.engine;
 
+import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.engine.ecs.EcsEntity;
 import me.kyren223.kapi.engine.ecs.SystemTrigger;
 import me.kyren223.kapi.utility.Pair;
@@ -16,8 +17,9 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+@Kapi
 public class Object3D implements EcsEntity {
-    private final World world;
+    @Kapi private final World world;
     private final Matrix4f transform;
     private Matrix4fc cachedWorldTransform;
     private final List<Point> points;
@@ -107,11 +109,12 @@ public class Object3D implements EcsEntity {
      *
      * @param consumer The consumer that modifies the transform
      */
-    public void transform(Consumer<Matrix4f> consumer) {
+    @Kapi
+    public void transform(Consumer<Matrix4f> transformer) {
         Vector3f scale = new Vector3f();
         transform.getScale(scale);
         
-        consumer.accept(transform);
+        transformer.accept(transform);
         invalidateCachedWorldTransform();
         
         Vector3f newScale = new Vector3f();
@@ -173,6 +176,7 @@ public class Object3D implements EcsEntity {
         return parent;
     }
     
+    @Kapi
     public void addChild(String name, Template3D child) {
         Object3D object = child.newInstance(world, new Matrix4f(), this);
         children.put(name, object);
