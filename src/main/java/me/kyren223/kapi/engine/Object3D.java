@@ -107,7 +107,7 @@ public class Object3D implements EcsEntity {
      * checking if the scale was modified, use the method
      * {@link #getMutableTransform()} instead
      *
-     * @param consumer The consumer that modifies the transform
+     * @param transformer The consumer that modifies the transform
      */
     @Kapi
     public void transform(Consumer<Matrix4f> transformer) {
