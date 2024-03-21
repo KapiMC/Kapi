@@ -6,7 +6,7 @@
 
     <groupId>me.kyren223</groupId>
     <artifactId>Kapi</artifactId>
-    <version>1.5.23</version>
+    <version>1.5.29</version>
     <packaging>jar</packaging>
 
     <name>Kapi</name>
@@ -52,7 +52,8 @@
                         <option>-allowaccessmodification</option>
                         <option>-keep public class * extends java.applet.Applet { *; }</option>
 
-                        <option>-keepattributes *Annotation*, *MethodParameters*</option>
+                        <option>-keepattributes *Annotation*, MethodParameters, Exceptions, Signature</option>
+                        <option>-keepparameternames</option>
                         <option>-dontnote</option>
                         <option>-dontoptimize</option>
                         <option>-dontwarn</option>

@@ -60,8 +60,8 @@ public class Mathf {
     }
     
     /**
-     * Linearly interpolates between two colors
-     * <p></p>
+     * Linearly interpolates between two colors<br>
+     * <br>
      * Works by interpolating each RGB component separately
      * @param a The first color
      * @param b The second color

@@ -9,9 +9,8 @@ public class Utils {
     }
     
     /**
-     * Replaces all color codes starting with '&' with the corresponding color
-     *
-     * @param s A string to be colored
+     * Replaces color codes starting with '&amp;' with their appropriate ChatColor
+     * @param s The string to color
      * @return The colored string
      */
     public static String col(String s) {
