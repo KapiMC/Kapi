@@ -1,18 +1,25 @@
 package me.kyren223.kapi;
 
 import me.kyren223.kapi.annotations.Kapi;
+import me.kyren223.kapi.annotations.ScheduledForRefactor;
 import me.kyren223.kapi.utility.CommandRegistry;
 import me.kyren223.kapi.utility.DocumentStore;
 import me.kyren223.kapi.utility.EventRegistry;
 import me.kyren223.kapi.utility.Log;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.ApiStatus;
 
+/**
+ * This class should be extended by the main class of your plugin.<br>
+ * Extend this instead of {@link JavaPlugin}<br>
+ */
+@Kapi
 public class KPlugin extends JavaPlugin {
     
-    private static KPlugin instance;
-    protected CommandRegistry commands;
-    protected EventRegistry events;
-    protected boolean debug = false;
+    @Kapi private static KPlugin instance;
+    @Kapi @ScheduledForRefactor protected CommandRegistry commands;
+    @Kapi @ScheduledForRefactor protected EventRegistry events;
+    @Kapi @ScheduledForRefactor protected boolean debug = false;
     
     @Override
     @Kapi
@@ -41,6 +48,7 @@ public class KPlugin extends JavaPlugin {
     }
     
     @Kapi
+    @ScheduledForRefactor
     public boolean isDebug() {
         return debug;
     }
