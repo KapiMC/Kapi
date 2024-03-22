@@ -1,6 +1,7 @@
 package me.kyren223.kapi.utility;
 
 import me.kyren223.kapi.KPlugin;
+import me.kyren223.kapi.annotations.Kapi;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -10,10 +11,16 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 
+/**
+ * A utility class that manages configuration files.<br>
+ * Allows CRUD operations on documents (.yml configs).<br>
+ * Documents are saved and loaded automatically onEnable and onDisable.<br>
+ */
+@Kapi
 public class DocumentStore {
     
     private DocumentStore() {
-        // Prevent instantiation
+        throw new AssertionError("DocumentStore should not be instantiated");
     }
     
     private static final HashMap<String, FileConfiguration> documents = new HashMap<>();
@@ -50,6 +57,7 @@ public class DocumentStore {
      * If the document exists as a file but wasn't loaded yet, it will get loaded
      * @param path The path to the document
      */
+    @Kapi
     public static void createDocument(String path) {
         path = getPath(path);
         if (documentExists(path)) return;
@@ -61,17 +69,20 @@ public class DocumentStore {
      * @param path The path to the document
      * @return True if the document exists, false otherwise
      */
+    @Kapi
     public static boolean documentExists(String path) {
         path = getPath(path);
         return documents.containsKey(path);
     }
     
+    @Kapi
     public static FileConfiguration getDocument(String path) {
         path = getPath(path);
         if (!documentExists(path)) createDocument(path);
         return documents.get(path);
     }
     
+    @Kapi
     private static FileConfiguration getDocumentFromDisk(String path) {
         File file = new File(KPlugin.get().getDataFolder(), path);
         if (!file.exists()) return null;
@@ -86,6 +97,7 @@ public class DocumentStore {
      * If the document doesn't exist, it will create a new empty document
      * @param path Path to the document
      */
+    @Kapi
     public static void loadDocument(String path) {
         path = getPath(path);
         
@@ -100,6 +112,7 @@ public class DocumentStore {
     /**
      * Loads all documents from the plugin's data folder
      */
+    @Kapi
     public static void loadDocuments() {
         File[] files = KPlugin.get().getDataFolder().listFiles();
         if (files == null) {
@@ -118,6 +131,7 @@ public class DocumentStore {
      * Saves the document to disk
      * @param path The path to the document
      */
+    @Kapi
     public static void saveDocument(String path) {
         path = getPath(path);
         FileConfiguration document = documents.get(path);
@@ -132,6 +146,7 @@ public class DocumentStore {
      * Saves all documents to disk
      * See {@link #saveDocument(String)}
      */
+    @Kapi
     public static void saveDocuments() {
         documents.forEach((path, document) -> saveDocument(path));
         Log.success("Saved " + documents.size() + " documents successfully");

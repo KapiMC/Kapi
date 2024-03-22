@@ -17,7 +17,7 @@ import java.util.logging.Level;
 public class Log {
     
     private Log() {
-        // Prevent instantiation
+        throw new AssertionError("Log should not be instantiated");
     }
     
     private static String prefix = "";

@@ -10,7 +10,7 @@ import org.bukkit.ChatColor;
 public class Utils {
     
     private Utils() {
-        // Prevent instantiation
+        throw new AssertionError("Utils should not be instantiated");
     }
     
     /**

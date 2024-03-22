@@ -1,5 +1,7 @@
 package me.kyren223.kapi.engine.data;
 
+import me.kyren223.kapi.annotations.Kapi;
+import me.kyren223.kapi.engine.renderable.TextDisplayRender;
 import org.bukkit.Color;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.TextDisplay;
@@ -7,6 +9,11 @@ import org.bukkit.util.Transformation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Holds the data for a text display.
+ * See {@link TextDisplayRender} for rendering text displays.
+ */
+@Kapi
 public class TextDisplayData extends DisplayData {
     
     private @Nullable String text;
@@ -18,6 +25,7 @@ public class TextDisplayData extends DisplayData {
     private boolean defaultBackground;
     private @NotNull TextDisplay.TextAlignment alignment;
     
+    @Kapi
     public TextDisplayData(
             @NotNull Transformation transformation,
             int interpolationDuration,
@@ -51,16 +59,17 @@ public class TextDisplayData extends DisplayData {
     }
     
     /**
-     * Copy constructor
+     * Copy constructor<br>
+     * Note: Does not clone the background color
      *
      * @param data The data to copy
      */
+    @Kapi
     public TextDisplayData(@NotNull TextDisplayData data) {
         super(data);
         this.text = data.getText();
         this.lineWidth = data.getLineWidth();
-        this.backgroundColor = data.getBackgroundColor() == null ?
-                null :Color.fromARGB(data.getBackgroundColor().asARGB());
+        this.backgroundColor = data.getBackgroundColor();
         this.textOpacity = data.getTextOpacity();
         this.shadowed = data.isShadowed();
         this.seeThrough = data.isSeeThrough();
@@ -73,6 +82,7 @@ public class TextDisplayData extends DisplayData {
      *
      * @return the displayed text.
      */
+    @Kapi
     @Nullable
     public String getText() {
         return text;
@@ -83,6 +93,7 @@ public class TextDisplayData extends DisplayData {
      *
      * @param text the new text
      */
+    @Kapi
     public void setText(@Nullable String text) {
         this.text = text;
     }
@@ -92,6 +103,7 @@ public class TextDisplayData extends DisplayData {
      *
      * @return the line width
      */
+    @Kapi
     public int getLineWidth() {
         return lineWidth;
     }
@@ -101,6 +113,7 @@ public class TextDisplayData extends DisplayData {
      *
      * @param width new line width
      */
+    @Kapi
     public void setLineWidth(int width) {
         this.lineWidth = width;
     }
@@ -111,6 +124,7 @@ public class TextDisplayData extends DisplayData {
      * @return the background color
      * @deprecated API subject to change
      */
+    @Kapi
     @Nullable
     @Deprecated
     public Color getBackgroundColor() {
@@ -123,6 +137,7 @@ public class TextDisplayData extends DisplayData {
      * @param color new background color
      * @deprecated API subject to change
      */
+    @Kapi
     @Deprecated
     public void setBackgroundColor(@Nullable Color color) {
         this.backgroundColor = color;
@@ -133,6 +148,7 @@ public class TextDisplayData extends DisplayData {
      *
      * @return opacity or -1 if not set
      */
+    @Kapi
     public byte getTextOpacity() {
         return textOpacity;
     }
@@ -142,6 +158,7 @@ public class TextDisplayData extends DisplayData {
      *
      * @param opacity new opacity or -1 if default
      */
+    @Kapi
     public void setTextOpacity(byte opacity) {
         this.textOpacity = opacity;
     }
@@ -151,6 +168,7 @@ public class TextDisplayData extends DisplayData {
      *
      * @return shadow status
      */
+    @Kapi
     public boolean isShadowed() {
         return shadowed;
     }
@@ -160,6 +178,7 @@ public class TextDisplayData extends DisplayData {
      *
      * @param shadow if shadowed
      */
+    @Kapi
     public void setShadowed(boolean shadow) {
         this.shadowed = shadow;
     }
@@ -169,6 +188,7 @@ public class TextDisplayData extends DisplayData {
      *
      * @return see through status
      */
+    @Kapi
     public boolean isSeeThrough() {
         return seeThrough;
     }
@@ -178,6 +198,7 @@ public class TextDisplayData extends DisplayData {
      *
      * @param seeThrough if see through
      */
+    @Kapi
     public void setSeeThrough(boolean seeThrough) {
         this.seeThrough = seeThrough;
     }
@@ -187,6 +208,7 @@ public class TextDisplayData extends DisplayData {
      *
      * @return default background
      */
+    @Kapi
     public boolean isDefaultBackground() {
         return defaultBackground;
     }
@@ -196,6 +218,7 @@ public class TextDisplayData extends DisplayData {
      *
      * @param defaultBackground if default
      */
+    @Kapi
     public void setDefaultBackground(boolean defaultBackground) {
         this.defaultBackground = defaultBackground;
     }
@@ -205,6 +228,7 @@ public class TextDisplayData extends DisplayData {
      *
      * @return text alignment
      */
+    @Kapi
     @NotNull
     public TextDisplay.TextAlignment getAlignment() {
         return alignment;
@@ -215,6 +239,7 @@ public class TextDisplayData extends DisplayData {
      *
      * @param alignment new alignment
      */
+    @Kapi
     public void setAlignment(@NotNull TextDisplay.TextAlignment alignment) {
         this.alignment = alignment;
     }

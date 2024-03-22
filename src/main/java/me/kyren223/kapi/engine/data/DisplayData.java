@@ -1,5 +1,6 @@
 package me.kyren223.kapi.engine.data;
 
+import me.kyren223.kapi.annotations.Kapi;
 import org.bukkit.Color;
 import org.bukkit.entity.Display;
 import org.bukkit.util.Transformation;
@@ -7,7 +8,14 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-@SuppressWarnings("ALL")
+/**
+ * Holds the common data for all displays.<br>
+ * Do not use this class directly, and do not extend this class.<br>
+ * <br>
+ * Subclasses of this class are
+ * {@link ItemDisplayData}, {@link BlockDisplayData} and {@link TextDisplayData}.
+ */
+@Kapi
 public abstract class DisplayData {
     
     private @NotNull Transformation transformation;
@@ -85,6 +93,7 @@ public abstract class DisplayData {
      *
      * @return the transformation
      */
+    @Kapi
     @NotNull
     public Transformation getTransformation() {
         return transformation;
@@ -95,6 +104,7 @@ public abstract class DisplayData {
      *
      * @param transformation the new transformation
      */
+    @Kapi
     public void setTransformation(@NotNull Transformation transformation) {
         this.transformation = transformation;
     }
@@ -104,6 +114,7 @@ public abstract class DisplayData {
      *
      * @return interpolation duration
      */
+    @Kapi
     public int getInterpolationDuration() {
         return interpolationDuration;
     }
@@ -113,6 +124,7 @@ public abstract class DisplayData {
      *
      * @param duration new duration
      */
+    @Kapi
     public void setInterpolationDuration(int duration) {
         this.interpolationDuration = duration;
     }
@@ -122,6 +134,7 @@ public abstract class DisplayData {
      *
      * @return view range
      */
+    @Kapi
     public float getViewRange() {
         return viewRange;
     }
@@ -131,6 +144,7 @@ public abstract class DisplayData {
      *
      * @param range new range
      */
+    @Kapi
     public void setViewRange(float range) {
         this.viewRange = range;
     }
@@ -140,6 +154,7 @@ public abstract class DisplayData {
      *
      * @return radius
      */
+    @Kapi
     public float getShadowRadius() {
         return shadowRadius;
     }
@@ -149,6 +164,7 @@ public abstract class DisplayData {
      *
      * @param radius new radius
      */
+    @Kapi
     public void setShadowRadius(float radius) {
         this.shadowRadius = radius;
     }
@@ -158,6 +174,7 @@ public abstract class DisplayData {
      *
      * @return shadow strength
      */
+    @Kapi
     public float getShadowStrength() {
         return shadowStrength;
     }
@@ -167,6 +184,7 @@ public abstract class DisplayData {
      *
      * @param strength new strength
      */
+    @Kapi
     public void setShadowStrength(float strength) {
         this.shadowStrength = strength;
     }
@@ -176,6 +194,7 @@ public abstract class DisplayData {
      *
      * @return width
      */
+    @Kapi
     public float getDisplayWidth() {
         return displayWidth;
     }
@@ -185,6 +204,7 @@ public abstract class DisplayData {
      *
      * @param width new width
      */
+    @Kapi
     public void setDisplayWidth(float width) {
         this.displayWidth = width;
     }
@@ -194,6 +214,7 @@ public abstract class DisplayData {
      *
      * @return height
      */
+    @Kapi
     public float getDisplayHeight() {
         return displayHeight;
     }
@@ -203,6 +224,7 @@ public abstract class DisplayData {
      *
      * @param height new height
      */
+    @Kapi
     public void setDisplayHeight(float height) {
         this.displayHeight = height;
     }
@@ -212,6 +234,7 @@ public abstract class DisplayData {
      *
      * @return interpolation delay ticks
      */
+    @Kapi
     public int getInterpolationDelay() {
         return interpolationDelay;
     }
@@ -221,6 +244,7 @@ public abstract class DisplayData {
      *
      * @param ticks interpolation delay ticks
      */
+    @Kapi
     public void setInterpolationDelay(int ticks) {
         this.interpolationDelay = ticks;
     }
@@ -231,18 +255,20 @@ public abstract class DisplayData {
      * @return view range
      */
     @NotNull
+    @Kapi
     public Display.Billboard getBillboard() {
         return billboard;
     }
     
     /**
-     * Sets the billboard setting of this entity.
+     * Sets the billboard setting of this entity.<br>
      *
      * The billboard setting controls the automatic rotation of the entity to
      * face the player.
      *
      * @param billboard new setting
      */
+    @Kapi
     public void setBillboard(@NotNull Display.Billboard billboard) {
         this.billboard = billboard;
     }
@@ -252,6 +278,7 @@ public abstract class DisplayData {
      *
      * @return glow color
      */
+    @Kapi
     @NotNull
     public Color getGlowColorOverride() {
         return glowColorOverride;
@@ -262,6 +289,7 @@ public abstract class DisplayData {
      *
      * @param color new color
      */
+    @Kapi
     public void setGlowColorOverride(@NotNull Color color) {
         this.glowColorOverride = color;
     }
@@ -272,6 +300,7 @@ public abstract class DisplayData {
      * @return brightness override, if set
      */
     @NotNull
+    @Kapi
     public Display.Brightness getBrightness() {
         return brightness;
     }
@@ -281,6 +310,7 @@ public abstract class DisplayData {
      *
      * @param brightness new brightness override
      */
+    @Kapi
     public void setBrightness(@NotNull Display.Brightness brightness) {
         this.brightness = brightness;
     }

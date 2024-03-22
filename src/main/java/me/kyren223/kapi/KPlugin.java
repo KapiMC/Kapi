@@ -7,7 +7,6 @@ import me.kyren223.kapi.utility.DocumentStore;
 import me.kyren223.kapi.utility.EventRegistry;
 import me.kyren223.kapi.utility.Log;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.ApiStatus;
 
 /**
  * This class should be extended by the main class of your plugin.<br>
@@ -39,6 +38,12 @@ public class KPlugin extends JavaPlugin {
         Log.info("KAPI has unloaded!");
     }
     
+    /**
+     * Gets the instance of the plugin
+     *
+     * @return The instance of the plugin
+     * @throws IllegalStateException If the plugin has not been enabled yet
+     */
     @Kapi
     public static KPlugin get() {
         if (instance == null) {

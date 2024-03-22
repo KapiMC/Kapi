@@ -1,6 +1,8 @@
 package me.kyren223.kapi.utility;
 
 import me.kyren223.kapi.KPlugin;
+import me.kyren223.kapi.annotations.Kapi;
+import me.kyren223.kapi.annotations.ScheduledForRefactor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -10,6 +12,11 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
+/**
+ * A utility class for registering commands.
+ */
+@Kapi
+@ScheduledForRefactor
 public class CommandRegistry {
     
     /**
@@ -17,6 +24,8 @@ public class CommandRegistry {
      * @param name The name of the command
      * @param executor The executor for the command
      */
+    @Kapi
+    @ScheduledForRefactor
     public void register(String name, CommandExecutor executor) {
         PluginCommand command = KPlugin.get().getCommand(name);
         if (command == null) {
@@ -31,6 +40,8 @@ public class CommandRegistry {
      * @param executor The executor for the command
      * @param completer The tab completer for the command
      */
+    @Kapi
+    @ScheduledForRefactor
     public void register(String name, CommandExecutor executor, TabCompleter completer) {
         PluginCommand command = KPlugin.get().getCommand(name);
         if (command == null) {
@@ -48,6 +59,8 @@ public class CommandRegistry {
      * @param name The name of the command
      * @param executor A function that takes a sender and args for the command
      */
+    @Kapi
+    @ScheduledForRefactor
     public void register(String name, BiConsumer<CommandSender, String[]> executor) {
         register(name, (sender, command, label, args) -> {
             executor.accept(sender, args);
@@ -65,6 +78,8 @@ public class CommandRegistry {
      * @param completer A function that takes a sender and args for the command
      *                  and returns a string list of possible completions
      */
+    @Kapi
+    @ScheduledForRefactor
     public void register(String name, BiConsumer<CommandSender, String[]> executor, BiFunction<CommandSender, String[], List<String>> completer) {
         register(name, (sender, command, label, args) -> {
             executor.accept(sender, args);
