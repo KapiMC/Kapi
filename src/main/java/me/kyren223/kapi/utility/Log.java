@@ -3,7 +3,7 @@ package me.kyren223.kapi.utility;
 
 import me.kyren223.kapi.KPlugin;
 import me.kyren223.kapi.annotations.Kapi;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 
 import java.util.logging.Level;
 
@@ -79,7 +79,7 @@ public class Log {
     }
     
     /**
-     * Logs an error message to a list of players.<br>
+     * Logs an error message to a list of senders.<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It applies `&amp;c` color code before the message.
@@ -87,14 +87,14 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void error(String message, Player... players) {
-        for (Player player : players) {
-            player.sendMessage(getError(message));
+    public static void error(String message, CommandSender... senders) {
+        for (CommandSender sender : senders) {
+            sender.sendMessage(getError(message));
         }
     }
     
     /**
-     * Logs an error message to all players on the server (through Bukkit's Broadcast).<br>
+     * Logs an error message to all senders on the server (through Bukkit's Broadcast).<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It applies `&amp;c` color code before the message.
@@ -120,7 +120,7 @@ public class Log {
     }
     
     /**
-     * Logs a warning message to a list of players.<br>
+     * Logs a warning message to a list of senders.<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It applies `&amp;e` color code before the message.
@@ -128,14 +128,14 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void warn(String message, Player... players) {
-        for (Player player : players) {
-            player.sendMessage(getWarn(message));
+    public static void warn(String message, CommandSender... senders) {
+        for (CommandSender sender : senders) {
+            sender.sendMessage(getWarn(message));
         }
     }
     
     /**
-     * Logs a warning message to all players on the server (through Bukkit's Broadcast).<br>
+     * Logs a warning message to all senders on the server (through Bukkit's Broadcast).<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It applies `&amp;e` color code before the message.
@@ -161,7 +161,7 @@ public class Log {
     }
     
     /**
-     * Logs an info message to a list of players.<br>
+     * Logs an info message to a list of senders.<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It applies `&amp;9` color code before the message.
@@ -169,14 +169,14 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void info(String message, Player... players) {
-        for (Player player : players) {
-            player.sendMessage(getInfo(message));
+    public static void info(String message, CommandSender... senders) {
+        for (CommandSender sender : senders) {
+            sender.sendMessage(getInfo(message));
         }
     }
     
     /**
-     * Logs an info message to all players on the server (through Bukkit's Broadcast).<br>
+     * Logs an info message to all senders on the server (through Bukkit's Broadcast).<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It applies `&amp;9` color code before the message.
@@ -202,7 +202,7 @@ public class Log {
     }
     
     /**
-     * Logs a success message to a list of players.<br>
+     * Logs a success message to a list of senders.<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It applies `&amp;a` color code before the message.
@@ -210,14 +210,14 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void success(String message, Player... players) {
-        for (Player player : players) {
-            player.sendMessage(getSuccess(message));
+    public static void success(String message, CommandSender... senders) {
+        for (CommandSender sender : senders) {
+            sender.sendMessage(getSuccess(message));
         }
     }
     
     /**
-     * Logs a success message to all players on the server (through Bukkit's Broadcast).<br>
+     * Logs a success message to all senders on the server (through Bukkit's Broadcast).<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It applies `&amp;a` color code before the message.
@@ -246,7 +246,7 @@ public class Log {
     }
     
     /**
-     * Logs a debug message to a list of players.<br>
+     * Logs a debug message to a list of senders.<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It applies `&amp;3` color code before the message.<br>
@@ -256,15 +256,15 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void debug(String message, Player... players) {
+    public static void debug(String message, CommandSender... senders) {
         if (!KPlugin.get().isDebug()) return;
-        for (Player player : players) {
-            player.sendMessage(getDebug(message));
+        for (CommandSender sender : senders) {
+            sender.sendMessage(getDebug(message));
         }
     }
     
     /**
-     * Logs a debug message to all players on the server (through Bukkit's Broadcast).<br>
+     * Logs a debug message to all senders on the server (through Bukkit's Broadcast).<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It applies `&amp;3` color code before the message.<br>
@@ -289,11 +289,11 @@ public class Log {
      */
     @Kapi
     public static void log(String message) {
-        KPlugin.get().getLogger().info(getLog(message));
+        KPlugin.get().getLogger().info(() -> getLog(message));
     }
     
     /**
-     * Logs a message to a list of players.<br>
+     * Logs a message to a list of senders.<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It does not apply any color codes.
@@ -301,14 +301,14 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void log(String message, Player... players) {
-        for (Player player : players) {
-            player.sendMessage(getLog(message));
+    public static void log(String message, CommandSender... senders) {
+        for (CommandSender sender : senders) {
+            sender.sendMessage(getLog(message));
         }
     }
     
     /**
-     * Logs a message to all players on the server (through Bukkit's Broadcast).<br>
+     * Logs a message to all senders on the server (through Bukkit's Broadcast).<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It does not apply any color codes.

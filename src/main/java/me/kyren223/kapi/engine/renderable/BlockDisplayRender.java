@@ -1,8 +1,7 @@
 package me.kyren223.kapi.engine.renderable;
 
 import me.kyren223.kapi.annotations.Kapi;
-import me.kyren223.kapi.annotations.ScheduledForRefactor;
-import me.kyren223.kapi.engine.data.BlockDisplayData;
+import me.kyren223.kapi.data.BlockDisplayData;
 import org.bukkit.Color;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
@@ -16,13 +15,11 @@ import org.jetbrains.annotations.NotNull;
  * Used to render block displays.
  */
 @Kapi
-@ScheduledForRefactor
 public class BlockDisplayRender extends BlockDisplayData implements Renderable {
     
     private BlockDisplay entity;
     
     @Kapi
-    @ScheduledForRefactor
     public BlockDisplayRender(
             @NotNull Transformation transformation,
             int interpolationDuration,
@@ -45,7 +42,6 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
      * @param data The data to copy
      */
     @Kapi
-    @ScheduledForRefactor
     public BlockDisplayRender(@NotNull BlockDisplayData data) {
         super(data);
     }
@@ -78,7 +74,6 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setBlock(@NotNull BlockData block) {
         super.setBlock(block);
@@ -86,7 +81,7 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
+    
     @Override
     public void setTransformation(@NotNull Transformation transformation) {
         super.setTransformation(transformation);
@@ -94,7 +89,6 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setInterpolationDuration(int duration) {
         super.setInterpolationDuration(duration);
@@ -102,7 +96,6 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setViewRange(float range) {
         super.setViewRange(range);
@@ -110,7 +103,6 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setShadowRadius(float radius) {
         super.setShadowRadius(radius);
@@ -118,7 +110,6 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setShadowStrength(float strength) {
         super.setShadowStrength(strength);
@@ -126,7 +117,6 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setDisplayWidth(float width) {
         super.setDisplayWidth(width);
@@ -134,7 +124,6 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setDisplayHeight(float height) {
         super.setDisplayHeight(height);
@@ -142,7 +131,6 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setInterpolationDelay(int ticks) {
         super.setInterpolationDelay(ticks);
@@ -150,7 +138,6 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setBillboard(Display.@NotNull Billboard billboard) {
         super.setBillboard(billboard);
@@ -158,7 +145,6 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setGlowColorOverride(@NotNull Color color) {
         super.setGlowColorOverride(color);
@@ -166,7 +152,6 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setBrightness(Display.@NotNull Brightness brightness) {
         super.setBrightness(brightness);
@@ -174,7 +159,6 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public Renderable clone() {
         return new BlockDisplayRender(this);

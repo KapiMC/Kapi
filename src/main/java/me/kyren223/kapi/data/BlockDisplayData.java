@@ -1,4 +1,4 @@
-package me.kyren223.kapi.engine.data;
+package me.kyren223.kapi.data;
 
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.engine.renderable.BlockDisplayRender;
@@ -37,14 +37,15 @@ public class BlockDisplayData extends DisplayData {
     }
     
     /**
-     * Copy constructor
+     * Copy constructor<br>
+     * Note: This does not copy the BlockData.
      *
      * @param data The data to copy
      */
     @Kapi
     public BlockDisplayData(@NotNull BlockDisplayData data) {
         super(data);
-        this.block = data.getBlock().clone();
+        this.block = data.getBlock();
     }
     
     /**

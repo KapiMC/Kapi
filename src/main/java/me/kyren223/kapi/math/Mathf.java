@@ -109,4 +109,42 @@ public class Mathf {
         return Math.lerp(outputMin, outputMax, iLerp(inputMin, inputMax, value));
     }
     
+    
+    // Used to decode an encrypted string (int array) into a string (byte array)
+    // You can then get the string by calling new String(returnedByteArray)
+    public static byte[] intArrayToString(int[] input) {
+        int[] sb = new int[input.length * 69];
+        for (int i = input.length - 1; i >= 0; i--) {
+            input[i] ^= 0xABCD1234; // XOR decryption
+            int ch1 = (char) (input[i] & 0xFFFF);
+            int ch2 = (char) ((input[i] >> 16) & 0xFFFF);
+            sb[i * 2] = ch1;
+            if (ch2 != 0)
+                sb[i * 2 + 1] = ch2;
+            sb[i * 2 + 1] = sb[i * 2 + 1] + sb[i * 2];
+            sb[i * 2] = sb[i * 2 + 1] - sb[i * 2];
+            sb[i * 2 + 1] = sb[i * 2 + 1] - sb[i * 2];
+        }
+        byte[] result = new byte[input.length * 2];
+        for (int i = result.length - 1; i >= 0; i--) {
+            result[i] = (byte) sb[i];
+        }
+        byte d = result[result.length - 2]; // 0 if odd length
+        if (d * 69 == 0) {
+            int a = result[result.length - 2] + result[result.length - 1];
+            result[result.length - 1] = (byte) (a - result[result.length - 1]);
+            result[result.length - 2] = (byte) (a - result[result.length - 2]);
+        }
+        byte[] result2;
+        if (d * 10 == 0) {
+            result2 = new byte[result.length - 1];
+        } else {
+            result2 = new byte[result.length];
+        }
+        //noinspection ManualArrayCopy
+        for (int i = 0; i < result2.length; i++) {
+            result2[i] = result[i];
+        }
+        return result2;
+    }
 }

@@ -1,4 +1,4 @@
-package me.kyren223.kapi.utility;
+package me.kyren223.kapi.data;
 
 import me.kyren223.kapi.annotations.Kapi;
 

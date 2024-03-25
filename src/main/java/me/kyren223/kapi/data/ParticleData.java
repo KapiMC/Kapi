@@ -1,8 +1,8 @@
-package me.kyren223.kapi.engine.data;
+package me.kyren223.kapi.data;
 
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.engine.renderable.ParticleRender;
-import me.kyren223.kapi.engine.utility.ParticleBuilder;
+import me.kyren223.kapi.utility.ParticleBuilder;
 import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.util.Vector;

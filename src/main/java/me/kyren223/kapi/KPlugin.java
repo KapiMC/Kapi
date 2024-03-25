@@ -2,10 +2,7 @@ package me.kyren223.kapi;
 
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.annotations.ScheduledForRefactor;
-import me.kyren223.kapi.utility.CommandRegistry;
-import me.kyren223.kapi.utility.DocumentStore;
-import me.kyren223.kapi.utility.EventRegistry;
-import me.kyren223.kapi.utility.Log;
+import me.kyren223.kapi.utility.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**

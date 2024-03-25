@@ -1,7 +1,7 @@
-package me.kyren223.kapi.engine.utility;
+package me.kyren223.kapi.utility;
 
 import me.kyren223.kapi.annotations.Kapi;
-import me.kyren223.kapi.engine.data.ParticleData;
+import me.kyren223.kapi.data.ParticleData;
 import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.util.Vector;

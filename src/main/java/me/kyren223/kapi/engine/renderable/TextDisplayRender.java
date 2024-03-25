@@ -1,8 +1,7 @@
 package me.kyren223.kapi.engine.renderable;
 
 import me.kyren223.kapi.annotations.Kapi;
-import me.kyren223.kapi.annotations.ScheduledForRefactor;
-import me.kyren223.kapi.engine.data.TextDisplayData;
+import me.kyren223.kapi.data.TextDisplayData;
 import org.bukkit.Color;
 import org.bukkit.World;
 import org.bukkit.entity.Display;
@@ -16,12 +15,10 @@ import org.jetbrains.annotations.Nullable;
  * Used to render text displays.
  */
 @Kapi
-@ScheduledForRefactor
 public class TextDisplayRender extends TextDisplayData implements Renderable {
     private TextDisplay entity;
     
     @Kapi
-    @ScheduledForRefactor
     public TextDisplayRender(
             @NotNull Transformation transformation,
             int interpolationDuration,
@@ -87,7 +84,6 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
     
     @Override
     @Kapi
-    @ScheduledForRefactor
     public void setTransformation(@NotNull Transformation transformation) {
         super.setTransformation(transformation);
         entity.setTransformation(transformation);
@@ -95,14 +91,12 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
     
     @Override
     @Kapi
-    @ScheduledForRefactor
     public void setInterpolationDuration(int duration) {
         super.setInterpolationDuration(duration);
         entity.setInterpolationDuration(duration);
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setViewRange(float range) {
         super.setViewRange(range);
@@ -110,7 +104,6 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setShadowRadius(float radius) {
         super.setShadowRadius(radius);
@@ -118,7 +111,6 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setShadowStrength(float strength) {
         super.setShadowStrength(strength);
@@ -126,7 +118,6 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setDisplayWidth(float width) {
         super.setDisplayWidth(width);
@@ -134,7 +125,6 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setDisplayHeight(float height) {
         super.setDisplayHeight(height);
@@ -142,7 +132,6 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setInterpolationDelay(int ticks) {
         super.setInterpolationDelay(ticks);
@@ -150,7 +139,6 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setBillboard(Display.@NotNull Billboard billboard) {
         super.setBillboard(billboard);
@@ -158,7 +146,6 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setGlowColorOverride(@NotNull Color color) {
         super.setGlowColorOverride(color);
@@ -166,7 +153,6 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setBrightness(Display.@NotNull Brightness brightness) {
         super.setBrightness(brightness);
@@ -174,7 +160,6 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setText(@Nullable String text) {
         super.setText(text);
@@ -183,7 +168,6 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
     
     @Override
     @Kapi
-    @ScheduledForRefactor
     public void setLineWidth(int width) {
         super.setLineWidth(width);
         entity.setLineWidth(width);
@@ -198,7 +182,6 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
     @SuppressWarnings("deprecation")
     @Deprecated
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setBackgroundColor(@Nullable Color color) {
         super.setBackgroundColor(color);
@@ -207,14 +190,12 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
     
     @Override
     @Kapi
-    @ScheduledForRefactor
     public void setTextOpacity(byte opacity) {
         super.setTextOpacity(opacity);
         entity.setTextOpacity(opacity);
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setShadowed(boolean shadow) {
         super.setShadowed(shadow);
@@ -222,7 +203,6 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setSeeThrough(boolean seeThrough) {
         super.setSeeThrough(seeThrough);
@@ -230,7 +210,6 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setDefaultBackground(boolean defaultBackground) {
         super.setDefaultBackground(defaultBackground);
@@ -238,7 +217,6 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public void setAlignment(TextDisplay.@NotNull TextAlignment alignment) {
         super.setAlignment(alignment);
@@ -246,7 +224,6 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
     }
     
     @Kapi
-    @ScheduledForRefactor
     @Override
     public TextDisplayRender clone() {
         return new TextDisplayRender(new TextDisplayData(this));

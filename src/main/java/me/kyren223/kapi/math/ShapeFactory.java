@@ -1,7 +1,6 @@
-package me.kyren223.kapi.utility;
+package me.kyren223.kapi.math;
 
 import me.kyren223.kapi.annotations.Kapi;
-import me.kyren223.kapi.math.Mathf;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;

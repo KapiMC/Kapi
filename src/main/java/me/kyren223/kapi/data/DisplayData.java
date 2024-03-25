@@ -1,4 +1,4 @@
-package me.kyren223.kapi.engine.data;
+package me.kyren223.kapi.data;
 
 import me.kyren223.kapi.annotations.Kapi;
 import org.bukkit.Color;
@@ -57,7 +57,8 @@ public abstract class DisplayData {
     }
     
     /**
-     * Copy constructor
+     * Copy constructor<br>
+     * Note: This deep copies the transformation, and the glow color override.
      *
      * @param data The data to copy
      */
@@ -82,8 +83,7 @@ public abstract class DisplayData {
         
         this.billboard = data.getBillboard();
         this.glowColorOverride = Color.fromARGB(data.getGlowColorOverride().asARGB());
-        this.brightness = new Display.Brightness(
-                data.getBrightness().getBlockLight(),
+        this.brightness = new Display.Brightness(data.getBrightness().getBlockLight(),
                 data.getBrightness().getSkyLight()
         );
     }

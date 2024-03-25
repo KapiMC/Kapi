@@ -2,7 +2,7 @@ package me.kyren223.kapi.engine;
 
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.engine.ecs.SystemTrigger;
-import me.kyren223.kapi.utility.Pair;
+import me.kyren223.kapi.data.Pair;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;

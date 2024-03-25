@@ -3,7 +3,7 @@ package me.kyren223.kapi.engine;
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.engine.ecs.EcsEntity;
 import me.kyren223.kapi.engine.ecs.SystemTrigger;
-import me.kyren223.kapi.utility.Pair;
+import me.kyren223.kapi.data.Pair;
 import me.kyren223.kapi.utility.Task;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
