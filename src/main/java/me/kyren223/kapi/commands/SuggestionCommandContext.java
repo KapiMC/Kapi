@@ -1,5 +1,6 @@
 package me.kyren223.kapi.commands;
 
+import me.kyren223.kapi.annotations.Kapi;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -8,6 +9,12 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+/**
+ * Represents the context of a command during suggestion (TabCompleter).<br>
+ * See {@link ExecutionCommandContext} for "CommandExecutor" context.<br>
+ * See {@link CommandContext} for a general command context.
+ */
+@Kapi
 public class SuggestionCommandContext extends CommandContext {
     
     private List<String> returnValue;
@@ -27,8 +34,13 @@ public class SuggestionCommandContext extends CommandContext {
         return returnValue;
     }
     
-    public void setReturnValue(List<String> returnValue) {
-        this.returnValue = returnValue;
+    /**
+     * Adds a suggestion to the list of suggestions.
+     *
+     * @param suggestion the suggestion
+     */
+    public void addSuggestion(String suggestion) {
+        returnValue.add(suggestion);
     }
     
     public void process() {

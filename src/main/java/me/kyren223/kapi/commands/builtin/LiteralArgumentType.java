@@ -1,9 +1,14 @@
 package me.kyren223.kapi.commands.builtin;
 
+import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.commands.ArgumentType;
 import me.kyren223.kapi.commands.SuggestionCommandContext;
 import me.kyren223.kapi.data.Result;
 
+/**
+ * Represents a command argument type for a literal.
+ */
+@Kapi
 public class LiteralArgumentType implements ArgumentType<String> {
     
     private final String literal;
@@ -15,10 +20,29 @@ public class LiteralArgumentType implements ArgumentType<String> {
         this.ignoreCase = false;
     }
     
+    /**
+     * Creates a new literal argument type.
+     *
+     * @param literal the literal
+     * @return the literal argument type
+     */
+    @Kapi
     public static LiteralArgumentType literal(String literal) {
         return new LiteralArgumentType(literal);
     }
     
+    /**
+     * Ignores the case of the input.
+     *
+     * @return this, for chaining
+     */
+    @Kapi
+    public LiteralArgumentType ignoreCase() {
+        this.ignoreCase = true;
+        return this;
+    }
+    
+    @Kapi
     @Override
     public Result<String, String> parse(String input) {
         if (ignoreCase) {
@@ -36,19 +60,19 @@ public class LiteralArgumentType implements ArgumentType<String> {
         }
     }
     
-    @Override
+    /**
+     * Adds the literal as a suggestion.
+     */
+    @Kapi
     public void autoSuggest() {
         suggest = true;
     }
     
+    @Kapi
     @Override
     public void getSuggestions(SuggestionCommandContext context) {
         if (!suggest) return;
-        context.getReturnValue().add(literal);
+        context.addSuggestion(literal);
     }
     
-    public LiteralArgumentType ignoreCase() {
-        this.ignoreCase = true;
-        return this;
-    }
 }
