@@ -6,6 +6,7 @@ import me.kyren223.kapi.commands.SuggestionCommandContext;
 import me.kyren223.kapi.data.Result;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -106,10 +107,10 @@ public class IntegerArgumentType implements ArgumentType<Integer> {
         return this;
     }
     
-    
     @Kapi
     @Override
-    public Result<Integer, String> parse(String input) {
+    public Result<Integer, String> parse(List<String> arguments) {
+        String input = arguments.remove(0);
         int output;
         try {
             output = Integer.parseInt(input);

@@ -5,6 +5,8 @@ import me.kyren223.kapi.commands.ArgumentType;
 import me.kyren223.kapi.commands.SuggestionCommandContext;
 import me.kyren223.kapi.data.Result;
 
+import java.util.List;
+
 /**
  * Represents a command argument type for a boolean.
  */
@@ -30,7 +32,8 @@ public class BooleanArgumentType implements ArgumentType<Boolean> {
     
     @Kapi
     @Override
-    public Result<Boolean, String> parse(String input) {
+    public Result<Boolean, String> parse(List<String> arguments) {
+        String input = arguments.remove(0);
         if (input.equalsIgnoreCase("true")) {
             return Result.ok(true);
         } else if (input.equalsIgnoreCase("false")) {

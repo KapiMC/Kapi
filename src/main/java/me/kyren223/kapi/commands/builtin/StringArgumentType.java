@@ -5,6 +5,8 @@ import me.kyren223.kapi.commands.ArgumentType;
 import me.kyren223.kapi.commands.SuggestionCommandContext;
 import me.kyren223.kapi.data.Result;
 
+import java.util.List;
+
 /**
  * Represents a command argument type for a string.
  */
@@ -61,7 +63,8 @@ public class StringArgumentType implements ArgumentType<String> {
     
     @Kapi
     @Override
-    public Result<String, String> parse(String input) {
+    public Result<String, String> parse(List<String> arguments) {
+        String input = arguments.remove(0);
         String output;
         if (toLowerCase) {
             output = input.toLowerCase();

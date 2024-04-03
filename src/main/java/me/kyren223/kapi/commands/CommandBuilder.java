@@ -1,12 +1,17 @@
 package me.kyren223.kapi.commands;
 
 import me.kyren223.kapi.annotations.Kapi;
+import me.kyren223.kapi.commands.builtin.LiteralArgumentType;
+import me.kyren223.kapi.data.Result;
 import me.kyren223.kapi.utility.KapiRegistry;
 import me.kyren223.kapi.utility.Log;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiConsumer;
 
 /**
@@ -17,7 +22,7 @@ public class CommandBuilder {
     
     private final String name;
     private ArgumentBuilder<CommandBuilder> argumentBuilder;
-    private BiConsumer<CommandContext, String> failureHandler;
+    private BiConsumer<ExecutionCommandContext, String> failureHandler;
     
     private CommandBuilder(String name) {
         this.name = name;
@@ -42,21 +47,7 @@ public class CommandBuilder {
      */
     @Kapi
     public void register() {
-        KapiRegistry.register(name, ((sender, command, label, args) -> {
-            ExecutionCommandContext context = new ExecutionCommandContext(
-                    argumentBuilder, failureHandler,
-                    sender, command, label, args
-            );
-            context.process();
-            return context.getReturnValue();
-        }), (sender, command, label, args) -> {
-            SuggestionCommandContext context = new SuggestionCommandContext(
-                    argumentBuilder, failureHandler,
-                    sender, command, label, args
-            );
-            context.process();
-            return context.getReturnValue();
-        });
+        KapiRegistry.register(name, this::onCommand, this::onTabComplete);
     }
     
     /**
@@ -77,7 +68,7 @@ public class CommandBuilder {
      * @return the command builder for chaining
      */
     @Kapi
-    public CommandBuilder onFail(BiConsumer<CommandContext, String> failureHandler) {
+    public CommandBuilder onFail(BiConsumer<ExecutionCommandContext, String> failureHandler) {
         this.failureHandler = failureHandler;
         return this;
     }
@@ -94,8 +85,54 @@ public class CommandBuilder {
     public CommandBuilder autoFailHandler() {
         return onFail((context, message) -> {
             if (message == null) return;
-            if (context instanceof SuggestionCommandContext) return;
             Log.error(message, context.getSender());
         });
+    }
+    
+    private boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        ExecutionCommandContext context = new ExecutionCommandContext(
+                sender, command, label, args
+        );
+        
+        ArgumentBuilder<?> builder = argumentBuilder;
+        ArgumentType<?> type = LiteralArgumentType.literal(label).ignoreCase();
+        String argumentName = null;
+        List<String> arguments = new ArrayList<>(List.of(args));
+        arguments.add(0, label);
+        
+        while (true) {
+            // Check if all requirements are met
+            for (var requirement : builder.getRequirements()) {
+                if (requirement.second.test(context)) continue;
+                
+                if (failureHandler != null) {
+                    failureHandler.accept(context, requirement.first);
+                }
+                
+                return context.getReturnValue();
+            }
+            
+            if (arguments.isEmpty()) {
+                break;
+            }
+            
+            // Parse current argument
+            Result<?, String> result = type.parse(arguments);
+            // TODO
+            
+            
+        }
+        
+        builder.getExecutor().accept(context);
+        
+        return context.getReturnValue();
+    }
+    
+    private List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        SuggestionCommandContext context = new SuggestionCommandContext(
+                sender, command, label, args
+        );
+        
+        return context.getReturnValue();
     }
 }

@@ -3,6 +3,8 @@ package me.kyren223.kapi.commands;
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.data.Result;
 
+import java.util.List;
+
 /**
  * Represents a Command Argument Type.
  * @param <T> The java type of the argument.
@@ -10,11 +12,20 @@ import me.kyren223.kapi.data.Result;
 @Kapi
 public interface ArgumentType<T> {
     /**
-     * @param input An argument string.
+     * For classes that implement {@link ArgumentType}, this method parses the argument.<br>
+     *
+     * @param arguments The list of command arguments that haven't been parsed yet<br>
+     *                  A list is being used because the argument may be a multi-word string.<br>
+     *                  Guaranteed to have at least one element.<br>
+     *                  <br>
+     *                  Note: This is a mutable list, you should remove all the arguments you've parsed.<br>
+     *                  Removing the parsed arguments ensures that the next argument type
+     *                  won't parse the same arguments.<br>
+     *
      * @return A Result containing the parsed argument or an error message.
      */
     @Kapi
-    Result<T, String> parse(String input);
+    Result<T, String> parse(List<String> arguments);
     
     /**
      * Should NOT be called by the user.<br>
