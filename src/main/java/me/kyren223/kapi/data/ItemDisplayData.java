@@ -2,6 +2,7 @@ package me.kyren223.kapi.data;
 
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.engine.renderable.ItemDisplayRender;
+import me.kyren223.kapi.utility.ItemDisplayBuilder;
 import org.bukkit.Color;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.ItemDisplay;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Holds the data for an item display.
  * See {@link ItemDisplayRender} for rendering particles.
+ * See {@link ItemDisplayBuilder} for creating new instances.
  */
 @Kapi
 public class ItemDisplayData extends DisplayData {

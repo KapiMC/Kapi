@@ -2,6 +2,7 @@ package me.kyren223.kapi.data;
 
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.engine.renderable.BlockDisplayRender;
+import me.kyren223.kapi.utility.BlockDisplayBuilder;
 import org.bukkit.Color;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Display;
@@ -11,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Holds the data for a block display.
  * See {@link BlockDisplayRender} for rendering block displays.
+ * See {@link BlockDisplayBuilder} for creating new instances.
  */
 @Kapi
 public class BlockDisplayData extends DisplayData {
