@@ -32,7 +32,7 @@ public class Log {
      * Note: No whitespace is added after the prefix,
      * so make sure to add a space at the end of the prefix if needed.<br>
      * <br>
-     * Example: Log.setPrefix("&8[&bKAPI&8] &r");
+     * Example: Log.setPrefix("&amp;8[&amp;bKAPI&amp;8] &amp;r");
      *
      * @param prefix The prefix for all log messages
      */

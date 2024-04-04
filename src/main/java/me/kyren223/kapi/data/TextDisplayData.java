@@ -2,6 +2,7 @@ package me.kyren223.kapi.data;
 
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.engine.renderable.TextDisplayRender;
+import me.kyren223.kapi.utility.TextDisplayBuilder;
 import org.bukkit.Color;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.TextDisplay;
@@ -12,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Holds the data for a text display.
  * See {@link TextDisplayRender} for rendering text displays.
+ * See {@link TextDisplayBuilder} for creating new instances.
  */
 @Kapi
 public class TextDisplayData extends DisplayData {

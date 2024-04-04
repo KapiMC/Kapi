@@ -22,8 +22,23 @@ public class ItemDisplayBuilder extends DisplayBuilder<ItemDisplayBuilder> {
     
     /**
      * Creates a new builder (with item being null).<br>
-     * Item will be set to null by default.<br>
-     * ItemDisplayTransform will set to NONE by default.
+     * <br>
+     * All values will be set to their default values, which are:<br>
+     * <ul>
+     *     <li>item = null;
+     *     <li>itemDisplayTransform = NONE;
+     *     <li>transformation = new Transformation(
+     *          new Vector3f(),new Quaternionf(),new Vector3f(1, 1, 1),new Quaternionf());
+     *     <li>interpolationDuration = 0;
+     *     <li>viewRange = 32; // same as particles
+     *     <li>shadowRadius = 0;
+     *     <li>shadowStrength = 0;
+     *     <li>displayWidth = 1;
+     *     <li>displayHeight = 1;
+     *     <li>interpolationDelay = 0;
+     *     <li>billboard = display.billboard.fiXED;
+     *     <li>glowColorOverride = color.white;
+     * <ul>
      *
      * @return a new builder
      */
@@ -34,7 +49,8 @@ public class ItemDisplayBuilder extends DisplayBuilder<ItemDisplayBuilder> {
     
     /**
      * Creates a new builder for the given item.<br>
-     * ItemDisplayTransform will set to NONE by default.
+     * ItemDisplayTransform will set to NONE by default,
+     * for other values, see {@link #create()}.
      *
      * @param item the item to display
      * @return a new builder
