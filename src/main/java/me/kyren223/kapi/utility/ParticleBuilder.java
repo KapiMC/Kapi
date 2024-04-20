@@ -20,6 +20,8 @@ public class ParticleBuilder {
     private Object data;
     private boolean force;
     
+    // TODO Add docs for what the default values are
+    
     /**
      * Creates a new particle builder.<br>
      * For redstone particles, using {@link #createRedstone(Color, float)}
@@ -69,6 +71,8 @@ public class ParticleBuilder {
      */
     @Kapi
     public ParticleBuilder spread(double spreadX, double spreadY, double spreadZ) {
+        ParticleBuilder.create(Particle.BLOCK_CRACK).count(1).spread(10.5).force(true);
+        ParticleBuilder.createRedstone(Colors.DARK_AQUA, 5).count(1).spread(10.5).force(true);
         this.spreadX = spreadX;
         this.spreadY = spreadY;
         this.spreadZ = spreadZ;

@@ -6,7 +6,7 @@
 
     <groupId>me.kyren223</groupId>
     <artifactId>Kapi</artifactId>
-    <version>1.6.2</version>
+    <version>0.7.0</version>
     <packaging>jar</packaging>
 
     <name>Kapi</name>
@@ -48,46 +48,12 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <options>
-                        <option>-allowaccessmodification</option>
-                        <option>-keep public class * extends java.applet.Applet { *; }</option>
 
-                        <option>-keepattributes *Annotation*, MethodParameters, Exceptions, Signature</option>
-                        <option>-keepparameternames</option>
-                        <option>-dontnote</option>
-                        <option>-dontoptimize</option>
-                        <option>-dontwarn</option>
-                        <option>-repackageclasses</option>
+                    <!-- Make sure only 1 is commented and the other isn't -->
+<!--                    <options><option>-dontinclude me.kyren223.kapi.antipiracy.KPlugin</option></options>-->
+                    <outjar>Kapi-${project.version}-nap.jar</outjar> <!-- nap = No Anti Piracy -->
 
-                        <!-- Prevent obfuscation for classes, fields, and methods annotated with @Kapi -->
-                        <option>-keep @me.kyren223.kapi.annotations.Kapi class *</option>
-                        <option>
-                            -keepclassmembers class * {
-                                @me.kyren223.kapi.annotations.Kapi &lt;fields&gt;;
-                                @me.kyren223.kapi.annotations.Kapi &lt;methods&gt;;
-                            }
-                        </option>
-
-                        <!-- Prevent obfuscation for classes that extend KPlugin or JavaPlugin -->
-                        <option>-keep public class * extends me.kyren223.kapi.KPlugin </option>
-                        <option>-keep public class * extends org.bukkit.plugin.java.JavaPlugin </option>
-
-                        <!-- Prevent obfuscation for enums -->
-                        <option>
-                            -keepclassmembers class * extends java.lang.Enum {
-                                &lt;fields&gt;;
-                                public static **[] values();
-                                public static ** valueOf(java.lang.String);
-                            }
-                        </option>
-
-                        <!-- Prevent obfuscation for classes with event listeners -->
-                        <option>-keepclassmembers class * extends org.bukkit.event.Listener
-                            { @org.bukkit.event.EventHandler &lt;methods&gt;; }</option>
-
-                        <option>-keep class com.mojang.authlib.** { *; }</option>
-
-                    </options>
+                    <proguardInclude>${basedir}/proguard.conf</proguardInclude>
                     <libs>
                         <lib>${java.home}/jmods/java.base.jmod</lib>
                     </libs>
@@ -116,6 +82,7 @@
                 </executions>
             </plugin>
         </plugins>
+
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

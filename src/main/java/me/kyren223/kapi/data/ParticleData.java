@@ -4,8 +4,11 @@ import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.engine.renderable.ParticleRender;
 import me.kyren223.kapi.utility.ParticleBuilder;
 import org.bukkit.Color;
+import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.World;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Holds the data for a particle.<br>
@@ -24,6 +27,19 @@ public class ParticleData {
     private Object data;
     private boolean force;
     
+    /**
+     * Creates a new ParticleData object with the given data.<br>
+     * It's recommended to use {@link ParticleBuilder} for easier particle creation.
+     *
+     * @param particle The particle to display
+     * @param count The number of particles to display
+     * @param spreadX The spread of the particles on the X axis
+     * @param spreadY The spread of the particles on the Y axis
+     * @param spreadZ The spread of the particles on the Z axis
+     * @param extra The extra data of the particle
+     * @param data The data of the particle
+     * @param force Whether the particle should be forced to be displayed
+     */
     @Kapi
     public ParticleData(Particle particle, int count, double spreadX, double spreadY, double spreadZ, double extra, Object data, boolean force) {
         this.particle = particle;
@@ -234,5 +250,78 @@ public class ParticleData {
     @Kapi
     public void setForce(boolean force) {
         this.force = force;
+    }
+    
+    /**
+     * Spawns the particle at the given location.
+     *
+     * @param location The location to spawn the particle at
+     */
+    @Kapi
+    public void spawn(Location location) {
+        World world = location.getWorld();
+        if (world == null) {
+            throw new IllegalStateException("The location's world cannot be null");
+        }
+        
+        world.spawnParticle(
+            particle,
+            location,
+            count,
+            spreadX,
+            spreadY,
+            spreadZ,
+            extra,
+            data,
+            force
+        );
+    }
+    
+    /**
+     * Spawns the particle at the given location.
+     *
+     * @param world The world to spawn the particle in
+     * @param vector The X, Y, and Z coordinates to spawn the particle at
+     */
+    @Kapi
+    public void spawn(@NotNull World world, Vector vector) {
+        world.spawnParticle(
+                particle,
+                vector.getX(),
+                vector.getY(),
+                vector.getZ(),
+                count,
+                spreadX,
+                spreadY,
+                spreadZ,
+                extra,
+                data,
+                force
+        );
+    }
+    
+    /**
+     * Spawns the particle at the given location.
+     *
+     * @param world The world to spawn the particle in
+     * @param x The X coordinate to spawn the particle at
+     * @param y The Y coordinate to spawn the particle at
+     * @param z The Z coordinate to spawn the particle at
+     */
+    @Kapi
+    public void spawn(@NotNull World world, double x, double y, double z) {
+        world.spawnParticle(
+                particle,
+                x,
+                y,
+                z,
+                count,
+                spreadX,
+                spreadY,
+                spreadZ,
+                extra,
+                data,
+                force
+        );
     }
 }

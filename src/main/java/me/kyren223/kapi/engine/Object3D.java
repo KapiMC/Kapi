@@ -143,7 +143,9 @@ public class Object3D implements EcsEntity {
      */
     @Kapi
     public Matrix4fc getWorldTransform() {
-        if (cachedWorldTransform != null) return cachedWorldTransform;
+        if (cachedWorldTransform != null) {
+            return cachedWorldTransform;
+        }
         
         if (parent != null) {
             cachedWorldTransform = new Matrix4f(parent.getWorldTransform()).mul(transform);
