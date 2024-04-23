@@ -1,9 +1,50 @@
+/*
+ * Copyright (c) 2024 Kapi Contributors. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted if the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions, the following disclaimer and the list of contributors.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation and/or
+ *    other materials provided with the distribution.
+ *
+ * 3. The buyer of the "Kapi" API is granted the right to use this software
+ *    as a dependency in their own software projects. However, the buyer
+ *    may not resell or distribute the "Kapi" API, in whole or in part, to other parties.
+ *
+ * 4. The buyer may include the "Kapi" API in a "fat jar" along with their own code.
+ *    The license for the "fat jar" is at the buyer's discretion and may allow
+ *    redistribution of the "fat jar", but the "Kapi" API code inside the "fat jar"
+ *    must not be modified.
+ *
+ * 5. Neither the name "Kapi" nor the names of its contributors may be used to endorse
+ *    or promote products derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY "Kapi" API, AND ITS CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL "Kapi" API, AND CONTRIBUTORS
+ * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Kapi Contributors:
+ * - Kyren223
+ */
+
 package me.kyren223.kapi.utility;
 
 
-import me.kyren223.kapi.KPlugin;
+import me.kyren223.kapi.core.Kplugin;
 import me.kyren223.kapi.annotations.Kapi;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.logging.Level;
 
@@ -11,7 +52,7 @@ import java.util.logging.Level;
  * A utility class that includes a bunch of useful methods for logging messages.<br>
  * <br>
  * Note: Console messages use the plugin's logger through Bukkit's API,
- * not System.out.println or System.err.println.<br>
+ * not System.out.println or System.err.println.
  */
 @Kapi
 public class Log {
@@ -20,10 +61,12 @@ public class Log {
         throw new AssertionError("Log should not be instantiated");
     }
     
-    private static String prefix = "";
+    private static String prefix;
     
-    private static String format(String message, String color) {
-        return prefix + Utils.col(color + message);
+    private static @NotNull String format(@NotNull String message, @NotNull String color) {
+        String prefix = Log.prefix;
+        prefix += Utils.col(color + message);
+        return prefix;
     }
     
     /**
@@ -37,31 +80,31 @@ public class Log {
      * @param prefix The prefix for all log messages
      */
     @Kapi
-    public static void setPrefix(String prefix) {
+    public static void setPrefix(@NotNull String prefix) {
         Log.prefix = Utils.col(prefix);
     }
     
-    private static String getError(String message) {
+    private static @NotNull String getError(@NotNull String message) {
         return format(message, "&c");
     }
     
-    private static String getWarn(String message) {
+    private static @NotNull String getWarn(@NotNull String message) {
         return format(message, "&e");
     }
     
-    private static String getInfo(String message) {
+    private static @NotNull String getInfo(@NotNull String message) {
         return format(message, "&9");
     }
     
-    private static String getSuccess(String message) {
+    private static @NotNull String getSuccess(@NotNull String message) {
         return format(message, "&a");
     }
     
-    private static String getDebug(String message) {
+    private static @NotNull String getDebug(@NotNull String message) {
         return format(message, "&3");
     }
     
-    private static String getLog(String message) {
+    private static @NotNull String getLog(@NotNull String message) {
         return format(message, "");
     }
     
@@ -74,8 +117,8 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void error(String message) {
-        KPlugin.get().getLogger().severe(() -> getError(message));
+    public static void error(@NotNull String message) {
+        Kplugin.get().getLogger().severe(() -> getError(message));
     }
     
     /**
@@ -87,7 +130,7 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void error(String message, CommandSender... senders) {
+    public static void error(@NotNull String message, @NotNull CommandSender... senders) {
         for (CommandSender sender : senders) {
             sender.sendMessage(getError(message));
         }
@@ -102,8 +145,8 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void broadcastError(String message) {
-        KPlugin.get().getServer().broadcastMessage(getError(message));
+    public static void broadcastError(@NotNull String message) {
+        Kplugin.get().getServer().broadcastMessage(getError(message));
     }
     
     /**
@@ -115,8 +158,8 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void warn(String message) {
-        KPlugin.get().getLogger().warning(() -> getWarn(message));
+    public static void warn(@NotNull String message) {
+        Kplugin.get().getLogger().warning(() -> getWarn(message));
     }
     
     /**
@@ -128,7 +171,7 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void warn(String message, CommandSender... senders) {
+    public static void warn(@NotNull String message, @NotNull CommandSender... senders) {
         for (CommandSender sender : senders) {
             sender.sendMessage(getWarn(message));
         }
@@ -143,8 +186,8 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void broadcastWarn(String message) {
-        KPlugin.get().getServer().broadcastMessage(getWarn(message));
+    public static void broadcastWarn(@NotNull String message) {
+        Kplugin.get().getServer().broadcastMessage(getWarn(message));
     }
     
     /**
@@ -156,8 +199,8 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void info(String message) {
-        KPlugin.get().getLogger().info(() -> getInfo(message));
+    public static void info(@NotNull String message) {
+        Kplugin.get().getLogger().info(() -> getInfo(message));
     }
     
     /**
@@ -169,7 +212,7 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void info(String message, CommandSender... senders) {
+    public static void info(@NotNull String message, @NotNull CommandSender... senders) {
         for (CommandSender sender : senders) {
             sender.sendMessage(getInfo(message));
         }
@@ -184,8 +227,8 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void broadcastInfo(String message) {
-        KPlugin.get().getServer().broadcastMessage(getInfo(message));
+    public static void broadcastInfo(@NotNull String message) {
+        Kplugin.get().getServer().broadcastMessage(getInfo(message));
     }
     
     /**
@@ -197,8 +240,8 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void success(String message) {
-        KPlugin.get().getLogger().info(() -> getSuccess(message));
+    public static void success(@NotNull String message) {
+        Kplugin.get().getLogger().info(() -> getSuccess(message));
     }
     
     /**
@@ -210,7 +253,7 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void success(String message, CommandSender... senders) {
+    public static void success(@NotNull String message, @NotNull CommandSender... senders) {
         for (CommandSender sender : senders) {
             sender.sendMessage(getSuccess(message));
         }
@@ -225,8 +268,8 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void broadcastSuccess(String message) {
-        KPlugin.get().getServer().broadcastMessage(getSuccess(message));
+    public static void broadcastSuccess(@NotNull String message) {
+        Kplugin.get().getServer().broadcastMessage(getSuccess(message));
     }
     
     /**
@@ -240,9 +283,9 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void debug(String message) {
-        if (!KPlugin.get().isDebug()) return;
-        KPlugin.get().getLogger().log(Level.INFO, () -> getDebug(message));
+    public static void debug(@NotNull String message) {
+        if (!Kplugin.get().isDebug()) return;
+        Kplugin.get().getLogger().log(Level.INFO, () -> getDebug(message));
     }
     
     /**
@@ -256,8 +299,8 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void debug(String message, CommandSender... senders) {
-        if (!KPlugin.get().isDebug()) return;
+    public static void debug(@NotNull String message, @NotNull CommandSender... senders) {
+        if (!Kplugin.get().isDebug()) return;
         for (CommandSender sender : senders) {
             sender.sendMessage(getDebug(message));
         }
@@ -274,9 +317,9 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void broadcastDebug(String message) {
-        if (!KPlugin.get().isDebug()) return;
-        KPlugin.get().getServer().broadcastMessage(getDebug(message));
+    public static void broadcastDebug(@NotNull String message) {
+        if (!Kplugin.get().isDebug()) return;
+        Kplugin.get().getServer().broadcastMessage(getDebug(message));
     }
     
     /**
@@ -288,8 +331,8 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void log(String message) {
-        KPlugin.get().getLogger().info(() -> getLog(message));
+    public static void log(@NotNull String message) {
+        Kplugin.get().getLogger().info(() -> getLog(message));
     }
     
     /**
@@ -301,7 +344,7 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void log(String message, CommandSender... senders) {
+    public static void log(@NotNull String message, @NotNull CommandSender... senders) {
         for (CommandSender sender : senders) {
             sender.sendMessage(getLog(message));
         }
@@ -316,8 +359,8 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void broadcastLog(String message) {
-        KPlugin.get().getServer().broadcastMessage(getLog(message));
+    public static void broadcastLog(@NotNull String message) {
+        Kplugin.get().getServer().broadcastMessage(getLog(message));
     }
     
 }

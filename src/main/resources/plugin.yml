@@ -1,4 +1,4 @@
 name: Kapi
 version: '${project.version}'
-main: me.kyren223.kapi.KPlugin
+main: me.kyren223.kapi.core.KPlugin
 api-version: '1.20'

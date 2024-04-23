@@ -1,6 +1,6 @@
 package me.kyren223.kapi.utility;
 
-import me.kyren223.kapi.KPlugin;
+import me.kyren223.kapi.core.Kplugin;
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.annotations.ScheduledForRefactor;
 import org.bukkit.command.CommandExecutor;
@@ -27,7 +27,7 @@ public class CommandRegistry {
     @Kapi
     @ScheduledForRefactor
     public void register(String name, CommandExecutor executor) {
-        PluginCommand command = KPlugin.get().getCommand(name);
+        PluginCommand command = Kplugin.get().getCommand(name);
         if (command == null) {
             throw new IllegalArgumentException("Command " + name + " does not exist!");
         }
@@ -43,7 +43,7 @@ public class CommandRegistry {
     @Kapi
     @ScheduledForRefactor
     public void register(String name, CommandExecutor executor, TabCompleter completer) {
-        PluginCommand command = KPlugin.get().getCommand(name);
+        PluginCommand command = Kplugin.get().getCommand(name);
         if (command == null) {
             throw new IllegalArgumentException("Command " + name + " does not exist!");
         }

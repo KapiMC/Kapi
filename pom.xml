@@ -6,9 +6,8 @@
 
     <groupId>me.kyren223</groupId>
     <artifactId>Kapi</artifactId>
-    <version>0.7.0</version>
+    <version>0.7.44-ap</version>
     <packaging>jar</packaging>
-
     <name>Kapi</name>
 
     <properties>
@@ -48,11 +47,6 @@
                     </execution>
                 </executions>
                 <configuration>
-
-                    <!-- Make sure only 1 is commented and the other isn't -->
-<!--                    <options><option>-dontinclude me.kyren223.kapi.antipiracy.KPlugin</option></options>-->
-                    <outjar>Kapi-${project.version}-nap.jar</outjar> <!-- nap = No Anti Piracy -->
-
                     <proguardInclude>${basedir}/proguard.conf</proguardInclude>
                     <libs>
                         <lib>${java.home}/jmods/java.base.jmod</lib>
@@ -66,6 +60,11 @@
                 <configuration>
                     <source>16</source>
                     <target>16</target>
+
+                    <!-- NOTE COMMENT TO INCLUDE KAPI INIT CLASS -->
+                    <excludes><exclude>**/*KapiInit*.*</exclude></excludes>
+                    <!-- NOTE UNCOMMENT TO EXCLUDE KAPI INIT CLASS -->
+
                 </configuration>
             </plugin>
             <plugin>

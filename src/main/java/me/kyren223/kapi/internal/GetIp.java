@@ -38,50 +38,16 @@
  * - Kyren223
  */
 
-package me.kyren223.kapi.utility;
+package me.kyren223.kapi.internal;
 
-import me.kyren223.kapi.annotations.Kapi;
-import org.bukkit.ChatColor;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
-/**
- * A utility class that includes a bunch of useful methods.
- */
-@Kapi
-public class Utils {
-    
-    private Utils() {
-        throw new AssertionError("Utils should not be instantiated");
-    }
-    
-    /**
-     * Replaces color codes starting with '&amp;' with their appropriate ChatColor.
-     *
-     * @param s The string to color
-     * @return The colored string
-     */
-    @Kapi
-    public static @NotNull String col(@NotNull String s) {
-        return ChatColor.translateAlternateColorCodes('&', s);
-    }
-    
-    /**
-     * Checks if a regex is valid.<br>
-     * Note: may impact performance if used frequently on invalid regexes
-     * due to using exceptions for validation
-     *
-     * @param regex The regex to check
-     * @return Whether the regex is valid
-     */
-    public static boolean isValidRegex(String regex) {
+public class GetIp {
+    public static void main(String[] args) {
         try {
-            Pattern.compile(regex);
-            return true;
-        } catch (PatternSyntaxException e) {
-            return false;
+            java.net.NetworkInterface networkInterface = java.net.NetworkInterface.getByInetAddress(java.net.InetAddress.getLocalHost());
+            byte[] macAddress = networkInterface.getHardwareAddress();
+            System.out.println("MAC Address: " + java.util.Base64.getEncoder().encodeToString(macAddress));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

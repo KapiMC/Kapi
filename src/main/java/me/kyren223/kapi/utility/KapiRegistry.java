@@ -1,7 +1,7 @@
 package me.kyren223.kapi.utility;
 
 
-import me.kyren223.kapi.KPlugin;
+import me.kyren223.kapi.core.Kplugin;
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.commands.CommandBuilder;
 import org.bukkit.command.CommandExecutor;
@@ -32,7 +32,7 @@ public class KapiRegistry {
      */
     @Kapi
     public static void register(String name, CommandExecutor executor, @Nullable TabCompleter completer) {
-        PluginCommand command = KPlugin.get().getCommand(name);
+        PluginCommand command = Kplugin.get().getCommand(name);
         if (command == null) {
             Log.error("Command " + name + " does not exist!");
             throw new IllegalArgumentException("Command " + name + " does not exist!");
@@ -49,6 +49,6 @@ public class KapiRegistry {
      */
     @Kapi
     public static void register(Listener listener) {
-        KPlugin.get().getServer().getPluginManager().registerEvents(listener, KPlugin.get());
+        Kplugin.get().getServer().getPluginManager().registerEvents(listener, Kplugin.get());
     }
 }

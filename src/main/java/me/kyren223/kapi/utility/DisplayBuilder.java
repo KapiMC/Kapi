@@ -1,6 +1,5 @@
 package me.kyren223.kapi.utility;
 
-import me.kyren223.kapi.KPlugin;
 import me.kyren223.kapi.annotations.Kapi;
 import org.bukkit.Color;
 import org.bukkit.entity.Display;
@@ -10,10 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.AxisAngle4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     

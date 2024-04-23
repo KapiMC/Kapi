@@ -38,50 +38,19 @@
  * - Kyren223
  */
 
-package me.kyren223.kapi.utility;
+package me.kyren223.kapi.internal;
 
-import me.kyren223.kapi.annotations.Kapi;
-import org.bukkit.ChatColor;
-import org.jetbrains.annotations.NotNull;
+import me.kyren223.kapi.math.CryptoUtils;
 
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
+import java.security.KeyPair;
 
-/**
- * A utility class that includes a bunch of useful methods.
- */
-@Kapi
-public class Utils {
-    
-    private Utils() {
-        throw new AssertionError("Utils should not be instantiated");
-    }
-    
-    /**
-     * Replaces color codes starting with '&amp;' with their appropriate ChatColor.
-     *
-     * @param s The string to color
-     * @return The colored string
-     */
-    @Kapi
-    public static @NotNull String col(@NotNull String s) {
-        return ChatColor.translateAlternateColorCodes('&', s);
-    }
-    
-    /**
-     * Checks if a regex is valid.<br>
-     * Note: may impact performance if used frequently on invalid regexes
-     * due to using exceptions for validation
-     *
-     * @param regex The regex to check
-     * @return Whether the regex is valid
-     */
-    public static boolean isValidRegex(String regex) {
-        try {
-            Pattern.compile(regex);
-            return true;
-        } catch (PatternSyntaxException e) {
-            return false;
-        }
+public class KeyPairGen {
+    public static void main(String[] args) {
+        System.out.println("Generating key pair...");
+        KeyPair keyPair = CryptoUtils.generateRsaKeyPair(4096).unwrap();
+        String publicKey = CryptoUtils.publicKeyToString(keyPair.getPublic()).unwrap();
+        String privateKey = CryptoUtils.privateKeyToString(keyPair.getPrivate()).unwrap();
+        System.out.println("Public key: " + publicKey);
+        System.out.println("Private key: " + privateKey);
     }
 }

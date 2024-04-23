@@ -1,7 +1,9 @@
 package me.kyren223.kapi.data;
 
+import com.sun.jdi.InvalidTypeException;
 import me.kyren223.kapi.annotations.Kapi;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -133,5 +135,35 @@ public class Result<Ok, Err> {
     public Ok expect(String message) {
         if (isOk()) return ok;
         throw new IllegalStateException(message);
+    }
+    
+    /**
+     * Returns the Ok value or throws an exception produced by a supplier if this result is an Err.
+     *
+     * @param exceptionSupplier The exception supplier (takes the Err value and returns a Throwable)
+     * @return The Ok value
+     * @throws Throwable If this result is an Err
+     */
+    @Kapi
+    public Ok unwrapOrThrow(Function<Err, Throwable> exceptionSupplier) throws Throwable {
+        if (isOk()) return ok;
+        throw exceptionSupplier.apply(err);
+    }
+    
+    /**
+     * Returns the Ok value or throws the Err value if this result is an Err.
+     *
+     * @return The Ok value
+     * @throws Throwable If this result is an Err<br>
+     *                   If the Err value is a Throwable, it will be thrown<br>
+     *                   If the Err value is not a Throwable, an InvalidTypeException will be thrown
+     */
+    @Kapi
+    public Ok unwrapOrThrow() throws Throwable {
+        if (isOk()) return ok;
+        if (err instanceof Throwable exception) {
+            throw exception;
+        }
+        throw new InvalidTypeException("Called unwrapOrThrow on an Err result that is not Throwable");
     }
 }

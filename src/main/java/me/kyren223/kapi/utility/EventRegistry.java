@@ -1,6 +1,6 @@
 package me.kyren223.kapi.utility;
 
-import me.kyren223.kapi.KPlugin;
+import me.kyren223.kapi.core.Kplugin;
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.annotations.ScheduledForRefactor;
 import org.bukkit.event.Listener;
@@ -19,7 +19,7 @@ public class EventRegistry {
     @Kapi
     @ScheduledForRefactor
     public void register(Listener listener) {
-        KPlugin.get().getServer().getPluginManager().registerEvents(listener, KPlugin.get());
+        Kplugin.get().getServer().getPluginManager().registerEvents(listener, Kplugin.get());
     }
     
 }

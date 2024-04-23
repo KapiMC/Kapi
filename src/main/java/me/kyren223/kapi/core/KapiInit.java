@@ -38,19 +38,54 @@
  * - Kyren223
  */
 
-package me.kyren223.kapi.antipiracy;
+package me.kyren223.kapi.core;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import java.lang.reflect.Method;
 
-public class KPlugin extends JavaPlugin {
+public class KapiInit {
+    protected static boolean cpp = false;
+    protected static Object nms;
+    protected static ClassLoader e;
     
-    @Override
-    public void onEnable() {
-        System.out.println("KAPI has loaded!");
+    private KapiInit() {
+        cpp = false;
+        nms = null;
     }
     
-    @Override
-    public void onDisable() {
-        System.out.println("KAPI has unloaded!");
+    protected static void linusTorvalds(Object mnm)
+            throws ClassNotFoundException, NoSuchFieldException,
+            IllegalAccessException, NoSuchMethodException,
+            java.lang.reflect.InvocationTargetException {
+        nms = mnm;
+        e = nms.getClass().getClassLoader();
+        Class<?> a = e.loadClass("me.kyren223.kapi.utility.DocumentStore");
+        java.lang.reflect.Field b = a.getDeclaredField("a");
+        b.setAccessible(true);
+        b.set(null, new java.util.HashMap<>());
+        b.setAccessible(false);
+        Class<?> c = e.loadClass("me.kyren223.kapi.utility.Log");
+        String f = (String) nms.getClass().getMethod("getPluginName").invoke(nms);
+        c.getMethod("setPrefix", String.class).invoke(null, "&8[" + f + "I&8] &r");
+        a.getMethod("loadDocuments").invoke(null);
+        c.getMethod("info", String.class).invoke(null, "KAPI has been enabled!");
+        Method g = nms.getClass().getDeclaredMethod("onPluginStart");
+        g.setAccessible(true);
+        g.invoke(nms);
+        g.setAccessible(false);
+    }
+    
+    protected static void vimMotions()
+            throws ClassNotFoundException, NoSuchMethodException,
+            java.lang.reflect.InvocationTargetException, IllegalAccessException {
+        Method g = nms.getClass().getDeclaredMethod("onPluginStop");
+        g.setAccessible(true);
+        g.invoke(nms);
+        g.setAccessible(false);
+        e.loadClass("me.kyren223.kapi.utility.DocumentStore")
+                .getMethod("saveDocuments")
+                .invoke(null);
+        e.loadClass("me.kyren223.kapi.utility.Log")
+                .getMethod("info", String.class)
+                .invoke(null, "KAPI has been disabled!");
     }
 }

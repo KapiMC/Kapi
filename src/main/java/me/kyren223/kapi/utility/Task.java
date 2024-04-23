@@ -1,6 +1,6 @@
 package me.kyren223.kapi.utility;
 
-import me.kyren223.kapi.KPlugin;
+import me.kyren223.kapi.core.Kplugin;
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.annotations.ScheduledForRefactor;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -23,13 +23,13 @@ public class Task extends BukkitRunnable {
     @Kapi
     @ScheduledForRefactor
     public static void runLater(Consumer<BukkitRunnable> task, long delay) {
-        new Task(task).runTaskLater(KPlugin.get(), delay);
+        new Task(task).runTaskLater(Kplugin.get(), delay);
     }
     
     @Kapi
     @ScheduledForRefactor
     public static void runRepeatedly(Consumer<BukkitRunnable> task, long delay, long period) {
-        new Task(task).runTaskTimer(KPlugin.get(), delay, period);
+        new Task(task).runTaskTimer(Kplugin.get(), delay, period);
     }
     
     @Kapi
