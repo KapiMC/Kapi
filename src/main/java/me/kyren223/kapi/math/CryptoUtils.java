@@ -134,10 +134,6 @@ public class CryptoUtils {
         return decrypt(RSA, signature, publicKey);
     }
     
-//    public static boolean verifyRsa(String message, String signature, PublicKey publicKey) {
-//        return message.equals(getRsaSignedMessage(signature, publicKey).unwrapOr(null));
-//    }
-    
     public static Result<KeyPair, String> generateRsaKeyPair(int size) {
         final List<Integer> allowedSizes = List.of(1024, 2048, 3072, 4096);
         if (!allowedSizes.contains(size)) {

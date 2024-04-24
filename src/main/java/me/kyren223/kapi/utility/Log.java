@@ -51,7 +51,7 @@ import java.util.logging.Level;
 /**
  * A utility class that includes a bunch of useful methods for logging messages.<br>
  * <br>
- * Note: Console messages use the plugin's logger through Bukkit's API,
+ * Note: Console messages use the plugin's logger through Kplugin.get().getServer()'s API,
  * not System.out.println or System.err.println.
  */
 @Kapi
@@ -137,7 +137,7 @@ public class Log {
     }
     
     /**
-     * Logs an error message to all senders on the server (through Bukkit's Broadcast).<br>
+     * Logs an error message to all senders on the server (through Kplugin.get().getServer()'s Broadcast).<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It applies `&amp;c` color code before the message.
@@ -178,7 +178,7 @@ public class Log {
     }
     
     /**
-     * Logs a warning message to all senders on the server (through Bukkit's Broadcast).<br>
+     * Logs a warning message to all senders on the server (through Kplugin.get().getServer()'s Broadcast).<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It applies `&amp;e` color code before the message.
@@ -219,7 +219,7 @@ public class Log {
     }
     
     /**
-     * Logs an info message to all senders on the server (through Bukkit's Broadcast).<br>
+     * Logs an info message to all senders on the server (through Kplugin.get().getServer()'s Broadcast).<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It applies `&amp;9` color code before the message.
@@ -260,7 +260,7 @@ public class Log {
     }
     
     /**
-     * Logs a success message to all senders on the server (through Bukkit's Broadcast).<br>
+     * Logs a success message to all senders on the server (through Kplugin.get().getServer()'s Broadcast).<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It applies `&amp;a` color code before the message.
@@ -307,7 +307,7 @@ public class Log {
     }
     
     /**
-     * Logs a debug message to all senders on the server (through Bukkit's Broadcast).<br>
+     * Logs a debug message to all senders on the server (through Kplugin.get().getServer()'s Broadcast).<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It applies `&amp;3` color code before the message.<br>
@@ -351,7 +351,7 @@ public class Log {
     }
     
     /**
-     * Logs a message to all senders on the server (through Bukkit's Broadcast).<br>
+     * Logs a message to all senders on the server (through Kplugin.get().getServer()'s Broadcast).<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It does not apply any color codes.

@@ -69,10 +69,6 @@ public abstract class Kplugin extends JavaPlugin {
     
     private static Class<?> clazz;
     private static Kplugin instance;
-    /**
-     * Do not use this, annotated with @Kapi to prevent obfuscation.
-     */
-    @Kapi
     public static String userLicense;
     
     private void tryLoadingKapi() {
@@ -83,8 +79,7 @@ public abstract class Kplugin extends JavaPlugin {
             clazz = null;
             askServerForClass();
             if (clazz == null) {
-                System.out.println("KapiInit not found! check your internet connection.");
-                throw new IllegalStateException("Kapi failed to load! try restarting...");
+                System.out.println("KapiInit not found!");
             }
         }
         System.out.println("KapiInit has been loaded!");
@@ -92,13 +87,11 @@ public abstract class Kplugin extends JavaPlugin {
     
     private YamlConfiguration getKapiConfig() {
         File dataFolder = getDataFolder();
-        boolean created = dataFolder.mkdirs();
-        if (created) {
-            System.out.println("Created Kapi folder");
-        }
+        //noinspection ResultOfMethodCallIgnored
+        dataFolder.mkdirs();
         File configFile = new File(dataFolder, "kapi.yml");
         try {
-            created = configFile.createNewFile();
+            boolean created = configFile.createNewFile();
             if (created) {
                 YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
                 config.set("license", "PUT YOUR LICENSE KEY HERE");
@@ -121,24 +114,20 @@ public abstract class Kplugin extends JavaPlugin {
         int port = config.getInt("port");
         
         if (license == null || license.isEmpty() || license.equals("PUT YOUR LICENSE KEY HERE")) {
-            System.out.println("license = " + license);
-            System.out.println((license == null) + " " + (license != null && license.isEmpty()) + " " + (license != null && license.equals("PUT YOUR LICENSE KEY HERE")));
-            throw new IllegalArgumentException(
-                    "Kapi license not found! Please set it in the Kapi config file");
-        } else {
-            userLicense = license;
+            System.out.println("Kapi license not found! Please set your license key in the kapi.yml file.");
+            return;
         }
+        userLicense = license;
         
         if (server == null || server.isEmpty()) {
-            throw new IllegalArgumentException("Kapi server not found!");
+            System.out.println("Kapi server not found! Please set the server IP in the kapi.yml file.");
+            return;
         }
         
         try (Socket socket = new Socket(server, port);
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))
         ) {
-            System.out.println("Connected to server: " + server + ":" + port);
-            
             KeyPair keyPair = CryptoUtils.generateRsaKeyPair().unwrap();
             PrivateKey privateKey = keyPair.getPrivate();
             String publicKey = CryptoUtils.publicKeyToString(keyPair.getPublic()).unwrap();
@@ -146,11 +135,10 @@ public abstract class Kplugin extends JavaPlugin {
             String hashedPublicKey = CryptoUtils.hashString(publicKey + salt);
             NetworkInterface ni = NetworkInterface.getByInetAddress(InetAddress.getLocalHost());
             String mac = Base64.getEncoder().encodeToString(ni.getHardwareAddress());
-            String payload = salt + ":" + hashedPublicKey + ":" + getKapiDeveloperLicense() + ":" + license + mac;
+            String payload = salt + ":" + hashedPublicKey + ":" + getKapiDeveloperLicense() + ":" + license + ":"+ mac;
             String encryptedPayload = CryptoUtils.encryptRsa(payload,
                     CryptoUtils.stringToPublicKey(serverPublicKey).unwrap()).unwrap();
             String message = publicKey + ":" + encryptedPayload;
-            
             out.println(message);
             StringBuilder response = new StringBuilder();
             String line;
@@ -158,28 +146,16 @@ public abstract class Kplugin extends JavaPlugin {
                 response.append(line);
             }
             String[] split = response.toString().split(":");
-            if (split.length != 2) {
-                System.out.println("Not length 2 (1)");
-                return;
-            }
             String encryptedSecret = split[0];
             String encryptedResponse = split[1];
             String secret = CryptoUtils.decryptRsa(encryptedSecret, privateKey).unwrap();
             split = secret.split(":");
-            if (split.length != 2) {
-                System.out.println("Not length 2 (2)");
-                return;
-            }
             String ivString = split[0];
             String aesKeyString = split[1];
             IvParameterSpec iv = CryptoUtils.stringToIv(ivString).unwrap();
-            SecretKey aesKey = CryptoUtils.stringToAesKey(aesKeyString).unwrap();
+            SecretKey aesKey = CryptoUtils.stringToAesKey(aesKeyString).unwrapOrThrow();
             String responsePayload = CryptoUtils.decryptAes(encryptedResponse, aesKey, iv).unwrap();
             split = responsePayload.split(":");
-            if (split.length != 2) {
-                System.out.println("Not length 2 (3)");
-                return;
-            }
             String verifiedResponse = split[0];
             String signedHashedResponse = split[1];
             String hashedResponse = CryptoUtils.verifyRsa(signedHashedResponse,
@@ -187,20 +163,17 @@ public abstract class Kplugin extends JavaPlugin {
             if (!CryptoUtils.hashString(verifiedResponse + salt).equals(hashedResponse)) {
                 return;
             }
-            System.out.println("Server response: " + verifiedResponse);
             if (!verifiedResponse.toLowerCase().startsWith("bytecode")) {
-                throw new IllegalArgumentException("Kapi: Invalid");
+                return;
             }
             String base64 = verifiedResponse.substring("bytecode".length());
-            System.out.println("Base64: " + base64);
             byte[] classBytes = Base64.getDecoder().decode(base64);
-            System.out.println("Decoded");
             ByteClassLoader loader = new ByteClassLoader();
-            System.out.println("Loaded");
             clazz = loader.defineClass("me.kyren223.kapi.core.KapiInit", classBytes);
-            System.out.println("Defined");
         } catch (IOException e) {
             System.err.println("Error connecting to server: " + e.getMessage());
+        } catch (Throwable ignored) {
+            System.err.println("Error Loading Kapi");
         }
     }
     
@@ -240,7 +213,6 @@ public abstract class Kplugin extends JavaPlugin {
             method.invoke(null);
             method.setAccessible(false);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
             System.out.println("Kapi has failed to unload!");
         }
     }
@@ -264,19 +236,40 @@ public abstract class Kplugin extends JavaPlugin {
     public abstract String getPluginName();
     
     /**
-     * Called when the plugin has been enabled.<br>
-     * Specifically, after Kapi has been loaded.
+     * Called at the "preload" phase.<br>
+     * Used as a replacement to the onEnable method in Bukkit plugins.<br>
+     * Recommended to use {@link #onPluginLoad()} instead of this method.<br>
+     * <br>
+     * The preload phase comes after Kapi has been fully loaded,
+     * it's called in the same game tick as the onEnable method.
      */
     @Kapi
-    protected abstract void onPluginStart();
+    public void onPluginPreload() {
+        // Do nothing
+    }
     
     /**
-     * Called when the plugin has been disabled.<br>
-     * Specifically, before Kapi has been unloaded, so you can still use Kapi methods.<br>
-     * Kapi will be unloaded immediately after this method returns.
+     * Called at the "load" phase.<br>
+     * This method should be used for initialization of the plugin.<br>
+     * {@link #onPluginPreload()} can be used only if absolutely needed, otherwise use this method.<br>
+     * <br>
+     * The load phase comes after the onEnable method has finished.<br>
+     * It'll be called 1 tick after the onEnable method (by using a 1-tick delayed Bukkit Task).<br>
+     * This means Kapi has been fully loaded and the {@link #onPluginPreload()} method has been called.
      */
     @Kapi
-    protected abstract void onPluginStop();
+    public abstract void onPluginLoad();
+    
+    /**
+     * Called at the "unload" phase.<br>
+     * Used as a replacement to the onDisable method in Bukkit plugins.<br>
+     * <br>
+     * The unload phase comes before Kapi unloads itself, so you can still use Kapi methods here.<br>
+     * It's called as the first thing in the onDisable method.<br>
+     * Immediately after it, Kapi unloads and then the onDisable method finishes.
+     */
+    @Kapi
+    public abstract void onPluginUnload();
     
     /**
      * Gets the instance of the plugin.

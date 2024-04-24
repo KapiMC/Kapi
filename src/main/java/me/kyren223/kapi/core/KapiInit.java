@@ -40,8 +40,6 @@
 
 package me.kyren223.kapi.core;
 
-import java.lang.reflect.Method;
-
 public class KapiInit {
     protected static boolean cpp = false;
     protected static Object nms;
@@ -52,10 +50,7 @@ public class KapiInit {
         nms = null;
     }
     
-    protected static void linusTorvalds(Object mnm)
-            throws ClassNotFoundException, NoSuchFieldException,
-            IllegalAccessException, NoSuchMethodException,
-            java.lang.reflect.InvocationTargetException {
+    protected static void linusTorvalds(Object mnm) throws Throwable {
         nms = mnm;
         e = nms.getClass().getClassLoader();
         Class<?> a = e.loadClass("me.kyren223.kapi.utility.DocumentStore");
@@ -68,24 +63,28 @@ public class KapiInit {
         c.getMethod("setPrefix", String.class).invoke(null, "&8[" + f + "I&8] &r");
         a.getMethod("loadDocuments").invoke(null);
         c.getMethod("info", String.class).invoke(null, "KAPI has been enabled!");
-        Method g = nms.getClass().getDeclaredMethod("onPluginStart");
-        g.setAccessible(true);
-        g.invoke(nms);
-        g.setAccessible(false);
+        nms.getClass().getDeclaredMethod("onPluginPreload").invoke(nms);
+        Object j = e.loadClass("org.bukkit.Bukkit").getMethod("getScheduler").invoke(null);
+        java.lang.reflect.Method k = j.getClass().getMethod("scheduleSyncDelayedTask",
+                e.loadClass("org.bukkit.plugin.Plugin"), Runnable.class, long.class);
+        k.invoke(j, nms, (Runnable) () -> {
+            try {
+                nms.getClass().getDeclaredMethod("onPluginLoad").invoke(nms);
+            } catch (Exception ignored) {
+                System.out.println("Failed to load plugin");
+            }
+        }, 1);
     }
     
-    protected static void vimMotions()
-            throws ClassNotFoundException, NoSuchMethodException,
-            java.lang.reflect.InvocationTargetException, IllegalAccessException {
-        Method g = nms.getClass().getDeclaredMethod("onPluginStop");
-        g.setAccessible(true);
-        g.invoke(nms);
-        g.setAccessible(false);
+    protected static void vimMotions() throws Throwable {
+        nms.getClass().getDeclaredMethod("onPluginUnload").invoke(nms);
         e.loadClass("me.kyren223.kapi.utility.DocumentStore")
                 .getMethod("saveDocuments")
                 .invoke(null);
         e.loadClass("me.kyren223.kapi.utility.Log")
                 .getMethod("info", String.class)
                 .invoke(null, "KAPI has been disabled!");
+        nms = null;
+        e = null;
     }
 }
