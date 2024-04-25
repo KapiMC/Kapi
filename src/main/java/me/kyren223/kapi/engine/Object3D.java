@@ -353,10 +353,10 @@ public class Object3D implements EcsEntity {
             SystemTrigger trigger = task.first;
             Consumer<Object3D> system = task.second;
             assert !trigger.isEvent();
-            Task.runWhile(this::shouldContinue, t -> system.accept(this), trigger.getDelay(), trigger.getPeriod());
+            Task.run(() -> system.accept(this)).timer(trigger.getDelay(), trigger.getPeriod())
+                    .whileCondition(this::shouldContinue).schedule();
         }
-        
-        Task.runWhile(this::shouldContinue, task -> render(), 1, 1);
+        Task.run(this::render).timer(1, 1).whileCondition(this::shouldContinue).schedule();
     }
     
     /**
