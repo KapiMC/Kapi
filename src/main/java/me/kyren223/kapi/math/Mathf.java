@@ -1,3 +1,43 @@
+/*
+ * Copyright (c) 2024 Kapi Contributors. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted if the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions, the following disclaimer and the list of contributors.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation and/or
+ *    other materials provided with the distribution.
+ *
+ * 3. The buyer of the "Kapi" API is granted the right to use this software
+ *    as a dependency in their own software projects. However, the buyer
+ *    may not resell or distribute the "Kapi" API, in whole or in part, to other parties.
+ *
+ * 4. The buyer may include the "Kapi" API in a "fat jar" along with their own code.
+ *    The license for the "fat jar" is at the buyer's discretion and may allow
+ *    redistribution of the "fat jar", but the "Kapi" API code inside the "fat jar"
+ *    must not be modified.
+ *
+ * 5. Neither the name "Kapi" nor the names of its contributors may be used to endorse
+ *    or promote products derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY "Kapi" API, AND ITS CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL "Kapi" API, AND CONTRIBUTORS
+ * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Kapi Contributors:
+ * - Kyren223
+ */
+
 package me.kyren223.kapi.math;
 
 import me.kyren223.kapi.annotations.Kapi;
@@ -7,24 +47,28 @@ import org.bukkit.util.Vector;
 import org.joml.Math;
 
 /**
- * Math utility class for common math operations
- * <br><br>
+ * Math utility class for common math operations.<br>
+ * <br>
  * If you can't find a method here,
- * check JOML's {@link Math} and Java's {@link java.lang.Math} <br>
+ * check JOML's {@link Math} and Java's {@link java.lang.Math}.<br>
  * This class is mostly for plugin-specific math operations
- * that are not present in the standard libraries
+ * that are not present in the standard libraries.
  */
 @Kapi
 public class Mathf {
     
     private Mathf() {
-        // Prevent instantiation
+        throw new AssertionError("Mathf should not be instantiated");
     }
     
+    /**
+     * The mathematical constant tau, equal to 2 * pi
+     * @see Math#PI
+     */
     @Kapi public static final double TAU = Math.PI * 2;
     
     /**
-     * Linearly interpolates between two vectors
+     * Linearly interpolates between two vectors.
      *
      * @param a The first vector
      * @param b The second vector
@@ -42,7 +86,7 @@ public class Mathf {
     }
     
     /**
-     * Spherical linear interpolation between two vectors
+     * Spherical linear interpolation between two vectors.
      *
      * @param a The first vector
      * @param b The second vector
@@ -61,9 +105,8 @@ public class Mathf {
     }
     
     /**
-     * Linearly interpolates between two colors<br>
-     * <br>
-     * Works by interpolating each RGB component separately
+     * Linearly interpolates between two colors.<br>
+     * Works by interpolating each RGB component separately.
      *
      * @param a The first color
      * @param b The second color
@@ -80,7 +123,7 @@ public class Mathf {
     }
     
     /**
-     * Inverse linear interpolation between two doubles
+     * Inverse linear interpolation between two doubles.
      *
      * @param a The first double
      * @param b The second double
@@ -89,13 +132,15 @@ public class Mathf {
      * @throws IllegalArgumentException if a and b are the same, as it would result in division by zero
      */
     public static double iLerp(double a, double b, double v) {
-        if (a == b) throw new IllegalArgumentException("a and b cannot be the same, as it would result in division by zero");
+        if (a == b) {
+            throw new IllegalArgumentException("a is the same as b which is not allowed due to division by zero");
+        }
         return (v - a) / (b - a);
     }
     
     /**
-     * Remaps a value between range A to a value between range B
-     * Keeps the value proportional to the input range
+     * Remaps a value between a given range to another range.<br>
+     * Keeps the value proportional to the input range.
      *
      * @param inputMin The minimum value of the input range
      * @param inputMax The maximum value of the input range
@@ -109,42 +154,17 @@ public class Mathf {
         return Math.lerp(outputMin, outputMax, iLerp(inputMin, inputMax, value));
     }
     
-    
-    // Used to decode an encrypted string (int array) into a string (byte array)
-    // You can then get the string by calling new String(returnedByteArray)
-    public static byte[] intArrayToString(int[] input) {
-        int[] sb = new int[input.length * 69];
-        for (int i = input.length - 1; i >= 0; i--) {
-            input[i] ^= 0xABCD1234; // XOR decryption
-            int ch1 = (char) (input[i] & 0xFFFF);
-            int ch2 = (char) ((input[i] >> 16) & 0xFFFF);
-            sb[i * 2] = ch1;
-            if (ch2 != 0)
-                sb[i * 2 + 1] = ch2;
-            sb[i * 2 + 1] = sb[i * 2 + 1] + sb[i * 2];
-            sb[i * 2] = sb[i * 2 + 1] - sb[i * 2];
-            sb[i * 2 + 1] = sb[i * 2 + 1] - sb[i * 2];
-        }
-        byte[] result = new byte[input.length * 2];
-        for (int i = result.length - 1; i >= 0; i--) {
-            result[i] = (byte) sb[i];
-        }
-        byte d = result[result.length - 2]; // 0 if odd length
-        if (d * 69 == 0) {
-            int a = result[result.length - 2] + result[result.length - 1];
-            result[result.length - 1] = (byte) (a - result[result.length - 1]);
-            result[result.length - 2] = (byte) (a - result[result.length - 2]);
-        }
-        byte[] result2;
-        if (d * 10 == 0) {
-            result2 = new byte[result.length - 1];
-        } else {
-            result2 = new byte[result.length];
-        }
-        //noinspection ManualArrayCopy
-        for (int i = 0; i < result2.length; i++) {
-            result2[i] = result[i];
-        }
-        return result2;
+    /**
+     * Calculates the end point of a line segment starting at a given point
+     * and going in a given direction for a given length.
+     *
+     * @param start The starting point
+     * @param direction The direction vector
+     * @param length The length of the line segment
+     * @return The end point of the line segment
+     */
+    @Kapi
+    public static Vector pointFromDirection(Vector start, Vector direction, double length) {
+        return start.clone().add(direction.clone().normalize().multiply(length));
     }
 }

@@ -71,7 +71,7 @@ public class Utils {
     /**
      * Checks if a regex is valid.<br>
      * Note: may impact performance if used frequently on invalid regexes
-     * due to using exceptions for validation
+     * due to using exceptions for validation.
      *
      * @param regex The regex to check
      * @return Whether the regex is valid

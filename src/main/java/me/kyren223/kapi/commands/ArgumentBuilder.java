@@ -41,6 +41,7 @@ package me.kyren223.kapi.commands;
 
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.data.Pair;
+import org.jetbrains.annotations.ApiStatus;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ import java.util.function.Predicate;
  * A utility class for building arguments.
  */
 @Kapi
+@ApiStatus.Internal
 public class ArgumentBuilder<T> {
     
     private final T parent;

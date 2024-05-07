@@ -1,3 +1,43 @@
+/*
+ * Copyright (c) 2024 Kapi Contributors. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted if the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions, the following disclaimer and the list of contributors.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation and/or
+ *    other materials provided with the distribution.
+ *
+ * 3. The buyer of the "Kapi" API is granted the right to use this software
+ *    as a dependency in their own software projects. However, the buyer
+ *    may not resell or distribute the "Kapi" API, in whole or in part, to other parties.
+ *
+ * 4. The buyer may include the "Kapi" API in a "fat jar" along with their own code.
+ *    The license for the "fat jar" is at the buyer's discretion and may allow
+ *    redistribution of the "fat jar", but the "Kapi" API code inside the "fat jar"
+ *    must not be modified.
+ *
+ * 5. Neither the name "Kapi" nor the names of its contributors may be used to endorse
+ *    or promote products derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY "Kapi" API, AND ITS CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL "Kapi" API, AND CONTRIBUTORS
+ * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Kapi Contributors:
+ * - Kyren223
+ */
+
 package me.kyren223.kapi.utility;
 
 import me.kyren223.kapi.annotations.Kapi;
@@ -20,29 +60,49 @@ public class ParticleBuilder {
     private Object data;
     private boolean force;
     
-    // TODO Add docs for what the default values are
-    
     /**
      * Creates a new particle builder.<br>
      * For redstone particles, using {@link #createRedstone(Color, float)}
-     * is recommended.
+     * is recommended.<br>
+     * <br>
+     * All values will be set to their default values, which are:
+     * <ul>
+     *     <li>count = 1;
+     *     <li>spreadX = 0;
+     *     <li>spreadY = 0;
+     *     <li>spreadZ = 0;
+     *     <li>extra = 0;
+     *     <li>data = null;
+     *     <li>force = false;
+     * </ul>
+     *
      *
      * @param particle The particle to create
      * @return A new particle builder
+     * @see #createRedstone(Color, float)
      */
     @Kapi
     public static ParticleBuilder create(Particle particle) {
         ParticleBuilder builder = new ParticleBuilder();
         builder.particle = particle;
+        builder.count = 1;
+        builder.spreadX = 0;
+        builder.spreadY = 0;
+        builder.spreadZ = 0;
+        builder.extra = 0;
+        builder.data = null;
+        builder.force = false;
         return builder;
     }
     
     /**
-     * Creates a new particle builder with a redstone particle.
+     * Creates a new particle builder with a redstone particle.<br>
+     * For more information see {@link #create(Particle)}.
      *
      * @param color The color of the redstone particle
      * @param size The size of the redstone particle
      * @return A new particle builder
+     * @see #create(Particle)
      */
     @Kapi
     public static ParticleBuilder createRedstone(Color color, float size) {
@@ -71,8 +131,6 @@ public class ParticleBuilder {
      */
     @Kapi
     public ParticleBuilder spread(double spreadX, double spreadY, double spreadZ) {
-        ParticleBuilder.create(Particle.BLOCK_CRACK).count(1).spread(10.5).force(true);
-        ParticleBuilder.createRedstone(Colors.DARK_AQUA, 5).count(1).spread(10.5).force(true);
         this.spreadX = spreadX;
         this.spreadY = spreadY;
         this.spreadZ = spreadZ;

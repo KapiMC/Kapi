@@ -41,7 +41,6 @@
 package me.kyren223.kapi.data;
 
 import me.kyren223.kapi.annotations.Kapi;
-import org.checkerframework.checker.units.qual.K;
 
 /**
  * Utility class for converting minecraft time durations between different units.<br>
@@ -116,7 +115,7 @@ public enum TimeUnit {
      * @param duration The duration to convert (in the current unit)
      * @return The duration in hours
      */
-    @K
+    @Kapi
     public long toHours(long duration) {
         return convert(duration, scaleToTicks, HOURS.scaleToTicks);
     }

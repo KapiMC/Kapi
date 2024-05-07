@@ -1,3 +1,43 @@
+/*
+ * Copyright (c) 2024 Kapi Contributors. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted if the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions, the following disclaimer and the list of contributors.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation and/or
+ *    other materials provided with the distribution.
+ *
+ * 3. The buyer of the "Kapi" API is granted the right to use this software
+ *    as a dependency in their own software projects. However, the buyer
+ *    may not resell or distribute the "Kapi" API, in whole or in part, to other parties.
+ *
+ * 4. The buyer may include the "Kapi" API in a "fat jar" along with their own code.
+ *    The license for the "fat jar" is at the buyer's discretion and may allow
+ *    redistribution of the "fat jar", but the "Kapi" API code inside the "fat jar"
+ *    must not be modified.
+ *
+ * 5. Neither the name "Kapi" nor the names of its contributors may be used to endorse
+ *    or promote products derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY "Kapi" API, AND ITS CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL "Kapi" API, AND CONTRIBUTORS
+ * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Kapi Contributors:
+ * - Kyren223
+ */
+
 package me.kyren223.kapi.utility;
 
 import me.kyren223.kapi.annotations.Kapi;
@@ -14,8 +54,8 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /*
     Note, a lot of methods have @SuppressWarnings("unchecked")
-    This is because the generic T indicates the type of the builder.
-    Which can be BlockDisplayBuilder, ItemDisplayBuilder, or TextDisplayBuilder.
+    This is because the generic T indicates the type of the builder
+    which can be either BlockDisplayBuilder, ItemDisplayBuilder, or TextDisplayBuilder.
     This makes sure the subclass is returned
     Casting to T generates a warning that we can suppress
     as it's always safe to cast to the subclass, as long as it's not an instance of
@@ -55,7 +95,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the view range of the display.<br>
-     * Default value if not set is 32
+     * Default value if not set is 32.
      *
      * @param viewRange the view range of the display
      * @return the builder
@@ -69,7 +109,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the shadow radius of the display.<br>
-     * Default value is 0
+     * Default value is 0.
      *
      * @param shadowRadius the shadow radius of the display
      * @return the builder
@@ -83,7 +123,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the shadow strength of the display.<br>
-     * Default value is 0
+     * Default value is 0.
      *
      * @param shadowStrength the shadow strength of the display
      * @return the builder
@@ -97,7 +137,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the display width of the display.<br>
-     * Default value is 1
+     * Default value is 1.
      *
      * @param displayWidth the display width of the display
      * @return the builder
@@ -111,7 +151,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the display height of the display.<br>
-     * Default value is 1
+     * Default value is 1.
      *
      * @param displayHeight the display height of the display
      * @return the builder
@@ -125,7 +165,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the interpolation delay of the display.<br>
-     * Default value is 0
+     * Default value is 0.
      *
      * @param interpolationDelay the interpolation delay of the display
      * @return the builder
@@ -139,7 +179,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the billboard of the display.<br>
-     * Default value is FIXED
+     * Default value is FIXED.
      *
      * @param billboard the billboard of the display
      * @return the builder
@@ -153,7 +193,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the glow color override of the display.<br>
-     * Default value is {@link Color#WHITE}
+     * Default value is {@link Color#WHITE}.
      *
      * @param glowColorOverride the glow color override of the display
      * @return the builder
@@ -167,7 +207,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the brightness of the display.<br>
-     * Default value is max brightness
+     * Default value is max brightness.
      *
      * @param brightness the brightness of the display
      * @return the builder
@@ -181,7 +221,8 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the transformation of the display.<br>
-     * Default value is a new transformation with zero translation, rotation, and (1, 1, 1) scale
+     * Default value is a new transformation
+     * with zero-ed translation, rotation, and (1, 1, 1) scale.
      *
      * @param transformation the transformation of the display
      * @return the builder
@@ -195,7 +236,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the interpolation duration of the display.<br>
-     * Default value is 0
+     * Default value is 0.
      *
      * @param interpolationDuration the interpolation duration of the display
      * @return the builder
@@ -209,7 +250,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the translation of the display.<br>
-     * Default value is (0, 0, 0)
+     * Default value is (0, 0, 0).
      *
      * @param x the x component of the translation
      * @param y the y component of the translation
@@ -225,7 +266,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the translation of the display.<br>
-     * Default value is (0, 0, 0)
+     * Default value is (0, 0, 0).
      *
      * @param translation the translation
      * @return the builder
@@ -239,7 +280,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the translation of the display.<br>
-     * Default value is (0, 0, 0)
+     * Default value is (0, 0, 0).
      *
      * @param translation the translation
      * @return the builder
@@ -253,7 +294,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the left rotation of the display.<br>
-     * Default value is the quaternion (x0, y0, z0, w1)
+     * Default value is the quaternion (x0, y0, z0, w1).
      *
      * @param q The quaternion representing the rotation
      * @return the builder
@@ -267,7 +308,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the left rotation of the display.<br>
-     * Default value is the quaternion (x0, y0, z0, w1)
+     * Default value is the quaternion (x0, y0, z0, w1).
      *
      * @param axis  the axis of rotation
      * @param angle the angle of rotation
@@ -282,7 +323,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the left rotation of the display.<br>
-     * Default value is the quaternion (x0, y0, z0, w1)
+     * Default value is the quaternion (x0, y0, z0, w1).
      *
      * @param axis  the axis of rotation
      * @param angle the angle of rotation
@@ -297,7 +338,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the left rotation of the display.<br>
-     * Default value is the quaternion (x0, y0, z0, w1)
+     * Default value is the quaternion (x0, y0, z0, w1).
      *
      * @param axisAngle the axis angle of rotation
      * @return the builder
@@ -311,7 +352,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the left rotation of the display.<br>
-     * Default value is the quaternion (x0, y0, z0, w1)
+     * Default value is the quaternion (x0, y0, z0, w1).
      *
      * @param x the x component of the quaternion
      * @param y the y component of the quaternion
@@ -328,7 +369,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the right rotation of the display.<br>
-     * Default value is the quaternion (x0, y0, z0, w1)
+     * Default value is the quaternion (x0, y0, z0, w1).
      *
      * @param q The quaternion representing the rotation
      * @return the builder
@@ -342,7 +383,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the right rotation of the display.<br>
-     * Default value is the quaternion (x0, y0, z0, w1)
+     * Default value is the quaternion (x0, y0, z0, w1).
      *
      * @param axis  the axis of rotation
      * @param angle the angle of rotation
@@ -357,7 +398,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the right rotation of the display.<br>
-     * Default value is the quaternion (x0, y0, z0, w1)
+     * Default value is the quaternion (x0, y0, z0, w1).
      *
      * @param axis  the axis of rotation
      * @param angle the angle of rotation
@@ -372,21 +413,21 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the right rotation of the display.<br>
-     * Default value is the quaternion (x0, y0, z0, w1)
+     * Default value is the quaternion (x0, y0, z0, w1).
      *
      * @param axisAngle the axis angle of rotation
      * @return the builder
      */
     @SuppressWarnings("unchecked")
     @Kapi
-    public T righRotation(AxisAngle4f axisAngle) {
+    public T rightRotation(AxisAngle4f axisAngle) {
         this.transformation.getRightRotation().set(axisAngle);
         return (T) this;
     }
     
     /**
      * Sets the right rotation of the display.<br>
-     * Default value is the quaternion (x0, y0, z0, w1)
+     * Default value is the quaternion (x0, y0, z0, w1).
      *
      * @param x the x component of the quaternion
      * @param y the y component of the quaternion
@@ -403,7 +444,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the scale of the display.<br>
-     * Default value is (1, 1, 1)
+     * Default value is (1, 1, 1).
      *
      * @param x the x component of the scale
      * @param y the y component of the scale
@@ -419,7 +460,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the scale of the display.<br>
-     * Default value is (1, 1, 1)
+     * Default value is (1, 1, 1).
      *
      * @param scale the scale of the display
      * @return the builder
@@ -433,7 +474,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /**
      * Sets the scale of the display.<br>
-     * Default value is (1, 1, 1)
+     * Default value is (1, 1, 1).
      *
      * @param scale the scale of the display
      * @return the builder
