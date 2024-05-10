@@ -6,7 +6,7 @@
 
     <groupId>me.kyren223</groupId>
     <artifactId>Kapi</artifactId>
-    <version>1.0.0b3</version>
+    <version>1.0.0b4</version>
     <packaging>jar</packaging>
     <name>Kapi</name>
 
