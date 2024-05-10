@@ -51,14 +51,15 @@ public class KapiInit {
     }
     
     protected static void linusTorvalds(Object mnm) throws Throwable {
+        final String name = (String) nms.getClass().getMethod("getPluginName").invoke(nms);
         nms = mnm;
         e = nms.getClass().getClassLoader();
-        Class<?> a = e.loadClass("me.kyren223.kapi.utility.DocumentStore");
+        Class<?> a = e.loadClass(name + ".me.kyren223.kapi.utility.DocumentStore");
         java.lang.reflect.Field b = a.getDeclaredField("a");
         b.setAccessible(true);
         b.set(null, new java.util.HashMap<>());
         b.setAccessible(false);
-        Class<?> c = e.loadClass("me.kyren223.kapi.utility.Log");
+        Class<?> c = e.loadClass(name + ".me.kyren223.kapi.utility.Log");
         String f = (String) nms.getClass().getMethod("getPluginName").invoke(nms);
         c.getMethod("setPrefix", String.class).invoke(null, "&8[" + f + "I&8] &r");
         a.getMethod("loadDocuments").invoke(null);
@@ -77,11 +78,12 @@ public class KapiInit {
     }
     
     protected static void vimMotions() throws Throwable {
+        final String name = (String) nms.getClass().getMethod("getPluginName").invoke(nms);
         nms.getClass().getDeclaredMethod("onPluginUnload").invoke(nms);
-        e.loadClass("me.kyren223.kapi.utility.DocumentStore")
+        e.loadClass(name + ".me.kyren223.kapi.utility.DocumentStore")
                 .getMethod("saveDocuments")
                 .invoke(null);
-        e.loadClass("me.kyren223.kapi.utility.Log")
+        e.loadClass(name + ".me.kyren223.kapi.utility.Log")
                 .getMethod("info", String.class)
                 .invoke(null, "KAPI has been disabled!");
         nms = null;

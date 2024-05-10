@@ -61,9 +61,10 @@ public class KpluginHelper {
     }
     
     public static Class<?> tryLoadingKapi(Kplugin plugin, Class<?> clazz) {
+        final String name = plugin.getPluginName();
         if (clazz != null) return clazz;
         try {
-            clazz = Class.forName("me.kyren223.kapi.core.KapiInit");
+            clazz = Class.forName(name + ".me.kyren223.kapi.core.KapiInit");
             System.out.println("KapiInit has been loaded!");
             return clazz;
         } catch (ClassNotFoundException e) {
@@ -93,6 +94,7 @@ public class KpluginHelper {
     }
     
     public static Class<?> askServerForClass(Kplugin plugin) {
+        final String name = plugin.getPluginName();
         YamlConfiguration config = getKapiConfig(plugin);
         String license = config.getString("license");
         String server = config.getString("server");
@@ -121,7 +123,9 @@ public class KpluginHelper {
             String hashedPublicKey = CryptoUtils.hashString(publicKey + salt);
             NetworkInterface ni = NetworkInterface.getByInetAddress(InetAddress.getLocalHost());
             String mac = Base64.getEncoder().encodeToString(ni.getHardwareAddress());
-            String payload = salt + ":" + hashedPublicKey + ":" + plugin.getKapiDeveloperLicense() + ":" + license + ":"+ mac;
+            String payload = salt + ":" + hashedPublicKey + ":" +
+                    plugin.getKapiDeveloperLicense() + ":" + license + ":" +
+                    mac + ":" + plugin.getPluginName();
             String encryptedPayload = CryptoUtils.encryptRsa(payload,
                     CryptoUtils.stringToPublicKey(serverPublicKey).unwrap()).unwrap();
             String message = publicKey + ":" + encryptedPayload;
@@ -155,7 +159,7 @@ public class KpluginHelper {
             String base64 = verifiedResponse.substring("bytecode".length());
             byte[] classBytes = Base64.getDecoder().decode(base64);
             ByteClassLoader loader = new ByteClassLoader();
-            return loader.defineClass("me.kyren223.kapi.core.KapiInit", classBytes);
+            return loader.defineClass(name + ".me.kyren223.kapi.core.KapiInit", classBytes);
         } catch (IOException e) {
             System.err.println("Error connecting to server: " + e.getMessage());
         } catch (Throwable ignored) {

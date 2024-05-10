@@ -102,9 +102,13 @@ public abstract class Kplugin extends JavaPlugin {
     public abstract String getKapiDeveloperLicense();
     
     /**
-     * The name of the plugin, supports String color codes.<br>
-     * This is used as a Display Name for the plugin.<br>
-     * Should be overridden by any plugin that extends KpluginDTree
+     * The name of the plugin.<br>
+     * Must adhere to the following regex:
+     * <pre><code>[a-zA-Z_][a-zA-Z0-9_]*</code></pre>
+     * <ul>
+     *     <li>Starts with a letter or underscore</li>
+     *     <li>Contains only letters, numbers, underscores</li>
+     * </ul>
      *
      * @return The name of the plugin
      */
