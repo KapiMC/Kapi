@@ -64,7 +64,7 @@ public abstract class Kplugin extends JavaPlugin {
     public void onEnable() {
         clazz = KpluginHelper.tryLoadingKapi(this, clazz);
         if (clazz == null) {
-            System.out.println("Kapi failed to load, error enabling!");
+            System.out.println(getPluginName() + ": failed to authenticate with Kapi, error enabling!");
             return;
         }
         try {
@@ -73,14 +73,14 @@ public abstract class Kplugin extends JavaPlugin {
             method.invoke(null, this);
             method.setAccessible(false);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            System.out.println("KAPI has failed to load! restart the server to retry...");
+            System.out.println(getPluginName() + " has failed to load Kapi! try restarting the server");
         }
     }
     
     @Override
     public void onDisable() {
         if (clazz == null) {
-            System.out.println("KapiInit not found, error disabling!");
+            System.out.println(getPluginName() + ": KapiInit not found, error disabling!");
             return;
         }
         try {
@@ -89,7 +89,7 @@ public abstract class Kplugin extends JavaPlugin {
             method.invoke(null);
             method.setAccessible(false);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            System.out.println("Kapi has failed to unload!");
+            System.out.println(getPluginName() + ": Kapi has failed to unload! error saving!");
         }
     }
     
