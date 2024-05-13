@@ -43,6 +43,7 @@ package me.kyren223.kapi.commands;
 
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.commands.builtin.LiteralArgumentType;
+import me.kyren223.kapi.data.Pair;
 import me.kyren223.kapi.data.Result;
 import me.kyren223.kapi.utility.KapiRegistry;
 import me.kyren223.kapi.utility.Log;
@@ -54,7 +55,10 @@ import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
+
+import static me.kyren223.kapi.commands.builtin.LiteralArgumentType.literal;
 
 /**
  * A utility class for building commands.
@@ -62,12 +66,11 @@ import java.util.function.BiConsumer;
 @Kapi
 @ApiStatus.Internal
 // TODO Remove this annotation
-@SuppressWarnings("all")
 public class CommandBuilder {
     
     private final String name;
     private ArgumentBuilder<CommandBuilder> argumentBuilder;
-    private BiConsumer<ExecutionCommandContext, String> failureHandler;
+    private BiConsumer<ExecutionCommandContext,String> failureHandler;
     
     private CommandBuilder(String name) {
         this.name = name;
@@ -113,7 +116,7 @@ public class CommandBuilder {
      * @return the command builder for chaining
      */
     @Kapi
-    public CommandBuilder onFail(BiConsumer<ExecutionCommandContext, String> failureHandler) {
+    public CommandBuilder onFail(BiConsumer<ExecutionCommandContext,String> failureHandler) {
         this.failureHandler = failureHandler;
         return this;
     }
@@ -135,21 +138,25 @@ public class CommandBuilder {
     }
     
     private boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        ExecutionCommandContext context = new ExecutionCommandContext(
-                sender, command, label, args
-        );
+        ExecutionCommandContext context = new ExecutionCommandContext(sender, command, label, args);
         
-        ArgumentBuilder<?> builder = argumentBuilder;
-        ArgumentType<?> type = LiteralArgumentType.literal(label).ignoreCase();
-        String argumentName = null;
+        // Using `label` and not `name` to allow the executor
+        // to know the specific alias that was used
         List<String> arguments = new ArrayList<>(List.of(args));
         arguments.add(0, label);
+        
+        // Using `name` so the executor can search for the name argument
+        // which will store the actual label that was used (which many be an alias)
+        String argumentName = name;
+        ArgumentBuilder<?> builder = argumentBuilder;
+        Object result = literal(label).ignoreCase().parse(arguments);
         
         while (true) {
             // Check if all requirements are met
             for (var requirement : builder.getRequirements()) {
                 if (requirement.getSecond().test(context)) continue;
                 
+                // Failed requirement
                 if (failureHandler != null) {
                     failureHandler.accept(context, requirement.getFirst());
                 }
@@ -157,26 +164,48 @@ public class CommandBuilder {
                 return context.getReturnValue();
             }
             
+            // Add the argument
+            context.addArgument(argumentName, result);
+            
+            // If no more arguments are left, break, no need to check next args
             if (arguments.isEmpty()) {
                 break;
             }
             
-            // Parse current argument
-            Result<?, String> result = type.parse(arguments);
-            // TODO
             
+            // Choose the next argument
+            boolean hasNext = false;
+            var nextArgs = builder.getArgs();
+            for (var nextArgKey : nextArgs.keySet()) {
+                ArgumentType<?> nextType = nextArgKey.getFirst();
+                String nextArgumentName = nextArgKey.getSecond();
+                ArgumentBuilder<?> nextBuilder = nextArgs.get(nextArgKey);
+                
+                // Try to parse the next argument
+                Result<?,String> nextResult = nextType.parse(arguments);
+                if (nextResult.isErr()) continue;
+                
+                // Argument succeeded
+                hasNext = true;
+                result = nextResult;
+                argumentName = nextArgumentName;
+                builder = nextBuilder;
+                break;
+            }
             
+            if (!hasNext) break;
         }
         
+        // TODO if executor doesn't exist that means the path is invalid
+        // And must be handled by the failure handler
+        // Otherwise it's valid, the next args r just optional and can be ignored
         builder.getExecutor().accept(context);
         
         return context.getReturnValue();
     }
     
     private List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        SuggestionCommandContext context = new SuggestionCommandContext(
-                sender, command, label, args
-        );
+        SuggestionCommandContext context = new SuggestionCommandContext(sender, command, label, args);
         
         return context.getReturnValue();
     }

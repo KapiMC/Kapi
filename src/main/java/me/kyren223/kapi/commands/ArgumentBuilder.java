@@ -44,10 +44,7 @@ import me.kyren223.kapi.data.Pair;
 import org.jetbrains.annotations.ApiStatus;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -59,10 +56,10 @@ import java.util.function.Predicate;
 public class ArgumentBuilder<T> {
     
     private final T parent;
-    private final Map<Pair<ArgumentType<?>, String>, ArgumentBuilder<ArgumentBuilder<T>>> args;
+    private final Map<Pair<ArgumentType<?>,String>,ArgumentBuilder<ArgumentBuilder<T>>> args;
     
     // Pre-conditions consumers
-    private final List<Pair<String, Predicate<CommandContext>>> requirements;
+    private final List<Pair<String,Predicate<CommandContext>>> requirements;
     
     // Final execution consumer
     private Consumer<ExecutionCommandContext> executor;
@@ -70,7 +67,7 @@ public class ArgumentBuilder<T> {
     
     private ArgumentBuilder(T parent) {
         this.parent = parent;
-        this.args = new HashMap<>();
+        this.args = new LinkedHashMap<>();
         this.requirements = new ArrayList<>();
     }
     
@@ -180,11 +177,11 @@ public class ArgumentBuilder<T> {
     }
     
     
-    Map<Pair<ArgumentType<?>, String>, ArgumentBuilder<ArgumentBuilder<T>>> getArgs() {
+    Map<Pair<ArgumentType<?>,String>,ArgumentBuilder<ArgumentBuilder<T>>> getArgs() {
         return args;
     }
     
-    List<Pair<String, Predicate<CommandContext>>> getRequirements() {
+    List<Pair<String,Predicate<CommandContext>>> getRequirements() {
         return requirements;
     }
     
