@@ -44,17 +44,18 @@ import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.data.ItemDisplayData;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A builder for {@link ItemDisplayData}.
  */
 @Kapi
+@NullMarked
 public class ItemDisplayBuilder extends DisplayBuilder<ItemDisplayBuilder> {
     
     private @Nullable ItemStack item;
-    private @NotNull ItemDisplay.ItemDisplayTransform itemDisplayTransform;
+    private ItemDisplay.ItemDisplayTransform itemDisplayTransform;
     
     private ItemDisplayBuilder() {
         itemDisplayTransform = ItemDisplay.ItemDisplayTransform.NONE;
@@ -96,7 +97,7 @@ public class ItemDisplayBuilder extends DisplayBuilder<ItemDisplayBuilder> {
      * @return a new builder
      */
     @Kapi
-    public static ItemDisplayBuilder create(@NotNull ItemStack item) {
+    public static ItemDisplayBuilder create(ItemStack item) {
         return new ItemDisplayBuilder().item(item);
     }
     
@@ -107,7 +108,7 @@ public class ItemDisplayBuilder extends DisplayBuilder<ItemDisplayBuilder> {
      * @return this builder
      */
     @Kapi
-    public ItemDisplayBuilder item(@NotNull ItemStack item) {
+    public ItemDisplayBuilder item(final ItemStack item) {
         this.item = item;
         return this;
     }
@@ -119,7 +120,9 @@ public class ItemDisplayBuilder extends DisplayBuilder<ItemDisplayBuilder> {
      * @return this builder
      */
     @Kapi
-    public ItemDisplayBuilder itemDisplayTransform(@NotNull ItemDisplay.ItemDisplayTransform itemDisplayTransform) {
+    public ItemDisplayBuilder itemDisplayTransform(
+            ItemDisplay.ItemDisplayTransform itemDisplayTransform
+    ) {
         this.itemDisplayTransform = itemDisplayTransform;
         return this;
     }

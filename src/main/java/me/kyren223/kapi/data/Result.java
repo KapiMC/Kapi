@@ -40,26 +40,28 @@
 
 package me.kyren223.kapi.data;
 
-import com.sun.jdi.InvalidTypeException;
 import me.kyren223.kapi.annotations.Kapi;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
  * A simple result type that can be either an Ok or an Err.<br>
  * Inspired by Rust's Result type.
  *
- * @param <Ok> The type of the Ok value
+ * @param <Ok>  The type of the Ok value
  * @param <Err> The type of the Err value
  */
 @Kapi
+@NullMarked
+// TODO Finish Result
 public class Result<Ok, Err> {
     
-    private final Ok ok;
-    private final Err err;
+    private final @Nullable Ok ok;
+    private final @Nullable Err err;
     
-    private Result(Ok ok, Err err) {
+    private Result(@Nullable Ok ok, @Nullable Err err) {
         this.ok = ok;
         this.err = err;
     }
@@ -67,33 +69,31 @@ public class Result<Ok, Err> {
     /**
      * Returns a result that stores an Ok value.
      *
-     * @param ok The Ok value
-     * @param <Ok> The type of the Ok value
+     * @param ok    The Ok value
+     * @param <Ok>  The type of the Ok value
      * @param <Err> The type of the Err value
      * @return A result that stores an Ok value
      */
     @Kapi
-    public static <Ok, Err> Result<Ok, Err> ok(Ok ok) {
+    public static <Ok, Err> Result<Ok,Err> ok(Ok ok) {
         return new Result<>(ok, null);
     }
     
     /**
      * Returns a result that stores an Err value.
      *
-     * @param err The Err value
-     * @param <Ok> The type of the Ok value
+     * @param err   The Err value
+     * @param <Ok>  The type of the Ok value
      * @param <Err> The type of the Err value
      * @return A result that stores an Err value
      */
     @Kapi
-    public static <Ok, Err> Result<Ok, Err> err(Err err) {
+    public static <Ok, Err> Result<Ok,Err> err(Err err) {
         return new Result<>(null, err);
     }
     
     /**
-     * Returns whether this result is an Ok.
-     *
-     * @return Whether this result is an Ok
+     * @return True if this result is an Ok, false otherwise
      */
     @Kapi
     public boolean isOk() {
@@ -101,32 +101,26 @@ public class Result<Ok, Err> {
     }
     
     /**
-     * Returns whether this result is an Err.
-     *
-     * @return Whether this result is an Err
+     * @return True if this result is an Err, false otherwise
      */
     @Kapi
     public boolean isErr() {
-        return err != null;
+        return ok == null;
     }
     
     /**
-     * Returns the Ok value.
-     *
      * @return The Ok value or null if this result is an Err
      */
     @Kapi
-    public Ok getOk() {
+    public @Nullable Ok getOkOrNull() {
         return ok;
     }
     
     /**
-     * Returns the Err value.
-     *
      * @return The Err value or null if this result is an Ok
      */
     @Kapi
-    public Err getErr() {
+    public @Nullable Err getErrOrNull() {
         return err;
     }
     
@@ -134,12 +128,12 @@ public class Result<Ok, Err> {
      * Returns the Ok value or throws an exception if this result is an Err.
      *
      * @return The Ok value
-     * @throws IllegalStateException If this result is an Err
+     * @throws NullSafetyException If this result is an Err
      */
     @Kapi
     public Ok unwrap() {
-        if (isOk()) return ok;
-        throw new IllegalStateException("Called unwrap on an Err result");
+        if (ok != null) return ok;
+        throw new NullSafetyException("Called unwrap on an Err result");
     }
     
     /**
@@ -150,8 +144,20 @@ public class Result<Ok, Err> {
      */
     @Kapi
     public Ok unwrapOr(Ok def) {
-        return isOk() ? ok : def;
+        return ok != null ? ok : def;
     }
+    
+    /**
+     * Returns the Ok value or a default value if this result is an Err.
+     *
+     * @param def The default value
+     * @return The Ok value or the default value if this result is an Err
+     */
+    @Kapi
+    public @Nullable Ok unwrapOrNullable(@Nullable Ok def) {
+        return ok != null ? ok : def;
+    }
+    
     
     /**
      * Returns the Ok value or a value produced by a supplier if this result is an Err.
@@ -161,49 +167,36 @@ public class Result<Ok, Err> {
      */
     @Kapi
     public Ok unwrapOrGet(Supplier<Ok> supplier) {
-        return isOk() ? ok : supplier.get();
+        return ok != null ? ok : supplier.get();
     }
     
     /**
      * Returns the Ok value or throws an exception with a custom message if this result is an Err.
      *
-     * @param message The message
+     * @param message The message that will be thrown
      * @return The Ok value
-     * @throws IllegalStateException If this result is an Err
+     * @throws NullSafetyException If this result is an Err
      */
     @Kapi
     public Ok expect(String message) {
-        if (isOk()) return ok;
-        throw new IllegalStateException(message);
+        if (ok != null) return ok;
+        throw new NullSafetyException(message);
     }
     
     /**
-     * Returns the Ok value or throws an exception produced by a supplier if this result is an Err.
-     *
-     * @param exceptionSupplier The exception supplier (takes the Err value and returns a Throwable)
-     * @return The Ok value
-     * @throws Throwable If this result is an Err
-     */
-    @Kapi
-    public Ok unwrapOrThrow(Function<Err, Throwable> exceptionSupplier) throws Throwable {
-        if (isOk()) return ok;
-        throw exceptionSupplier.apply(err);
-    }
-    
-    /**
-     * Returns the Ok value or throws the Err value if this result is an Err.
+     * Returns the Ok value or throws the Err value if this result is an Err.<br>
+     * Error value must be a RuntimeException or a subclass of RuntimeException.
      *
      * @return The Ok value
-     * @throws Throwable If this result is an Err<br>
-     *                   If the Err value is a Throwable, it will be thrown<br>
-     *                   If the Err value is not a Throwable, an InvalidTypeException will be thrown
+     * @throws RuntimeException    If this result is an Err and the Err value is a RuntimeException
+     * @throws NullSafetyException If this result is an Err and the Err value is not a RuntimeException
      */
     @Kapi
-    public Ok unwrapOrThrow() throws Throwable {
-        if (isOk()) return ok;
-        if (err instanceof Throwable exception) {
+    public Ok unwrapOrThrow() {
+        if (ok != null) return ok;
+        if (err instanceof RuntimeException exception) {
             throw exception;
         }
-        throw new InvalidTypeException("Called unwrapOrThrow on an Err result that is not Throwable");
+        throw new NullSafetyException("Called unwrapOrThrow on an Err result that is not a RuntimeException");
     }
 }

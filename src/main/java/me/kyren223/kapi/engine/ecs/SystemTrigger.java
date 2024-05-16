@@ -41,41 +41,54 @@
 package me.kyren223.kapi.engine.ecs;
 
 import me.kyren223.kapi.annotations.Kapi;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents when a system should be executed.
  */
 @Kapi
+@NullMarked
 public final class SystemTrigger {
     
     // Built-in event names
-    @Kapi public static final String SPAWN_EVENT = "spawn";
-    @Kapi public static final String DESPAWN_EVENT = "despawn";
-    @Kapi public static final String SCALE_CHANGED_EVENT = "scale_changed";
+    @Kapi
+    public static final String SPAWN_EVENT = "spawn";
+    @Kapi
+    public static final String DESPAWN_EVENT = "despawn";
+    
+    @Kapi
+    public static final String SCALE_CHANGED_EVENT = "scale_changed";
+    @Kapi
+    public static final String ENTITY_COLLISION_EVENT = "entity_collision";
     
     // Built-in triggers
-    @Kapi public static final SystemTrigger ON_SPAWN = event(SPAWN_EVENT);
-    @Kapi public static final SystemTrigger ON_DESPAWN = event(DESPAWN_EVENT);
-    @Kapi public static final SystemTrigger TICK = interval(1);
-    @Kapi public static final SystemTrigger ON_SCALE_CHANGED = event(SCALE_CHANGED_EVENT);
+    @Kapi
+    public static final SystemTrigger ON_SPAWN = event(SPAWN_EVENT);
+    @Kapi
+    public static final SystemTrigger ON_DESPAWN = event(DESPAWN_EVENT);
+    @Kapi
+    public static final SystemTrigger TICK = interval(1);
+    
+    @Kapi
+    public static final SystemTrigger ON_SCALE_CHANGED = event(SCALE_CHANGED_EVENT);
+    @Kapi
+    public static final SystemTrigger ON_ENTITY_COLLISION = event(ENTITY_COLLISION_EVENT);
     
     private final int delay;
     private final int period;
-    private final String event;
-    private final boolean isEvent;
+    private final @Nullable String event;
     
     private SystemTrigger(int delay, int period) {
         this.event = null;
         this.delay = delay;
         this.period = period;
-        this.isEvent = false;
     }
     
     private SystemTrigger(String event) {
         this.delay = 0;
         this.period = 0;
         this.event = event;
-        this.isEvent = true;
     }
     
     /**
@@ -105,7 +118,7 @@ public final class SystemTrigger {
      * after {@code delay} ticks,
      * and then every {@code period} ticks.
      *
-     * @param delay The delay in ticks
+     * @param delay  The delay in ticks
      * @param period Every how many ticks the system should be executed
      * @return A new trigger
      */
@@ -127,35 +140,44 @@ public final class SystemTrigger {
     }
     
     /**
-     * Gets the delay of this trigger.<br>
-     * If the trigger is an event trigger, the value is considered undefined.
+     * Gets the delay of this trigger.
      *
      * @return The delay
+     * @throws IllegalStateException if the trigger is an event trigger
      */
     @Kapi
     public int getDelay() {
+        if (event != null) {
+            throw new IllegalStateException("This trigger is an event trigger");
+        }
         return delay;
     }
     
     /**
-     * Gets the period of this trigger.<br>
-     * If the trigger is an event trigger, the value is considered undefined.
+     * Gets the period of this trigger.
      *
      * @return The period
+     * @throws IllegalStateException if the trigger is an event trigger
      */
     @Kapi
     public int getPeriod() {
+        if (event != null) {
+            throw new IllegalStateException("This trigger is an event trigger");
+        }
         return period;
     }
     
     /**
-     * Gets the event of this trigger.<br>
-     * If the trigger is not an event trigger, the value is considered undefined.
+     * Gets the event of this trigger.
      *
      * @return The event's name
+     * @throws IllegalStateException If the trigger is not an event trigger
      */
     @Kapi
     public String getEvent() {
+        if (event == null) {
+            throw new IllegalStateException("This trigger is not an event trigger");
+        }
         return event;
     }
     
@@ -166,6 +188,6 @@ public final class SystemTrigger {
      */
     @Kapi
     public boolean isEvent() {
-        return isEvent;
+        return event != null;
     }
 }

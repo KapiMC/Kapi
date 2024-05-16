@@ -42,7 +42,8 @@ package me.kyren223.kapi.core;
 
 import me.kyren223.kapi.annotations.Kapi;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -53,11 +54,12 @@ import java.lang.reflect.Method;
  * Extend this instead of {@link JavaPlugin}<br>
  */
 @Kapi
+@NullMarked
 public abstract class Kplugin extends JavaPlugin {
     
-    private static Class<?> clazz;
-    private static Kplugin instance;
-    public static String userLicense;
+    private static @Nullable Class<?> clazz;
+    private static @Nullable Kplugin instance;
+    public static @Nullable String userLicense;
     
     
     @Override
@@ -156,7 +158,7 @@ public abstract class Kplugin extends JavaPlugin {
      * @throws IllegalStateException If the plugin has not been enabled yet
      */
     @Kapi
-    public static @NotNull Kplugin get() {
+    public static Kplugin get() {
         if (instance == null) {
             if (clazz == null) {
                 throw new IllegalStateException("KapiInit has not been loaded!");
@@ -171,6 +173,7 @@ public abstract class Kplugin extends JavaPlugin {
                 throw new IllegalStateException("Kapi has not been loaded yet!");
             }
         }
+        assert instance != null;
         return instance;
     }
     

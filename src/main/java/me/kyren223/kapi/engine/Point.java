@@ -43,11 +43,13 @@ package me.kyren223.kapi.engine;
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.engine.renderable.Renderable;
 import org.bukkit.util.Vector;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Represents a point in 3D space and a renderable object.
  */
 @Kapi
+@NullMarked
 public class Point {
     private double x;
     private double y;
@@ -55,7 +57,7 @@ public class Point {
     private Renderable renderable;
     
     @Kapi
-    public Point(double x, double y, double z, Renderable renderable) {
+    public Point(double x, double y, double z, final Renderable renderable) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -63,7 +65,7 @@ public class Point {
     }
     
     @Kapi
-    public Point(Vector vector, Renderable renderable) {
+    public Point(final Vector vector, final Renderable renderable) {
         this(vector.getX(), vector.getY(), vector.getZ(), renderable);
     }
     
@@ -74,7 +76,7 @@ public class Point {
      * @param point The point to copy
      */
     @Kapi
-    public Point(Point point) {
+    public Point(final Point point) {
         this(point.x, point.y, point.z, point.getRenderable().clone());
     }
     
@@ -110,6 +112,7 @@ public class Point {
     
     /**
      * Returns the point as a vector
+     *
      * @return A newly created vector with the point's coordinates
      */
     @Kapi

@@ -4,7 +4,7 @@
   <groupId>me.kyren223</groupId>
   <artifactId>Kapi</artifactId>
   <name>Kapi</name>
-  <version>1.0.1</version>
+  <version>1.1.0-alpha10</version>
   <build>
     <resources>
       <resource>

@@ -60,13 +60,14 @@ import java.util.Map;
  */
 @Kapi
 @ApiStatus.Internal
+// TODO Add @NullMarked
 public class CommandContext {
     
     private final CommandSender sender;
     private final Command command;
     private final String label;
     private final String[] args;
-    private final Map<String, Object> arguments;
+    private final Map<String,Object> arguments;
     
     public CommandContext(CommandSender sender, Command command, String label, String[] args) {
         this.sender = sender;
@@ -108,6 +109,7 @@ public class CommandContext {
     
     /**
      * This method returns the number of arguments of the command.<br>
+     *
      * @return The number of arguments of the command.
      */
     @Kapi
@@ -138,10 +140,11 @@ public class CommandContext {
     
     /**
      * Gets the player instance of the sender.<br>
+     *
      * @return A Result containing the player or an error message.
      */
     @Kapi
-    public Result<Player, String> getPlayer() {
+    public Result<Player,String> getPlayer() {
         if (sender instanceof Player player) {
             return Result.ok(player);
         } else {
@@ -189,13 +192,13 @@ public class CommandContext {
      *     <li>Invalid type for argument: {name}</li>
      * </ul>
      *
-     * @param name The name of the argument.
+     * @param name  The name of the argument.
      * @param clazz The class of the argument.
-     * @param <T> The type of the argument.
+     * @param <T>   The type of the argument.
      * @return A Result containing the parsed argument or an error message.
      */
     @Kapi
-    public <T> Result<T, String> getArg(String name, Class<T> clazz) {
+    public <T> Result<T,String> getArg(String name, Class<T> clazz) {
         if (!arguments.containsKey(name)) {
             return Result.err("Argument not found: " + name);
         }

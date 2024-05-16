@@ -48,8 +48,8 @@ import org.bukkit.entity.Display;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Transformation;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Holds the data for an item display.
@@ -57,14 +57,15 @@ import org.jetbrains.annotations.Nullable;
  * See {@link ItemDisplayBuilder} for creating new instances.
  */
 @Kapi
+@NullMarked
 public class ItemDisplayData extends DisplayData {
     
     private @Nullable ItemStack itemStack;
-    private @NotNull ItemDisplay.ItemDisplayTransform itemDisplayTransform;
+    private ItemDisplay.ItemDisplayTransform itemDisplayTransform;
     
     @Kapi
     public ItemDisplayData(
-            @NotNull Transformation transformation,
+            Transformation transformation,
             int interpolationDuration,
             float viewRange,
             float shadowRadius,
@@ -72,13 +73,16 @@ public class ItemDisplayData extends DisplayData {
             float displayWidth,
             float displayHeight,
             int interpolationDelay,
-            @NotNull Display.Billboard billboard,
-            @NotNull Color glowColorOverride,
-            @NotNull Display.Brightness brightness,
+            Display.Billboard billboard,
+            Color glowColorOverride,
+            Display.Brightness brightness,
             @Nullable ItemStack itemStack,
-            @NotNull ItemDisplay.ItemDisplayTransform itemDisplayTransform
+            ItemDisplay.ItemDisplayTransform itemDisplayTransform
     ) {
-        super(transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength, displayWidth, displayHeight, interpolationDelay, billboard, glowColorOverride, brightness);
+        super(
+                transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength, displayWidth,
+                displayHeight, interpolationDelay, billboard, glowColorOverride, brightness
+        );
         this.itemStack = itemStack;
         this.itemDisplayTransform = itemDisplayTransform;
     }
@@ -90,7 +94,7 @@ public class ItemDisplayData extends DisplayData {
      * @param data The data to copy
      */
     @Kapi
-    public ItemDisplayData(@NotNull ItemDisplayData data) {
+    public ItemDisplayData(ItemDisplayData data) {
         super(data);
         this.itemStack = data.getItemStack();
         this.itemDisplayTransform = data.getItemDisplayTransform();
@@ -124,7 +128,6 @@ public class ItemDisplayData extends DisplayData {
      * @return item display transform
      */
     @Kapi
-    @NotNull
     public ItemDisplay.ItemDisplayTransform getItemDisplayTransform() {
         return itemDisplayTransform;
     }
@@ -136,7 +139,7 @@ public class ItemDisplayData extends DisplayData {
      * @param display new display
      */
     @Kapi
-    public void setItemDisplayTransform(@NotNull ItemDisplay.ItemDisplayTransform display) {
+    public void setItemDisplayTransform(ItemDisplay.ItemDisplayTransform display) {
         this.itemDisplayTransform = display;
     }
 }

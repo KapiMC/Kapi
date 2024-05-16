@@ -49,20 +49,21 @@ import org.bukkit.entity.ItemDisplay;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Transformation;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Used to render item displays.
  */
 @Kapi
+@NullMarked
 public class ItemDisplayRender extends ItemDisplayData implements Renderable {
     
-    private ItemDisplay entity;
+    private @Nullable ItemDisplay entity;
     
     @Kapi
     public ItemDisplayRender(
-            @NotNull Transformation transformation,
+            Transformation transformation,
             int interpolationDuration,
             float viewRange,
             float shadowRadius,
@@ -70,22 +71,30 @@ public class ItemDisplayRender extends ItemDisplayData implements Renderable {
             float displayWidth,
             float displayHeight,
             int interpolationDelay,
-            @NotNull Display.Billboard billboard,
-            @NotNull Color glowColorOverride,
-            @NotNull Display.Brightness brightness,
-            @NotNull ItemStack itemStack,
-            @NotNull ItemDisplay.ItemDisplayTransform itemDisplayTransform
+            Display.Billboard billboard,
+            Color glowColorOverride,
+            Display.Brightness brightness,
+            ItemStack itemStack,
+            ItemDisplay.ItemDisplayTransform itemDisplayTransform
     ) {
-        super(transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength, displayWidth, displayHeight, interpolationDelay, billboard, glowColorOverride, brightness, itemStack, itemDisplayTransform);
+        super(
+                transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength,
+                displayWidth, displayHeight, interpolationDelay, billboard, glowColorOverride,
+                brightness, itemStack, itemDisplayTransform
+        );
     }
     
     @Kapi
-    public ItemDisplayRender(@NotNull ItemDisplayData data) {
+    public ItemDisplayRender(ItemDisplayData data) {
         super(data);
     }
     
     @Override
     public void spawn(World world, Vector point) {
+        if (entity != null) {
+            throw new IllegalStateException(
+                    "Cannot spawn an item display that has already been spawned");
+        }
         entity = world.spawn(point.toLocation(world), ItemDisplay.class);
         entity.setTransformation(getTransformation());
         entity.setInterpolationDuration(getInterpolationDuration());
@@ -109,98 +118,108 @@ public class ItemDisplayRender extends ItemDisplayData implements Renderable {
     
     @Override
     public void despawn(World world, Vector point) {
+        if (entity == null) {
+            throw new IllegalStateException(
+                    "Cannot despawn an item display that has not been spawned");
+        }
         entity.remove();
     }
     
     @Kapi
     @Override
-    public void setTransformation(@NotNull Transformation transformation) {
+    public boolean isSpawned() {
+        return entity != null;
+    }
+    
+    @Kapi
+    @Override
+    public void setTransformation(Transformation transformation) {
         super.setTransformation(transformation);
-        entity.setTransformation(transformation);
+        if (entity != null) entity.setTransformation(transformation);
     }
     
     @Kapi
     @Override
     public void setInterpolationDuration(int duration) {
         super.setInterpolationDuration(duration);
-        entity.setInterpolationDuration(duration);
+        if (entity != null) entity.setInterpolationDuration(duration);
     }
     
     @Kapi
     @Override
     public void setViewRange(float range) {
         super.setViewRange(range);
-        entity.setViewRange(range);
+        if (entity != null) entity.setViewRange(range);
     }
     
     @Kapi
     @Override
     public void setShadowRadius(float radius) {
         super.setShadowRadius(radius);
-        entity.setShadowRadius(radius);
+        if (entity != null) entity.setShadowRadius(radius);
     }
     
     @Kapi
     @Override
     public void setShadowStrength(float strength) {
         super.setShadowStrength(strength);
-        entity.setShadowStrength(strength);
+        if (entity != null) entity.setShadowStrength(strength);
     }
     
     @Kapi
     @Override
     public void setDisplayWidth(float width) {
         super.setDisplayWidth(width);
-        entity.setDisplayWidth(width);
+        if (entity != null) entity.setDisplayWidth(width);
     }
     
     @Kapi
     @Override
     public void setDisplayHeight(float height) {
         super.setDisplayHeight(height);
-        entity.setDisplayHeight(height);
+        if (entity != null) entity.setDisplayHeight(height);
     }
     
     @Kapi
     @Override
     public void setInterpolationDelay(int ticks) {
         super.setInterpolationDelay(ticks);
-        entity.setInterpolationDelay(ticks);
+        if (entity != null) entity.setInterpolationDelay(ticks);
     }
     
     @Kapi
     @Override
-    public void setBillboard(Display.@NotNull Billboard billboard) {
+    public void setBillboard(Display.Billboard billboard) {
         super.setBillboard(billboard);
-        entity.setBillboard(billboard);
+        if (entity != null) entity.setBillboard(billboard);
     }
     
     @Kapi
     @Override
-    public void setGlowColorOverride(@NotNull Color color) {
+    public void setGlowColorOverride(Color color) {
         super.setGlowColorOverride(color);
-        entity.setGlowColorOverride(color);
+        if (entity != null) entity.setGlowColorOverride(color);
     }
     
     @Kapi
     @Override
-    public void setBrightness(Display.@NotNull Brightness brightness) {
+    public void setBrightness(Display.Brightness brightness) {
         super.setBrightness(brightness);
-        entity.setBrightness(brightness);
+        if (entity != null) entity.setBrightness(brightness);
     }
     
     @Kapi
     @Override
     public void setItemStack(@Nullable ItemStack item) {
         super.setItemStack(item);
-        entity.setItemStack(item);
+        if (entity != null) entity.setItemStack(item);
     }
     
     @Kapi
     @Override
-    public void setItemDisplayTransform(ItemDisplay.@NotNull ItemDisplayTransform display) {
+    public void setItemDisplayTransform(ItemDisplay.ItemDisplayTransform display) {
         super.setItemDisplayTransform(display);
-        entity.setItemDisplayTransform(display);
+        if (entity != null) entity.setItemDisplayTransform(display);
     }
     
     @Kapi

@@ -43,6 +43,8 @@ package me.kyren223.kapi.math;
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.data.Pair;
 import me.kyren223.kapi.data.Result;
+import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.NullMarked;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
@@ -61,15 +63,20 @@ import java.util.stream.Collectors;
  * Utility class for cryptographic operations.
  */
 @Kapi
+@NullMarked
 public class CryptoUtils {
     
     private CryptoUtils() {
         throw new AssertionError("CryptoUtils should not be instantiated");
     }
     
+    @Kapi
     public static final String RSA = "RSA";
+    @Kapi
     public static final String AES = "AES";
+    @Kapi
     public static final String AES_CBC_PKCS5PADDING = "AES/CBC/PKCS5Padding";
+    @Kapi
     public static final String SHA_256 = "SHA-256";
     
     /**
@@ -89,25 +96,27 @@ public class CryptoUtils {
      * For decryption, use {@link #decrypt(String, String, SecretKey, IvParameterSpec)}.
      *
      * @param algorithm the algorithm to use
-     * @param input the input string to encrypt
-     * @param key the key to use for encryption
+     * @param input     the input string to encrypt
+     * @param key       the key to use for encryption
      * @return a pair of the encrypted string and the IV used
      *         or an error if the encryption failed
      * @see #encrypt(String, String, SecretKey, IvParameterSpec)
      * @see #decrypt(String, String, SecretKey, IvParameterSpec)
      */
     @Kapi
-    public static Result<Pair<String, IvParameterSpec>, Exception> encrypt(
-            String algorithm, String input, SecretKey key) {
+    @Contract(pure = true)
+    public static Result<Pair<String,IvParameterSpec>,Exception> encrypt(
+            String algorithm, String input, SecretKey key
+    ) {
         try {
             IvParameterSpec iv = generateIv();
             Cipher cipher = Cipher.getInstance(algorithm);
             cipher.init(Cipher.ENCRYPT_MODE, key, iv);
             byte[] cipherText = cipher.doFinal(input.getBytes());
             return Result.ok(Pair.of(Base64.getEncoder().encodeToString(cipherText), iv));
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException
-                 | InvalidAlgorithmParameterException | InvalidKeyException
-                 | BadPaddingException | IllegalBlockSizeException e) {
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException |
+                 InvalidAlgorithmParameterException | InvalidKeyException | BadPaddingException |
+                 IllegalBlockSizeException e) {
             return Result.err(e);
         }
     }
@@ -119,24 +128,27 @@ public class CryptoUtils {
      * for cases where the IV is not known in advance.
      *
      * @param algorithm the algorithm to use
-     * @param input the input string to encrypt
-     * @param key the key to use for encryption
-     * @param iv the IV to use for encryption
+     * @param input     the input string to encrypt
+     * @param key       the key to use for encryption
+     * @param iv        the IV to use for encryption
      * @return the encrypted string or an error if the encryption failed
      * @see #encrypt(String, String, SecretKey)
      * @see #decrypt(String, String, SecretKey, IvParameterSpec)
      */
     @Kapi
-    public static Result<String, Exception> encrypt(
-            String algorithm, String input, SecretKey key, IvParameterSpec iv) {
+    @Contract(pure = true)
+    public static Result<String,Exception> encrypt(
+            String algorithm, String input, SecretKey key,
+            IvParameterSpec iv
+    ) {
         try {
             Cipher cipher = Cipher.getInstance(algorithm);
             cipher.init(Cipher.ENCRYPT_MODE, key, iv);
             byte[] cipherText = cipher.doFinal(input.getBytes());
             return Result.ok(Base64.getEncoder().encodeToString(cipherText));
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException
-                 | InvalidAlgorithmParameterException | InvalidKeyException
-                 | BadPaddingException | IllegalBlockSizeException e) {
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException |
+                 InvalidAlgorithmParameterException | InvalidKeyException | BadPaddingException |
+                 IllegalBlockSizeException e) {
             return Result.err(e);
         }
     }
@@ -147,20 +159,23 @@ public class CryptoUtils {
      * For decryption, use {@link #decrypt(String, String, PrivateKey)}.
      *
      * @param algorithm the algorithm to use
-     * @param input the input string to encrypt
+     * @param input     the input string to encrypt
      * @param publicKey the public key to use for encryption
      * @return the encrypted string or an error if the encryption failed
      * @see #decrypt(String, String, PrivateKey)
      */
     @Kapi
-    public static Result<String, Exception> encrypt(String algorithm, String input, PublicKey publicKey) {
+    @Contract(pure = true)
+    public static Result<String,Exception> encrypt(
+            String algorithm, String input, PublicKey publicKey
+    ) {
         try {
             Cipher cipher = Cipher.getInstance(algorithm);
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             byte[] cipherText = cipher.doFinal(input.getBytes());
             return Result.ok(Base64.getEncoder().encodeToString(cipherText));
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
-                 | IllegalBlockSizeException | BadPaddingException e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
+                 IllegalBlockSizeException | BadPaddingException e) {
             return Result.err(e);
         }
     }
@@ -169,21 +184,24 @@ public class CryptoUtils {
      * Signs a string using the given algorithm and private key.<br>
      * For verification, use {@link #verify(String, String, PublicKey)}.<br>
      *
-     * @param algorithm the algorithm to use
-     * @param input the input string to encrypt
+     * @param algorithm  the algorithm to use
+     * @param input      the input string to encrypt
      * @param privateKey the private key to use for encryption
      * @return the signed string or an error if the signing failed
      * @see #verify(String, String, PublicKey)
      */
     @Kapi
-    public static Result<String, Exception> sign(String algorithm, String input, PrivateKey privateKey) {
+    @Contract(pure = true)
+    public static Result<String,Exception> sign(
+            String algorithm, String input, PrivateKey privateKey
+    ) {
         try {
             Cipher cipher = Cipher.getInstance(algorithm);
             cipher.init(Cipher.ENCRYPT_MODE, privateKey);
             byte[] cipherText = cipher.doFinal(input.getBytes());
             return Result.ok(Base64.getEncoder().encodeToString(cipherText));
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
-                 | IllegalBlockSizeException | BadPaddingException e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
+                 IllegalBlockSizeException | BadPaddingException e) {
             return Result.err(e);
         }
     }
@@ -192,25 +210,28 @@ public class CryptoUtils {
      * Decrypts a string using the given algorithm, key and IV.<br>
      * For encryption, use {@link #encrypt(String, String, SecretKey)}.<br>
      *
-     * @param algorithm the algorithm to use
+     * @param algorithm  the algorithm to use
      * @param cipherText the cipher text to decrypt
-     * @param key the key to use for decryption
-     * @param iv the IV to use for decryption
+     * @param key        the key to use for decryption
+     * @param iv         the IV to use for decryption
      * @return the decrypted string or an error if the decryption failed
      * @see #encrypt(String, String, SecretKey)
      * @see #encrypt(String, String, SecretKey, IvParameterSpec)
      */
     @Kapi
-    public static Result<String, Exception> decrypt(
-            String algorithm, String cipherText, SecretKey key, IvParameterSpec iv) {
+    @Contract(pure = true)
+    public static Result<String,Exception> decrypt(
+            String algorithm, String cipherText, SecretKey key,
+            IvParameterSpec iv
+    ) {
         try {
             Cipher cipher = Cipher.getInstance(algorithm);
             cipher.init(Cipher.DECRYPT_MODE, key, iv);
             byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(cipherText));
             return Result.ok(new String(decryptedBytes));
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException
-                 | InvalidAlgorithmParameterException | InvalidKeyException
-                 | BadPaddingException | IllegalBlockSizeException e) {
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException |
+                 InvalidAlgorithmParameterException | InvalidKeyException | BadPaddingException |
+                 IllegalBlockSizeException e) {
             return Result.err(e);
         }
     }
@@ -219,21 +240,24 @@ public class CryptoUtils {
      * Verifies a string using the given algorithm and public key.<br>
      * For signing, use {@link #sign(String, String, PrivateKey)}.<br>
      *
-     * @param algorithm the algorithm to use
+     * @param algorithm  the algorithm to use
      * @param cipherText the cipher text to verify
-     * @param publicKey the public key to use for verification
+     * @param publicKey  the public key to use for verification
      * @return the decrypted string (for verification) or an error if the decryption failed
      * @see #sign(String, String, PrivateKey)
      */
     @Kapi
-    public static Result<String, Exception> verify(String algorithm, String cipherText, PublicKey publicKey) {
+    @Contract(pure = true)
+    public static Result<String,Exception> verify(
+            String algorithm, String cipherText, PublicKey publicKey
+    ) {
         try {
             Cipher cipher = Cipher.getInstance(algorithm);
             cipher.init(Cipher.DECRYPT_MODE, publicKey);
             byte[] plainText = cipher.doFinal(Base64.getDecoder().decode(cipherText));
             return Result.ok(new String(plainText));
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
-                 | IllegalBlockSizeException | BadPaddingException e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
+                 IllegalBlockSizeException | BadPaddingException e) {
             return Result.err(e);
         }
     }
@@ -242,21 +266,24 @@ public class CryptoUtils {
      * Decrypts a string using the given algorithm and private key.<br>
      * For encryption, use {@link #encrypt(String, String, PublicKey)}.<br>
      *
-     * @param algorithm the algorithm to use
+     * @param algorithm  the algorithm to use
      * @param cipherText the cipher text to decrypt
      * @param privateKey the private key to use for decryption
      * @return the decrypted string or an error if the decryption failed
      * @see #encrypt(String, String, PublicKey)
      */
     @Kapi
-    public static Result<String, Exception> decrypt(String algorithm, String cipherText, PrivateKey privateKey) {
+    @Contract(pure = true)
+    public static Result<String,Exception> decrypt(
+            String algorithm, String cipherText, PrivateKey privateKey
+    ) {
         try {
             Cipher cipher = Cipher.getInstance(algorithm);
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
             byte[] plainText = cipher.doFinal(Base64.getDecoder().decode(cipherText));
             return Result.ok(new String(plainText));
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
-                 | IllegalBlockSizeException | BadPaddingException e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
+                 IllegalBlockSizeException | BadPaddingException e) {
             return Result.err(e);
         }
     }
@@ -269,14 +296,17 @@ public class CryptoUtils {
      * {@link #AES_CBC_PKCS5PADDING} as the algorithm internally.<br>
      *
      * @param input the input string to encrypt
-     * @param key the key to use for encryption
+     * @param key   the key to use for encryption
      * @return a pair of the encrypted string and the IV used
      *         or an error if the encryption failed
      * @see #decryptAes(String, SecretKey, IvParameterSpec)
      * @see #encrypt(String, String, SecretKey, IvParameterSpec)
      */
     @Kapi
-    public static Result<Pair<String, IvParameterSpec>, Exception> encryptAes(String input, SecretKey key) {
+    @Contract(pure = true)
+    public static Result<Pair<String,IvParameterSpec>,Exception> encryptAes(
+            String input, SecretKey key
+    ) {
         return encrypt(AES_CBC_PKCS5PADDING, input, key);
     }
     
@@ -290,14 +320,17 @@ public class CryptoUtils {
      * {@link #AES_CBC_PKCS5PADDING} as the algorithm internally.<br>
      *
      * @param input the input string to encrypt
-     * @param key the key to use for encryption
-     * @param iv the IV to use for encryption
+     * @param key   the key to use for encryption
+     * @param iv    the IV to use for encryption
      * @return the encrypted string or an error if the encryption failed
      * @see #decryptAes(String, SecretKey, IvParameterSpec)
      * @see #encrypt(String, String, SecretKey)
      */
     @Kapi
-    public static Result<String, Exception> encryptAes(String input, SecretKey key, IvParameterSpec iv) {
+    @Contract(pure = true)
+    public static Result<String,Exception> encryptAes(
+            String input, SecretKey key, IvParameterSpec iv
+    ) {
         return encrypt(AES_CBC_PKCS5PADDING, input, key, iv);
     }
     
@@ -309,14 +342,17 @@ public class CryptoUtils {
      * {@link #AES_CBC_PKCS5PADDING} as the algorithm internally.<br>
      *
      * @param cipherText the cipher text to decrypt
-     * @param key the key to use for decryption
-     * @param iv the IV to use for decryption
+     * @param key        the key to use for decryption
+     * @param iv         the IV to use for decryption
      * @return the decrypted string or an error if the decryption failed
      * @see #encryptAes(String, SecretKey)
      * @see #encrypt(String, String, SecretKey, IvParameterSpec)
      */
     @Kapi
-    public static Result<String, Exception> decryptAes(String cipherText, SecretKey key, IvParameterSpec iv) {
+    @Contract(pure = true)
+    public static Result<String,Exception> decryptAes(
+            String cipherText, SecretKey key, IvParameterSpec iv
+    ) {
         return decrypt(AES_CBC_PKCS5PADDING, cipherText, key, iv);
     }
     
@@ -327,14 +363,17 @@ public class CryptoUtils {
      * Uses {@link #encrypt(String, String, PublicKey)} with
      * {@link #RSA} as the algorithm internally.<br>
      *
-     * @param input the input string to encrypt
+     * @param input     the input string to encrypt
      * @param publicKey the public key to use for encryption
      * @return the encrypted string or an error if the encryption failed
      * @see #decryptRsa(String, PrivateKey)
      * @see #encrypt(String, String, PublicKey)
      */
     @Kapi
-    public static Result<String, Exception> encryptRsa(String input, PublicKey publicKey) {
+    @Contract(pure = true)
+    public static Result<String,Exception> encryptRsa(
+            String input, PublicKey publicKey
+    ) {
         return encrypt(RSA, input, publicKey);
     }
     
@@ -352,7 +391,10 @@ public class CryptoUtils {
      * @see #decrypt(String, String, PrivateKey)
      */
     @Kapi
-    public static Result<String, Exception> decryptRsa(String cipherText, PrivateKey privateKey) {
+    @Contract(pure = true)
+    public static Result<String,Exception> decryptRsa(
+            String cipherText, PrivateKey privateKey
+    ) {
         return decrypt(RSA, cipherText, privateKey);
     }
     
@@ -363,13 +405,16 @@ public class CryptoUtils {
      * Uses {@link #sign(String, String, PrivateKey)} with
      * {@link #RSA} as the algorithm internally.<br>
      *
-     * @param message the message to sign
+     * @param message    the message to sign
      * @param privateKey the private key to use for signing
      * @return the signed message or an error if the signing failed
      * @see #verifyRsa(String, PublicKey)
      */
     @Kapi
-    public static Result<String, Exception> signRsa(String message, PrivateKey privateKey) {
+    @Contract(pure = true)
+    public static Result<String,Exception> signRsa(
+            String message, PrivateKey privateKey
+    ) {
         return sign(RSA, message, privateKey);
     }
     
@@ -385,7 +430,10 @@ public class CryptoUtils {
      * @return the decrypted string (for verification) or an error if the decryption failed
      */
     @Kapi
-    public static Result<String, Exception> verifyRsa(String signature, PublicKey publicKey) {
+    @Contract(pure = true)
+    public static Result<String,Exception> verifyRsa(
+            String signature, PublicKey publicKey
+    ) {
         return verify(RSA, signature, publicKey);
     }
     
@@ -397,12 +445,13 @@ public class CryptoUtils {
      * @see #generateRsaKeyPair()
      */
     @Kapi
-    public static Result<KeyPair, String> generateRsaKeyPair(int size) {
+    @Contract(pure = true)
+    public static Result<KeyPair,String> generateRsaKeyPair(int size) {
         final List<Integer> allowedSizes = List.of(1024, 2048, 3072, 4096);
         if (!allowedSizes.contains(size)) {
             String sizes = allowedSizes.stream()
-                    .map(java.lang.String::valueOf)
-                    .collect(Collectors.joining(", "));
+                                       .map(java.lang.String::valueOf)
+                                       .collect(Collectors.joining(", "));
             return Result.err("Invalid key size, must be one of " + sizes);
         }
         try {
@@ -423,6 +472,7 @@ public class CryptoUtils {
      * @see #generateRsaKeyPair(int)
      */
     @Kapi
+    @Contract(pure = true)
     public static KeyPair generateRsaKeyPair() {
         return generateRsaKeyPair(2048).expect("Size is valid, cannot error");
     }
@@ -435,12 +485,13 @@ public class CryptoUtils {
      * @see #generateAesKey()
      */
     @Kapi
-    public static Result<SecretKey, String> generateAesKey(int size) {
+    @Contract(pure = true)
+    public static Result<SecretKey,String> generateAesKey(int size) {
         final List<Integer> allowedSizes = List.of(128, 192, 256);
         if (!allowedSizes.contains(size)) {
             String sizes = allowedSizes.stream()
-                    .map(java.lang.String::valueOf)
-                    .collect(Collectors.joining(", "));
+                                       .map(java.lang.String::valueOf)
+                                       .collect(Collectors.joining(", "));
             return Result.err("Invalid key size, must be one of " + sizes);
         }
         try {
@@ -461,7 +512,8 @@ public class CryptoUtils {
      * @see #generateAesKey(int)
      */
     @Kapi
-    public static Result<SecretKey, String> generateAesKey() {
+    @Contract(pure = true)
+    public static Result<SecretKey,String> generateAesKey() {
         return generateAesKey(256);
     }
     
@@ -472,6 +524,7 @@ public class CryptoUtils {
      * @return the hashed string
      */
     @Kapi
+    @Contract(pure = true)
     public static String hashString(String input) {
         try {
             MessageDigest digest = MessageDigest.getInstance(SHA_256);
@@ -491,7 +544,8 @@ public class CryptoUtils {
      * @see #stringToPublicKey(String)
      */
     @Kapi
-    public static Result<String, String> publicKeyToString(PublicKey publicKey) {
+    @Contract(pure = true)
+    public static Result<String,String> publicKeyToString(PublicKey publicKey) {
         byte[] keyBytes = publicKey.getEncoded();
         if (keyBytes == null) {
             return Result.err("Public key does not support encodings");
@@ -508,7 +562,8 @@ public class CryptoUtils {
      * @see #stringToPrivateKey(String)
      */
     @Kapi
-    public static Result<String, String> privateKeyToString(PrivateKey privateKey) {
+    @Contract(pure = true)
+    public static Result<String,String> privateKeyToString(PrivateKey privateKey) {
         byte[] keyBytes = privateKey.getEncoded();
         if (keyBytes == null) {
             return Result.err("Private key does not support encodings");
@@ -525,7 +580,8 @@ public class CryptoUtils {
      * @see #stringToAesKey(String)
      */
     @Kapi
-    public static Result<String, Exception> aesKeyToString(SecretKey key) {
+    @Contract(pure = true)
+    public static Result<String,Exception> aesKeyToString(SecretKey key) {
         byte[] keyBytes = key.getEncoded();
         if (keyBytes == null) {
             return Result.err(new IllegalArgumentException("AES key does not support encodings"));
@@ -542,6 +598,7 @@ public class CryptoUtils {
      * @see #stringToIv(String)
      */
     @Kapi
+    @Contract(pure = true)
     public static String ivToString(IvParameterSpec iv) {
         return Base64.getEncoder().encodeToString(iv.getIV());
     }
@@ -556,9 +613,13 @@ public class CryptoUtils {
      * @see #publicKeyToString(PublicKey)
      */
     @Kapi
-    public static Result<PublicKey, Exception> stringToPublicKey(String publicKeyStr) {
+    @Contract(pure = true)
+    public static Result<PublicKey,Exception> stringToPublicKey(
+            String publicKeyStr
+    ) {
         try {
-            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKeyStr));
+            X509EncodedKeySpec keySpec =
+                    new X509EncodedKeySpec(Base64.getDecoder().decode(publicKeyStr));
             KeyFactory keyFactory = KeyFactory.getInstance(RSA);
             PublicKey publicKey = keyFactory.generatePublic(keySpec);
             return Result.ok(publicKey);
@@ -579,9 +640,13 @@ public class CryptoUtils {
      * @see #privateKeyToString(PrivateKey)
      */
     @Kapi
-    public static Result<PrivateKey, Exception> stringToPrivateKey(String privateKeyStr) {
+    @Contract(pure = true)
+    public static Result<PrivateKey,Exception> stringToPrivateKey(
+            String privateKeyStr
+    ) {
         try {
-            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKeyStr));
+            PKCS8EncodedKeySpec keySpec =
+                    new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKeyStr));
             KeyFactory keyFactory = KeyFactory.getInstance(RSA);
             PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
             return Result.ok(privateKey);
@@ -600,7 +665,8 @@ public class CryptoUtils {
      * @see #aesKeyToString(SecretKey)
      */
     @Kapi
-    public static Result<SecretKey, Exception> stringToAesKey(String keyStr) {
+    @Contract(pure = true)
+    public static Result<SecretKey,Exception> stringToAesKey(String keyStr) {
         try {
             byte[] keyBytes = Base64.getDecoder().decode(keyStr);
             SecretKey key = new SecretKeySpec(keyBytes, AES);
@@ -618,7 +684,8 @@ public class CryptoUtils {
      * @see #ivToString(IvParameterSpec)
      */
     @Kapi
-    public static Result<IvParameterSpec, Exception> stringToIv(String ivString) {
+    @Contract(pure = true)
+    public static Result<IvParameterSpec,Exception> stringToIv(String ivString) {
         try {
             byte[] ivBytes = Base64.getDecoder().decode(ivString);
             return Result.ok(new IvParameterSpec(ivBytes));

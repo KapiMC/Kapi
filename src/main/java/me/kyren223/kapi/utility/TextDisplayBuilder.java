@@ -44,14 +44,15 @@ import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.data.TextDisplayData;
 import org.bukkit.Color;
 import org.bukkit.entity.TextDisplay;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
-import javax.annotation.Nullable;
 
 /**
  * A builder for {@link TextDisplayData}.
  */
 @Kapi
+@NullMarked
 public class TextDisplayBuilder extends DisplayBuilder<TextDisplayBuilder> {
     
     private @Nullable String text;
@@ -61,7 +62,7 @@ public class TextDisplayBuilder extends DisplayBuilder<TextDisplayBuilder> {
     private boolean shadowed;
     private boolean seeThrough;
     private boolean defaultBackground;
-    private @NotNull TextDisplay.TextAlignment alignment;
+    private TextDisplay.TextAlignment alignment;
     
     private TextDisplayBuilder() {
         text = null;
@@ -126,7 +127,7 @@ public class TextDisplayBuilder extends DisplayBuilder<TextDisplayBuilder> {
      * @return this builder
      */
     @Kapi
-    public TextDisplayBuilder text(@NotNull String text) {
+    public TextDisplayBuilder text(String text) {
         this.text = text;
         return this;
     }
@@ -149,7 +150,7 @@ public class TextDisplayBuilder extends DisplayBuilder<TextDisplayBuilder> {
      * @return this builder
      */
     @Kapi
-    public TextDisplayBuilder backgroundColor(@Nullable Color backgroundColor) {
+    public TextDisplayBuilder backgroundColor(final @Nullable Color backgroundColor) {
         this.backgroundColor = backgroundColor;
         return this;
     }
@@ -209,7 +210,7 @@ public class TextDisplayBuilder extends DisplayBuilder<TextDisplayBuilder> {
      * @return this builder
      */
     @Kapi
-    public TextDisplayBuilder alignment(@NotNull TextDisplay.TextAlignment alignment) {
+    public TextDisplayBuilder alignment(final TextDisplay.TextAlignment alignment) {
         this.alignment = alignment;
         return this;
     }

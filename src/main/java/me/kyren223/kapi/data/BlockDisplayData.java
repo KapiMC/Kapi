@@ -47,7 +47,7 @@ import org.bukkit.Color;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Display;
 import org.bukkit.util.Transformation;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Holds the data for a block display.<br>
@@ -55,13 +55,14 @@ import org.jetbrains.annotations.NotNull;
  * See {@link BlockDisplayBuilder} for creating new instances.
  */
 @Kapi
+@NullMarked
 public class BlockDisplayData extends DisplayData {
     
-    private @NotNull BlockData block;
+    private BlockData block;
     
     @Kapi
     public BlockDisplayData(
-            @NotNull Transformation transformation,
+            Transformation transformation,
             int interpolationDuration,
             float viewRange,
             float shadowRadius,
@@ -69,12 +70,15 @@ public class BlockDisplayData extends DisplayData {
             float displayWidth,
             float displayHeight,
             int interpolationDelay,
-            @NotNull Display.Billboard billboard,
-            @NotNull Color glowColorOverride,
-            @NotNull Display.Brightness brightness,
-            @NotNull BlockData block
+            Display.Billboard billboard,
+            Color glowColorOverride,
+            Display.Brightness brightness,
+            BlockData block
     ) {
-        super(transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength, displayWidth, displayHeight, interpolationDelay, billboard, glowColorOverride, brightness);
+        super(
+                transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength, displayWidth,
+                displayHeight, interpolationDelay, billboard, glowColorOverride, brightness
+        );
         this.block = block;
     }
     
@@ -85,7 +89,7 @@ public class BlockDisplayData extends DisplayData {
      * @param data The data to copy
      */
     @Kapi
-    public BlockDisplayData(@NotNull BlockDisplayData data) {
+    public BlockDisplayData(BlockDisplayData data) {
         super(data);
         this.block = data.getBlock();
     }
@@ -95,7 +99,6 @@ public class BlockDisplayData extends DisplayData {
      *
      * @return the displayed block
      */
-    @NotNull
     @Kapi
     public BlockData getBlock() {
         return block;
@@ -107,7 +110,7 @@ public class BlockDisplayData extends DisplayData {
      * @param block the new block
      */
     @Kapi
-    public void setBlock(@NotNull BlockData block) {
+    public void setBlock(BlockData block) {
         this.block = block;
     }
 }

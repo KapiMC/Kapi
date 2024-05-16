@@ -43,8 +43,9 @@ package me.kyren223.kapi.math;
 import me.kyren223.kapi.annotations.Kapi;
 import org.bukkit.Color;
 import org.bukkit.util.Vector;
-
+import org.jetbrains.annotations.Contract;
 import org.joml.Math;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Math utility class for common math operations.<br>
@@ -55,6 +56,7 @@ import org.joml.Math;
  * that are not present in the standard libraries.
  */
 @Kapi
+@NullMarked
 public class Mathf {
     
     private Mathf() {
@@ -62,10 +64,29 @@ public class Mathf {
     }
     
     /**
-     * The mathematical constant tau, equal to 2 * pi
-     * @see Math#PI
+     * The mathematical constant tau, equal to 2 * {@link Math#PI}
      */
-    @Kapi public static final double TAU = Math.PI * 2;
+    @Kapi
+    public static final double TAU = Math.PI * 2;
+    
+    /**
+     * The golden angle in radians.<br>
+     * This is the smaller of the two golden angles,
+     * usually considered the "golden angle".
+     *
+     * @see #PHI_BIG
+     */
+    @Kapi
+    public static final double PHI_SMALL = Math.PI * Math.sqrt(5) - 1;
+    
+    /**
+     * The golden angle in radians.<br>
+     * This is the larger of the two golden angles.
+     *
+     * @see #PHI_SMALL
+     */
+    @Kapi
+    public static final double PHI_BIG = Math.PI * 2 - PHI_SMALL;
     
     /**
      * Linearly interpolates between two vectors.
@@ -76,7 +97,8 @@ public class Mathf {
      * @return The interpolated vector
      */
     @Kapi
-    public static Vector lerp(Vector a, Vector b, double t) {
+    @Contract(pure = true)
+    public static Vector lerp(final Vector a, final Vector b, double t) {
         t = Math.clamp(t, 0, 1);
         return new Vector(
                 Math.lerp(a.getX(), b.getX(), t),
@@ -94,6 +116,7 @@ public class Mathf {
      * @return The interpolated vector
      */
     @Kapi
+    @Contract(pure = true)
     public static Vector slerp(Vector a, Vector b, double t) {
         t = Math.clamp(t, 0, 1);
         double dot = a.dot(b);
@@ -113,6 +136,8 @@ public class Mathf {
      * @param t The interpolation factor, clamped to 0-1
      * @return The interpolated color
      */
+    @Kapi
+    @Contract(pure = true)
     public static Color lerp(Color a, Color b, double t) {
         t = Math.clamp(t, 0, 1);
         return Color.fromRGB(
@@ -129,11 +154,15 @@ public class Mathf {
      * @param b The second double
      * @param v The value to find the interpolation factor for
      * @return The interpolation factor between 0-1
-     * @throws IllegalArgumentException if a and b are the same, as it would result in division by zero
+     * @throws IllegalArgumentException if a and b are the same, as it would result in division by
+     *                                  zero
      */
+    @Kapi
+    @Contract(pure = true)
     public static double iLerp(double a, double b, double v) {
         if (a == b) {
-            throw new IllegalArgumentException("a is the same as b which is not allowed due to division by zero");
+            throw new IllegalArgumentException(
+                    "a is the same as b which is not allowed due to division by zero");
         }
         return (v - a) / (b - a);
     }
@@ -142,15 +171,18 @@ public class Mathf {
      * Remaps a value between a given range to another range.<br>
      * Keeps the value proportional to the input range.
      *
-     * @param inputMin The minimum value of the input range
-     * @param inputMax The maximum value of the input range
+     * @param inputMin  The minimum value of the input range
+     * @param inputMax  The maximum value of the input range
      * @param outputMin The minimum value of the output range
      * @param outputMax The maximum value of the output range
-     * @param value The value to remap
+     * @param value     The value to remap
      * @return The remapped value
      */
     @Kapi
-    public static double remap(double inputMin, double inputMax, double outputMin, double outputMax, double value) {
+    @Contract(pure = true)
+    public static double remap(
+            double inputMin, double inputMax, double outputMin, double outputMax, double value
+    ) {
         return Math.lerp(outputMin, outputMax, iLerp(inputMin, inputMax, value));
     }
     
@@ -158,12 +190,13 @@ public class Mathf {
      * Calculates the end point of a line segment starting at a given point
      * and going in a given direction for a given length.
      *
-     * @param start The starting point
+     * @param start     The starting point
      * @param direction The direction vector
-     * @param length The length of the line segment
+     * @param length    The length of the line segment
      * @return The end point of the line segment
      */
     @Kapi
+    @Contract(pure = true)
     public static Vector pointFromDirection(Vector start, Vector direction, double length) {
         return start.clone().add(direction.clone().normalize().multiply(length));
     }

@@ -42,7 +42,8 @@ package me.kyren223.kapi.utility;
 
 import me.kyren223.kapi.annotations.Kapi;
 import org.bukkit.ChatColor;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -51,6 +52,7 @@ import java.util.regex.PatternSyntaxException;
  * A utility class that includes a bunch of useful methods.
  */
 @Kapi
+@NullMarked
 public class Utils {
     
     private Utils() {
@@ -64,7 +66,8 @@ public class Utils {
      * @return The colored string
      */
     @Kapi
-    public static @NotNull String col(@NotNull String s) {
+    @Contract(pure = true)
+    public static String col(String s) {
         return ChatColor.translateAlternateColorCodes('&', s);
     }
     
@@ -74,8 +77,10 @@ public class Utils {
      * due to using exceptions for validation.
      *
      * @param regex The regex to check
-     * @return Whether the regex is valid
+     * @return True if the regex is valid, false otherwise
      */
+    @Kapi
+    @Contract(pure = true)
     public static boolean isValidRegex(String regex) {
         try {
             Pattern.compile(regex);

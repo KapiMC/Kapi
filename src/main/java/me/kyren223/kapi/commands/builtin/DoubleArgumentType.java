@@ -55,6 +55,7 @@ import java.util.function.Predicate;
  */
 @Kapi
 @ApiStatus.Experimental
+// TODO Add @NullMarked
 public class DoubleArgumentType implements ArgumentType<Double> {
     
     private double min;
@@ -149,7 +150,7 @@ public class DoubleArgumentType implements ArgumentType<Double> {
     
     @Kapi
     @Override
-    public Result<Double, String> parse(List<String> arguments) {
+    public Result<Double,String> parse(List<String> arguments) {
         String input = arguments.remove(0);
         double value;
         try {

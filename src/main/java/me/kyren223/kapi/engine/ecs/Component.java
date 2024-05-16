@@ -41,6 +41,13 @@
 package me.kyren223.kapi.engine.ecs;
 
 import me.kyren223.kapi.annotations.Kapi;
+import me.kyren223.kapi.engine.Object3D;
+import org.bukkit.util.BoundingBox;
+import org.bukkit.util.Vector;
+import org.joml.Vector3fc;
+import org.jspecify.annotations.NullMarked;
+
+import java.util.function.Consumer;
 
 /**
  * A class that contains all the names of the built-in components.<br>
@@ -48,12 +55,32 @@ import me.kyren223.kapi.annotations.Kapi;
  * and reduces the chance of typos from using strings directly.
  */
 @Kapi
+@NullMarked
 public class Component {
     
     private Component() {
         throw new AssertionError("Component should not be instantiated");
     }
     
-    @Kapi public static final String VELOCITY = "velocity";
-    @Kapi public static final String ACCELERATION = "acceleration";
+    /**
+     * Related Systems: {@link System#velocity(Object3D)}<br>
+     * Supported types: {@link Vector3fc} and {@link Vector}
+     */
+    @Kapi
+    public static final String VELOCITY = "velocity";
+    
+    /**
+     * Related Systems: {@link System#acceleration(Object3D)}<br>
+     * Supported types: {@link Vector3fc} and {@link Vector}
+     */
+    @Kapi
+    public static final String ACCELERATION = "acceleration";
+    
+    /**
+     * Related Systems: {@link System#entityCollision(Object3D, Consumer)}
+     * Supported types: {@link Double}, {@link Vector},
+     * {@link Vector3fc} and {@link BoundingBox}
+     */
+    @Kapi
+    public static final String COLLISION_SHAPE = "collision_shape";
 }

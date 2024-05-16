@@ -42,8 +42,6 @@
 package me.kyren223.kapi.commands;
 
 import me.kyren223.kapi.annotations.Kapi;
-import me.kyren223.kapi.commands.builtin.LiteralArgumentType;
-import me.kyren223.kapi.data.Pair;
 import me.kyren223.kapi.data.Result;
 import me.kyren223.kapi.utility.KapiRegistry;
 import me.kyren223.kapi.utility.Log;
@@ -55,7 +53,6 @@ import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiConsumer;
 
 import static me.kyren223.kapi.commands.builtin.LiteralArgumentType.literal;
@@ -204,8 +201,11 @@ public class CommandBuilder {
         return context.getReturnValue();
     }
     
-    private List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        SuggestionCommandContext context = new SuggestionCommandContext(sender, command, label, args);
+    private List<String> onTabComplete(
+            CommandSender sender, Command command, String label, String[] args
+    ) {
+        SuggestionCommandContext context =
+                new SuggestionCommandContext(sender, command, label, args);
         
         return context.getReturnValue();
     }

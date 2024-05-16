@@ -38,47 +38,30 @@
  * - Kyren223
  */
 
-package me.kyren223.kapi.commands;
+package me.kyren223.kapi.data;
 
 import me.kyren223.kapi.annotations.Kapi;
-import me.kyren223.kapi.data.Result;
-import org.jetbrains.annotations.ApiStatus;
-
-import java.util.List;
+import org.jspecify.annotations.NullMarked;
 
 /**
- * Represents a Command Argument Type.
- *
- * @param <T> The java type of the argument.
+ * Used in {@link Result} and {@link Option},
+ * this exception is thrown when the assumption that a value is not null is violated.<br>
+ * For example, in {@link Result#unwrap()} when the result is Err.
  */
 @Kapi
-@ApiStatus.Internal
-// TODO Add @NullMarked
-public interface ArgumentType<T> {
-    /**
-     * For classes that implement {@link ArgumentType}, this method parses the argument.<br>
-     *
-     * @param arguments The list of command arguments that haven't been parsed yet<br>
-     *                  A list is being used because the argument may be a multi-word string.<br>
-     *                  Guaranteed to have at least one element.<br>
-     *                  <br>
-     *                  Note: This is a mutable list, you should remove all the arguments you've parsed.<br>
-     *                  Removing the parsed arguments ensures that the next argument type
-     *                  won't parse the same arguments.<br>
-     * @return A Result containing the parsed argument or an error message.
-     */
-    @Kapi
-    Result<T,String> parse(List<String> arguments);
+@NullMarked
+public class NullSafetyException extends RuntimeException {
     
-    /**
-     * Should NOT be called by the user.<br>
-     * <br>
-     * This should only be implemented by classes that implement {@link ArgumentType}.<br>
-     * To add a suggestion value, you should call the
-     * {@link SuggestionCommandContext#addSuggestion(String)} method.<br>
-     *
-     * @param context The context of the suggestion.
-     */
-    @Kapi
-    void getSuggestions(SuggestionCommandContext context);
+    public NullSafetyException(String message) {
+        super(message);
+    }
+    
+    public static NullSafetyException dueTo(String message) {
+        return new NullSafetyException(message);
+    }
+    
+    public static void throwDueTo(String message) {
+        throw dueTo(message);
+    }
+    
 }

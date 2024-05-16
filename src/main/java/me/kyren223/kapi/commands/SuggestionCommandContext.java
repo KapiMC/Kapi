@@ -55,6 +55,7 @@ import java.util.List;
  */
 @Kapi
 @ApiStatus.Internal
+// TODO Add @NullMarked
 public class SuggestionCommandContext extends CommandContext {
     
     private final List<String> returnValue;

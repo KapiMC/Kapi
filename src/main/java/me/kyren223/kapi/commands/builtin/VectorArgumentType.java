@@ -54,10 +54,11 @@ import java.util.List;
  */
 @Kapi
 @ApiStatus.Experimental
+// TODO Add @NullMarked
 public class VectorArgumentType implements ArgumentType<Vector> {
     
     @Override
-    public Result<Vector, String> parse(List<String> arguments) {
+    public Result<Vector,String> parse(List<String> arguments) {
         String xarg = arguments.remove(0);
         if (arguments.isEmpty()) {
             return Result.err("Missing y and z components");

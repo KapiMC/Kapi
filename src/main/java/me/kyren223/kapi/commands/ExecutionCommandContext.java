@@ -52,6 +52,7 @@ import org.jetbrains.annotations.ApiStatus;
  */
 @Kapi
 @ApiStatus.Internal
+// TODO Add @NullMarked
 public class ExecutionCommandContext extends CommandContext {
     
     private boolean returnValue;

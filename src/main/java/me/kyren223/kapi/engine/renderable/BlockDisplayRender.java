@@ -49,19 +49,21 @@ import org.bukkit.entity.BlockDisplay;
 import org.bukkit.entity.Display;
 import org.bukkit.util.Transformation;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Used to render block displays.
  */
 @Kapi
+@NullMarked
 public class BlockDisplayRender extends BlockDisplayData implements Renderable {
     
-    private BlockDisplay entity;
+    private @Nullable BlockDisplay entity;
     
     @Kapi
     public BlockDisplayRender(
-            @NotNull Transformation transformation,
+            Transformation transformation,
             int interpolationDuration,
             float viewRange,
             float shadowRadius,
@@ -69,25 +71,34 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
             float displayWidth,
             float displayHeight,
             int interpolationDelay,
-            @NotNull Display.Billboard billboard,
-            @NotNull Color glowColorOverride,
-            @NotNull Display.Brightness brightness,
-            @NotNull BlockData block
+            Display.Billboard billboard,
+            Color glowColorOverride,
+            Display.Brightness brightness,
+            BlockData block
     ) {
-        super(transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength, displayWidth, displayHeight, interpolationDelay, billboard, glowColorOverride, brightness, block);
+        super(
+                transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength,
+                displayWidth, displayHeight, interpolationDelay, billboard, glowColorOverride,
+                brightness, block
+        );
     }
     
     /**
      * Copy constructor
+     *
      * @param data The data to copy
      */
     @Kapi
-    public BlockDisplayRender(@NotNull BlockDisplayData data) {
+    public BlockDisplayRender(BlockDisplayData data) {
         super(data);
     }
     
     @Override
     public void spawn(World world, Vector point) {
+        if (entity != null) {
+            throw new IllegalStateException(
+                    "Cannot spawn a block display that has already been spawned");
+        }
         entity = world.spawn(point.toLocation(world), BlockDisplay.class);
         entity.setTransformation(getTransformation());
         entity.setInterpolationDuration(getInterpolationDuration());
@@ -110,92 +121,102 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
     
     @Override
     public void despawn(World world, Vector point) {
+        if (entity == null) {
+            throw new IllegalStateException(
+                    "Cannot despawn a block display that has not been spawned");
+        }
         entity.remove();
     }
     
     @Kapi
     @Override
-    public void setBlock(@NotNull BlockData block) {
+    public boolean isSpawned() {
+        return entity != null;
+    }
+    
+    @Kapi
+    @Override
+    public void setBlock(BlockData block) {
         super.setBlock(block);
-        entity.setBlock(block);
+        if (entity != null) entity.setBlock(block);
     }
     
     @Kapi
     
     @Override
-    public void setTransformation(@NotNull Transformation transformation) {
+    public void setTransformation(Transformation transformation) {
         super.setTransformation(transformation);
-        entity.setTransformation(transformation);
+        if (entity != null) entity.setTransformation(transformation);
     }
     
     @Kapi
     @Override
     public void setInterpolationDuration(int duration) {
         super.setInterpolationDuration(duration);
-        entity.setInterpolationDuration(duration);
+        if (entity != null) entity.setInterpolationDuration(duration);
     }
     
     @Kapi
     @Override
     public void setViewRange(float range) {
         super.setViewRange(range);
-        entity.setViewRange(range);
+        if (entity != null) entity.setViewRange(range);
     }
     
     @Kapi
     @Override
     public void setShadowRadius(float radius) {
         super.setShadowRadius(radius);
-        entity.setShadowRadius(radius);
+        if (entity != null) entity.setShadowRadius(radius);
     }
     
     @Kapi
     @Override
     public void setShadowStrength(float strength) {
         super.setShadowStrength(strength);
-        entity.setShadowStrength(strength);
+        if (entity != null) entity.setShadowStrength(strength);
     }
     
     @Kapi
     @Override
     public void setDisplayWidth(float width) {
         super.setDisplayWidth(width);
-        entity.setDisplayWidth(width);
+        if (entity != null) entity.setDisplayWidth(width);
     }
     
     @Kapi
     @Override
     public void setDisplayHeight(float height) {
         super.setDisplayHeight(height);
-        entity.setDisplayHeight(height);
+        if (entity != null) entity.setDisplayHeight(height);
     }
     
     @Kapi
     @Override
     public void setInterpolationDelay(int ticks) {
         super.setInterpolationDelay(ticks);
-        entity.setInterpolationDelay(ticks);
+        if (entity != null) entity.setInterpolationDelay(ticks);
     }
     
     @Kapi
     @Override
-    public void setBillboard(Display.@NotNull Billboard billboard) {
+    public void setBillboard(Display.Billboard billboard) {
         super.setBillboard(billboard);
-        entity.setBillboard(billboard);
+        if (entity != null) entity.setBillboard(billboard);
     }
     
     @Kapi
     @Override
-    public void setGlowColorOverride(@NotNull Color color) {
+    public void setGlowColorOverride(Color color) {
         super.setGlowColorOverride(color);
-        entity.setGlowColorOverride(color);
+        if (entity != null) entity.setGlowColorOverride(color);
     }
     
     @Kapi
     @Override
-    public void setBrightness(Display.@NotNull Brightness brightness) {
+    public void setBrightness(Display.Brightness brightness) {
         super.setBrightness(brightness);
-        entity.setBrightness(brightness);
+        if (entity != null) entity.setBrightness(brightness);
     }
     
     @Kapi

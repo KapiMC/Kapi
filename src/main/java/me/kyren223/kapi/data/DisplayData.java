@@ -44,9 +44,9 @@ import me.kyren223.kapi.annotations.Kapi;
 import org.bukkit.Color;
 import org.bukkit.entity.Display;
 import org.bukkit.util.Transformation;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Holds the common data for all displays.<br>
@@ -56,9 +56,10 @@ import org.joml.Vector3f;
  * {@link ItemDisplayData}, {@link BlockDisplayData} and {@link TextDisplayData}.
  */
 @Kapi
+@NullMarked
 public abstract class DisplayData {
     
-    private @NotNull Transformation transformation;
+    private Transformation transformation;
     private int interpolationDuration;
     private float viewRange;
     private float shadowRadius;
@@ -66,12 +67,12 @@ public abstract class DisplayData {
     private float displayWidth;
     private float displayHeight;
     private int interpolationDelay;
-    private @NotNull Display.Billboard billboard;
-    private @NotNull Color glowColorOverride;
-    private @NotNull Display.Brightness brightness;
+    private Display.Billboard billboard;
+    private Color glowColorOverride;
+    private Display.Brightness brightness;
     
     protected DisplayData(
-            @NotNull Transformation transformation,
+            Transformation transformation,
             int interpolationDuration,
             float viewRange,
             float shadowRadius,
@@ -79,9 +80,9 @@ public abstract class DisplayData {
             float displayWidth,
             float displayHeight,
             int interpolationDelay,
-            @NotNull Display.Billboard billboard,
-            @NotNull Color glowColorOverride,
-            @NotNull Display.Brightness brightness
+            Display.Billboard billboard,
+            Color glowColorOverride,
+            Display.Brightness brightness
     ) {
         this.transformation = transformation;
         this.interpolationDuration = interpolationDuration;
@@ -102,7 +103,7 @@ public abstract class DisplayData {
      *
      * @param data The data to copy
      */
-    protected DisplayData(@NotNull DisplayData data) {
+    protected DisplayData(DisplayData data) {
         Vector3f translation = new Vector3f();
         Quaternionf leftRotation = new Quaternionf();
         Vector3f scale = new Vector3f();
@@ -123,7 +124,8 @@ public abstract class DisplayData {
         
         this.billboard = data.getBillboard();
         this.glowColorOverride = Color.fromARGB(data.getGlowColorOverride().asARGB());
-        this.brightness = new Display.Brightness(data.getBrightness().getBlockLight(),
+        this.brightness = new Display.Brightness(
+                data.getBrightness().getBlockLight(),
                 data.getBrightness().getSkyLight()
         );
     }
@@ -134,7 +136,6 @@ public abstract class DisplayData {
      * @return the transformation
      */
     @Kapi
-    @NotNull
     public Transformation getTransformation() {
         return transformation;
     }
@@ -145,7 +146,7 @@ public abstract class DisplayData {
      * @param transformation the new transformation
      */
     @Kapi
-    public void setTransformation(@NotNull Transformation transformation) {
+    public void setTransformation(Transformation transformation) {
         this.transformation = transformation;
     }
     
@@ -294,7 +295,6 @@ public abstract class DisplayData {
      *
      * @return view range
      */
-    @NotNull
     @Kapi
     public Display.Billboard getBillboard() {
         return billboard;
@@ -308,7 +308,7 @@ public abstract class DisplayData {
      * @param billboard new setting
      */
     @Kapi
-    public void setBillboard(@NotNull Display.Billboard billboard) {
+    public void setBillboard(Display.Billboard billboard) {
         this.billboard = billboard;
     }
     
@@ -318,7 +318,6 @@ public abstract class DisplayData {
      * @return glow color
      */
     @Kapi
-    @NotNull
     public Color getGlowColorOverride() {
         return glowColorOverride;
     }
@@ -329,7 +328,7 @@ public abstract class DisplayData {
      * @param color new color
      */
     @Kapi
-    public void setGlowColorOverride(@NotNull Color color) {
+    public void setGlowColorOverride(Color color) {
         this.glowColorOverride = color;
     }
     
@@ -338,7 +337,6 @@ public abstract class DisplayData {
      *
      * @return brightness override, if set
      */
-    @NotNull
     @Kapi
     public Display.Brightness getBrightness() {
         return brightness;
@@ -350,7 +348,7 @@ public abstract class DisplayData {
      * @param brightness new brightness override
      */
     @Kapi
-    public void setBrightness(@NotNull Display.Brightness brightness) {
+    public void setBrightness(Display.Brightness brightness) {
         this.brightness = brightness;
     }
 }

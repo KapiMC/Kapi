@@ -44,7 +44,10 @@ import me.kyren223.kapi.data.Pair;
 import org.jetbrains.annotations.ApiStatus;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -53,6 +56,7 @@ import java.util.function.Predicate;
  */
 @Kapi
 @ApiStatus.Internal
+// TODO Add @NullMarked
 public class ArgumentBuilder<T> {
     
     private final T parent;
@@ -125,7 +129,7 @@ public class ArgumentBuilder<T> {
      * Adds a requirement to the command.
      * See {@link #require(Predicate)} if you don't want to provide an error message.
      *
-     * @param message The error message if the requirement is not met (can be null)
+     * @param message     The error message if the requirement is not met (can be null)
      * @param requirement A predicate that checks whether the requirement is met<br>
      *                    Takes a {@link CommandContext} as an argument
      * @return this argument builder for chaining

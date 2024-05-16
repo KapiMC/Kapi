@@ -41,6 +41,7 @@
 package me.kyren223.kapi.data;
 
 import me.kyren223.kapi.annotations.Kapi;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Utility class for converting minecraft time durations between different units.<br>
@@ -49,6 +50,7 @@ import me.kyren223.kapi.annotations.Kapi;
  * Units range from ticks to days. Ticks are the smallest unit in minecraft.
  */
 @Kapi
+@NullMarked
 public enum TimeUnit {
     TICKS(1),
     SECONDS(20),
@@ -135,7 +137,7 @@ public enum TimeUnit {
      * Converts the given duration to the specified unit.
      *
      * @param duration The duration to convert
-     * @param unit The unit to convert to
+     * @param unit     The unit to convert to
      * @return The duration in the specified unit
      */
     @Kapi
@@ -147,12 +149,12 @@ public enum TimeUnit {
      * Converts the given duration to the specified unit.
      *
      * @param duration The duration to convert
-     * @param from The unit of the duration
-     * @param to The unit to convert to
+     * @param from     The unit of the duration
+     * @param to       The unit to convert to
      * @return The duration in the specified unit
      */
     @Kapi
-    public static long convert (long duration, TimeUnit from, TimeUnit to) {
+    public static long convert(long duration, TimeUnit from, TimeUnit to) {
         return from.convert(duration, to);
     }
     

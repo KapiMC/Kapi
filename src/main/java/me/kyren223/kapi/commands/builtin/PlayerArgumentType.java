@@ -55,6 +55,7 @@ import java.util.List;
  */
 @Kapi
 @ApiStatus.Experimental
+// TODO Add @NullMarked
 public class PlayerArgumentType implements ArgumentType<Player> {
     
     private boolean suggest;
@@ -83,7 +84,7 @@ public class PlayerArgumentType implements ArgumentType<Player> {
     
     @Kapi
     @Override
-    public Result<Player, String> parse(List<String> arguments) {
+    public Result<Player,String> parse(List<String> arguments) {
         String name = arguments.remove(0);
         Player player = Bukkit.getPlayer(name);
         if (player == null) {

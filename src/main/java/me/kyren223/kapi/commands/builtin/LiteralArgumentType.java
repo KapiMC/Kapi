@@ -53,6 +53,7 @@ import java.util.List;
  */
 @Kapi
 @ApiStatus.Experimental
+// TODO Add @NullMarked
 public class LiteralArgumentType implements ArgumentType<String> {
     
     private final String literal;
@@ -88,7 +89,7 @@ public class LiteralArgumentType implements ArgumentType<String> {
     
     @Kapi
     @Override
-    public Result<String, String> parse(List<String> arguments) {
+    public Result<String,String> parse(List<String> arguments) {
         String input = arguments.remove(0);
         if (ignoreCase) {
             if (input.equalsIgnoreCase(literal)) {

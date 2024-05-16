@@ -45,20 +45,34 @@ import me.kyren223.kapi.data.ParticleData;
 import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.util.Vector;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A builder for creating {@link ParticleData} objects.
  */
 @Kapi
+@NullMarked
 public class ParticleBuilder {
-    private Particle particle;
+    private final Particle particle;
     private int count;
     private double spreadX;
     private double spreadY;
     private double spreadZ;
     private double extra;
-    private Object data;
+    private @Nullable Object data;
     private boolean force;
+    
+    private ParticleBuilder(Particle particle) {
+        this.particle = particle;
+        count = 1;
+        spreadX = 0;
+        spreadY = 0;
+        spreadZ = 0;
+        extra = 0;
+        data = null;
+        force = false;
+    }
     
     /**
      * Creates a new particle builder.<br>
@@ -76,23 +90,13 @@ public class ParticleBuilder {
      *     <li>force = false;
      * </ul>
      *
-     *
      * @param particle The particle to create
      * @return A new particle builder
      * @see #createRedstone(Color, float)
      */
     @Kapi
     public static ParticleBuilder create(Particle particle) {
-        ParticleBuilder builder = new ParticleBuilder();
-        builder.particle = particle;
-        builder.count = 1;
-        builder.spreadX = 0;
-        builder.spreadY = 0;
-        builder.spreadZ = 0;
-        builder.extra = 0;
-        builder.data = null;
-        builder.force = false;
-        return builder;
+        return new ParticleBuilder(particle);
     }
     
     /**
@@ -100,7 +104,7 @@ public class ParticleBuilder {
      * For more information see {@link #create(Particle)}.
      *
      * @param color The color of the redstone particle
-     * @param size The size of the redstone particle
+     * @param size  The size of the redstone particle
      * @return A new particle builder
      * @see #create(Particle)
      */
@@ -184,7 +188,7 @@ public class ParticleBuilder {
      * @return This builder for chaining
      */
     @Kapi
-    public ParticleBuilder data(Object data) {
+    public ParticleBuilder data(final @Nullable Object data) {
         this.data = data;
         return this;
     }

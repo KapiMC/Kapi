@@ -84,7 +84,10 @@ public class KpluginHelper {
                 config.set("license", "PUT YOUR LICENSE KEY HERE");
                 config.set("server", "78.46.110.72");
                 config.set("port", 50008);
-                config.set("publicKey", "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq3PnBCFuL0aoIikYcChuixkUg0vQTHX6Un5/kCg/UzIlTX7f2PHEf0WFj/OhSldOr93abIOMM8SFF/0q45MmltrdNe0QjW+vhF5cEKTWjSuWGAGWRO25r0il2dmfdYPmGbbp+gilkk6hpdnSDrRAsx/Rm/mAlnhjjf+WmSC6K1bVgJZSfO4tmZVq6IX6MpcddnD9KEQoBXsxywKeXU+rlXbQ1k2HgNS7giMirR/3TdJVUbGqxM5abmVSt5ecv62tmtkrcECTukFe922mh9SE0CGvCjLAwyXKYOm2uUbjKxcycyLDZMlDgNyWtsvo0lnkkDt4zIgsVBFXShR5i2ZxAwIDAQAB");
+                config.set(
+                        "publicKey",
+                        "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq3PnBCFuL0aoIikYcChuixkUg0vQTHX6Un5/kCg/UzIlTX7f2PHEf0WFj/OhSldOr93abIOMM8SFF/0q45MmltrdNe0QjW+vhF5cEKTWjSuWGAGWRO25r0il2dmfdYPmGbbp+gilkk6hpdnSDrRAsx/Rm/mAlnhjjf+WmSC6K1bVgJZSfO4tmZVq6IX6MpcddnD9KEQoBXsxywKeXU+rlXbQ1k2HgNS7giMirR/3TdJVUbGqxM5abmVSt5ecv62tmtkrcECTukFe922mh9SE0CGvCjLAwyXKYOm2uUbjKxcycyLDZMlDgNyWtsvo0lnkkDt4zIgsVBFXShR5i2ZxAwIDAQAB"
+                );
                 config.save(configFile);
             }
         } catch (IOException e) {
@@ -101,22 +104,33 @@ public class KpluginHelper {
         String serverPublicKey = config.getString("publicKey");
         int port = config.getInt("port");
         
+        if (serverPublicKey == null || serverPublicKey.isEmpty()) {
+            System.out.println(
+                    "Kapi server public key not found! Please set the server public key in the " +
+                            "kapi.yml file.");
+            return null;
+        }
+        
         if (license == null || license.isEmpty() || license.equals("PUT YOUR LICENSE KEY HERE")) {
-            System.out.println("Kapi license not found! Please set your license key in the kapi.yml file.");
+            System.out.println(
+                    "Kapi license not found! Please set your license key in the kapi.yml file.");
             return null;
         }
         Kplugin.userLicense = license;
         
         if (server == null || server.isEmpty()) {
-            System.out.println("Kapi server not found! Please set the server IP in the kapi.yml file.");
+            System.out.println(
+                    "Kapi server not found! Please set the server IP in the kapi.yml file.");
             return null;
         }
         
-        try (Socket socket = new Socket(server, port);
-             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))
+        try (
+                Socket socket = new Socket(server, port);
+                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(socket.getInputStream()))
         ) {
-            KeyPair keyPair = CryptoUtils.generateRsaKeyPair().unwrap();
+            KeyPair keyPair = CryptoUtils.generateRsaKeyPair();
             PrivateKey privateKey = keyPair.getPrivate();
             String publicKey = CryptoUtils.publicKeyToString(keyPair.getPublic()).unwrap();
             String salt = UUID.randomUUID().toString();
@@ -126,8 +140,10 @@ public class KpluginHelper {
             String payload = salt + ":" + hashedPublicKey + ":" +
                     plugin.getKapiDeveloperLicense() + ":" + license + ":" +
                     mac + ":" + plugin.getPluginName();
-            String encryptedPayload = CryptoUtils.encryptRsa(payload,
-                    CryptoUtils.stringToPublicKey(serverPublicKey).unwrap()).unwrap();
+            String encryptedPayload = CryptoUtils.encryptRsa(
+                    payload,
+                    CryptoUtils.stringToPublicKey(serverPublicKey).unwrap()
+            ).unwrap();
             String message = publicKey + ":" + encryptedPayload;
             out.println(message);
             StringBuilder response = new StringBuilder();
@@ -148,8 +164,10 @@ public class KpluginHelper {
             split = responsePayload.split(":");
             String verifiedResponse = split[0];
             String signedHashedResponse = split[1];
-            String hashedResponse = CryptoUtils.verifyRsa(signedHashedResponse,
-                    CryptoUtils.stringToPublicKey(serverPublicKey).unwrap()).unwrap();
+            String hashedResponse = CryptoUtils.verifyRsa(
+                    signedHashedResponse,
+                    CryptoUtils.stringToPublicKey(serverPublicKey).unwrap()
+            ).unwrap();
             if (!CryptoUtils.hashString(verifiedResponse + salt).equals(hashedResponse)) {
                 return null;
             }

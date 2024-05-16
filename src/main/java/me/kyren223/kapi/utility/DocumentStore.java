@@ -40,12 +40,12 @@
 
 package me.kyren223.kapi.utility;
 
-import me.kyren223.kapi.core.Kplugin;
 import me.kyren223.kapi.annotations.Kapi;
+import me.kyren223.kapi.core.Kplugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,15 +58,17 @@ import java.util.HashMap;
  * Documents are saved and loaded automatically.
  */
 @Kapi
+@NullMarked
 public class DocumentStore {
     
     private DocumentStore() {
         throw new AssertionError("DocumentStore should not be instantiated");
     }
     
-    private static HashMap<String, FileConfiguration> a;
+    @SuppressWarnings("NotNullFieldNotInitialized")
+    private static HashMap<String,FileConfiguration> a;
     
-    private static String getPath(@NotNull String path) {
+    private static String getPath(String path) {
         path = path.trim();
         
         if (path.isEmpty()) {
@@ -98,7 +100,7 @@ public class DocumentStore {
      * @param path The path to the document
      */
     @Kapi
-    public static void createDocument(@NotNull String path) {
+    public static void createDocument(String path) {
         path = getPath(path);
         if (documentExists(path)) return;
         loadDocument(path);
@@ -111,7 +113,7 @@ public class DocumentStore {
      * @return True if the document exists, false otherwise
      */
     @Kapi
-    public static boolean documentExists(@NotNull String path) {
+    public static boolean documentExists(String path) {
         path = getPath(path);
         return a.containsKey(path);
     }
@@ -123,7 +125,7 @@ public class DocumentStore {
      * @return The document
      */
     @Kapi
-    public static @NotNull FileConfiguration getDocument(@NotNull String path) {
+    public static FileConfiguration getDocument(String path) {
         path = getPath(path);
         if (!documentExists(path)) createDocument(path);
         return a.get(path);
@@ -136,7 +138,7 @@ public class DocumentStore {
      * @return The document, or null if it doesn't exist
      */
     @Kapi
-    private static @Nullable FileConfiguration getDocumentFromDisk(@NotNull String path) {
+    private static @Nullable FileConfiguration getDocumentFromDisk(String path) {
         File file = new File(Kplugin.get().getDataFolder(), path);
         if (!file.exists()) return null;
         return YamlConfiguration.loadConfiguration(file);
@@ -150,7 +152,7 @@ public class DocumentStore {
      * @param path Path to the document
      */
     @Kapi
-    public static void loadDocument(@NotNull String path) {
+    public static void loadDocument(String path) {
         path = getPath(path);
         
         FileConfiguration document = getDocumentFromDisk(path);
@@ -190,7 +192,7 @@ public class DocumentStore {
      * @param path The path to the document.
      */
     @Kapi
-    public static void saveDocument(@NotNull String path) {
+    public static void saveDocument(String path) {
         path = getPath(path);
         FileConfiguration document = a.get(path);
         try {

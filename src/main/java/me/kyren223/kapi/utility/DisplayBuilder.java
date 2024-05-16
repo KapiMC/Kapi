@@ -45,11 +45,12 @@ import org.bukkit.Color;
 import org.bukkit.entity.Display;
 import org.bukkit.util.Transformation;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
 import org.joml.AxisAngle4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /*
@@ -59,10 +60,11 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     This makes sure the subclass is returned
     Casting to T generates a warning that we can suppress
     as it's always safe to cast to the subclass, as long as it's not an instance of
-    this class, and the only space we use this class' constructor is as super() in the subclass constructors
+    this class, and the only space we use this class' constructor is as super() in the subclass
+    constructors
      */
     
-    protected @NotNull Transformation transformation;
+    protected Transformation transformation;
     protected int interpolationDuration;
     protected float viewRange;
     protected float shadowRadius;
@@ -70,9 +72,9 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     protected float displayWidth;
     protected float displayHeight;
     protected int interpolationDelay;
-    protected @NotNull Display.Billboard billboard;
-    protected @NotNull Color glowColorOverride;
-    protected @NotNull Display.Brightness brightness;
+    protected Display.Billboard billboard;
+    protected Color glowColorOverride;
+    protected Display.Brightness brightness;
     
     protected DisplayBuilder() {
         this.transformation = new Transformation(
@@ -186,7 +188,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
      */
     @SuppressWarnings("unchecked")
     @Kapi
-    public T billboard(@NotNull Display.Billboard billboard) {
+    public T billboard(Display.Billboard billboard) {
         this.billboard = billboard;
         return (T) this;
     }
@@ -200,7 +202,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
      */
     @SuppressWarnings("unchecked")
     @Kapi
-    public T glowColorOverride(@NotNull Color glowColorOverride) {
+    public T glowColorOverride(Color glowColorOverride) {
         this.glowColorOverride = glowColorOverride;
         return (T) this;
     }
@@ -214,7 +216,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
      */
     @SuppressWarnings("unchecked")
     @Kapi
-    public T brightness(@NotNull Display.Brightness brightness) {
+    public T brightness(Display.Brightness brightness) {
         this.brightness = brightness;
         return (T) this;
     }
@@ -229,7 +231,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
      */
     @SuppressWarnings("unchecked")
     @Kapi
-    public T transformation(@NotNull Transformation transformation) {
+    public T transformation(Transformation transformation) {
         this.transformation = transformation;
         return (T) this;
     }
@@ -273,7 +275,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
      */
     @SuppressWarnings("unchecked")
     @Kapi
-    public T translation(@NotNull Vector3f translation) {
+    public T translation(Vector3f translation) {
         this.transformation.getTranslation().set(translation);
         return (T) this;
     }
@@ -287,7 +289,7 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
      */
     @SuppressWarnings("unchecked")
     @Kapi
-    public T translation(@NotNull Vector translation) {
+    public T translation(Vector translation) {
         this.transformation.getTranslation().set(translation.toVector3f());
         return (T) this;
     }

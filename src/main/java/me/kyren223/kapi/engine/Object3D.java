@@ -41,17 +41,20 @@
 package me.kyren223.kapi.engine;
 
 import me.kyren223.kapi.annotations.Kapi;
+import me.kyren223.kapi.data.Option;
+import me.kyren223.kapi.data.Pair;
 import me.kyren223.kapi.engine.ecs.EcsEntity;
 import me.kyren223.kapi.engine.ecs.SystemTrigger;
-import me.kyren223.kapi.data.Pair;
 import me.kyren223.kapi.utility.Task;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fc;
 import org.joml.Vector3f;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -61,35 +64,37 @@ import java.util.stream.Stream;
  * Represents a 3D object.
  */
 @Kapi
+@NullMarked
 public class Object3D implements EcsEntity {
     private final World world;
     private final Matrix4f transform;
-    private Matrix4fc cachedWorldTransform;
+    private @Nullable Matrix4fc cachedWorldTransform;
     private final List<Point> points;
     private final @Nullable Object3D parent;
-    private final HashMap<String, Object3D> children;
-    private final HashMap<String, Object> components;
-    private final HashMap<String, List<Consumer<Object3D>>> events;
-    private final List<Pair<SystemTrigger, Consumer<Object3D>>> tasks;
+    private final HashMap<String,Object3D> children;
+    private final HashMap<String,@Nullable Object> components;
+    private final HashMap<String,@Nullable List<Consumer<Object3D>>> events;
+    private final List<Pair<SystemTrigger,Consumer<Object3D>>> tasks;
     private boolean cancel;
     private Visibility visibility;
     
     /**
      * Creates a new instance of this object
      *
-     * @param template The template to use for this object
-     * @param world The world to spawn this object in
+     * @param template  The template to use for this object
+     * @param world     The world to spawn this object in
      * @param transform The transform of this object, cloned to prevent modification
-     * @param parent The parent of this object, null if this object has no parent
+     * @param parent    The parent of this object, null if this object has no parent
      */
-    public Object3D(Template3D template, World world, Matrix4f transform, @Nullable Object3D parent) {
+    public Object3D(
+            Template3D template, World world, Matrix4f transform,
+            @Nullable Object3D parent
+    ) {
         this.parent = parent;
         this.world = world;
         this.transform = new Matrix4f(transform);
         this.points = new ArrayList<>();
-        template.getPoints().forEach(point ->
-                this.points.add(new Point(point))
-        );
+        template.getPoints().forEach(point -> this.points.add(new Point(point)));
         
         this.components = new HashMap<>();
         this.events = new HashMap<>(template.getEvents());
@@ -98,7 +103,7 @@ public class Object3D implements EcsEntity {
         this.children = new HashMap<>();
         this.visibility = parent == null ? Visibility.VISIBLE : Visibility.INHERIT;
         template.getChildren().forEach(entry -> {
-            Pair<Matrix4f, Template3D> value = entry.getValue();
+            Pair<Matrix4f,Template3D> value = entry.getValue();
             Object3D child = value.getSecond().newInstance(world, value.getFirst(), this);
             this.children.put(entry.getKey(), child);
         });
@@ -177,7 +182,8 @@ public class Object3D implements EcsEntity {
      * Until the parent is null where the transform is just a cloned
      * version of this object's transform<br>
      * <br>
-     * Note: this method is cached, so it's safe to call it multiple times
+     * Note: this method is cached, so it's safe to call it multiple times,
+     * although the initial call (or calls after moving the object) will be slower
      *
      * @return A read-only interface of this object's world transform
      */
@@ -194,6 +200,20 @@ public class Object3D implements EcsEntity {
         }
         
         return cachedWorldTransform;
+    }
+    
+    /**
+     * Gets the location of this object in world space.<br>
+     * Note: this method MAY be expensive, for more info see {@link #getWorldTransform()}
+     *
+     * @return A new location with the object's position and world
+     * @see #getWorldTransform()
+     */
+    @Kapi
+    public Location getWorldLocation() {
+        Vector3f position = new Vector3f();
+        getWorldTransform().getTranslation(position);
+        return new Location(world, position.x, position.y, position.z);
     }
     
     /**
@@ -274,7 +294,7 @@ public class Object3D implements EcsEntity {
      * Adds a child to this object.<br>
      * See {@link #addChild(String, Template3D, Matrix4f)} for adding a child with a transform.<br>
      *
-     * @param name The name of the child (used to retrieve it later)
+     * @param name  The name of the child (used to retrieve it later)
      * @param child The child's template
      */
     @Kapi
@@ -287,11 +307,13 @@ public class Object3D implements EcsEntity {
      * Adds a child to this object with a transform.<br>
      * See {@link #addChild(String, Template3D)} for adding a child without a transform.<br>
      *
-     * @param name The name of the child (used to retrieve it later)
-     * @param child The child's template
+     * @param name      The name of the child (used to retrieve it later)
+     * @param child     The child's template
      * @param transform The transform of the child relative to this template
      */
-    public void addChild(String name, Template3D child, Matrix4f transform) {
+    public void addChild(
+            String name, Template3D child, Matrix4f transform
+    ) {
         Object3D object = child.newInstance(world, transform, this);
         children.put(name, object);
     }
@@ -313,7 +335,7 @@ public class Object3D implements EcsEntity {
      * @param predicate The predicate
      */
     @Kapi
-    public void removeChildIf(Predicate<Map.Entry<String, Object3D>> predicate) {
+    public void removeChildIf(Predicate<Map.Entry<String,Object3D>> predicate) {
         children.entrySet().removeIf(predicate);
     }
     
@@ -323,7 +345,7 @@ public class Object3D implements EcsEntity {
      * @return A stream of the children names, transforms, and objects
      */
     @Kapi
-    public Stream<Map.Entry<String, Object3D>> getChildren() {
+    public Stream<Map.Entry<String,Object3D>> getChildren() {
         return children.entrySet().stream();
     }
     
@@ -334,8 +356,11 @@ public class Object3D implements EcsEntity {
      * @return The child's object or null if the child doesn't exist
      */
     @Kapi
-    public Object3D getChild(String name) {
-        return children.getOrDefault(name, null);
+    public Option<Object3D> getChild(String name) {
+        if (children.containsKey(name)) {
+            return Option.of(children.get(name));
+        }
+        return Option.none();
     }
     
     /**
@@ -345,9 +370,8 @@ public class Object3D implements EcsEntity {
      * @return The name of the child or null if the child doesn't exist
      */
     @Kapi
-    @Nullable
-    public String getNameOfChild(Object3D child) {
-        for (Map.Entry<String, Object3D> entry : children.entrySet()) {
+    public @Nullable String getNameOfChild(Object3D child) {
+        for (Map.Entry<String,Object3D> entry : children.entrySet()) {
             if (entry.getValue() == child) return entry.getKey();
         }
         return null;
@@ -384,17 +408,18 @@ public class Object3D implements EcsEntity {
         children.values().forEach(child -> child.spawn(renderInterval));
         
         points.forEach(point -> point.getRenderable().spawn(
-                world, Vector.fromJOML(getWorldTransform().transformPosition(point.getVector().toVector3f()))
+                world, Vector.fromJOML(
+                        getWorldTransform().transformPosition(point.getVector().toVector3f()))
         ));
         
         triggerEvent(SystemTrigger.SPAWN_EVENT);
         triggerEvent(SystemTrigger.SCALE_CHANGED_EVENT);
-        for (Pair<SystemTrigger, Consumer<Object3D>> task : tasks) {
+        for (Pair<SystemTrigger,Consumer<Object3D>> task : tasks) {
             SystemTrigger trigger = task.getFirst();
             Consumer<Object3D> system = task.getSecond();
             assert !trigger.isEvent();
             Task.run(() -> system.accept(this)).timer(trigger.getDelay(), trigger.getPeriod())
-                    .whileCondition(this::shouldContinue).schedule();
+                .whileCondition(this::shouldContinue).schedule();
         }
         Task.run(this::render).timer(1, 1).whileCondition(this::shouldContinue).schedule();
     }
@@ -416,7 +441,8 @@ public class Object3D implements EcsEntity {
     public void despawn() {
         this.cancel = true;
         points.forEach(point -> point.getRenderable().despawn(
-                world, Vector.fromJOML(getWorldTransform().transformPosition(point.getVector().toVector3f()))
+                world, Vector.fromJOML(
+                        getWorldTransform().transformPosition(point.getVector().toVector3f()))
         ));
         children.values().forEach(Object3D::despawn);
         
@@ -495,12 +521,12 @@ public class Object3D implements EcsEntity {
     /**
      * Sets a component on this object
      *
-     * @param key The name of the component
+     * @param key   The name of the component
      * @param value The value of the component
      */
     @Kapi
     @Override
-    public void set(String key, Object value) {
+    public void set(String key, @Nullable Object value) {
         components.put(key, value);
     }
     
@@ -515,7 +541,7 @@ public class Object3D implements EcsEntity {
      */
     @Kapi
     @Override
-    public Object get(String key) {
+    public @Nullable Object get(String key) {
         return components.getOrDefault(key, null);
     }
     
@@ -549,12 +575,14 @@ public class Object3D implements EcsEntity {
      * the system will be ignored until the object is respawned
      *
      * @param trigger The trigger for the system
-     * @param system The system to add
+     * @param system  The system to add
      * @return this object for chaining
      */
     @Kapi
     @Override
-    public Object3D addSystem(SystemTrigger trigger, Consumer<Object3D> system) {
+    public Object3D addSystem(
+            SystemTrigger trigger, Consumer<Object3D> system
+    ) {
         if (trigger.isEvent()) {
             events.computeIfAbsent(trigger.getEvent(), k -> new ArrayList<>()).add(system);
         } else {
@@ -575,5 +603,15 @@ public class Object3D implements EcsEntity {
         List<Consumer<Object3D>> listeners = events.getOrDefault(event, null);
         if (listeners == null) return;
         listeners.forEach(listener -> listener.accept(this));
+    }
+    
+    /**
+     * Gets the world of this object
+     *
+     * @return The world of this object
+     */
+    @Kapi
+    public World getWorld() {
+        return world;
     }
 }

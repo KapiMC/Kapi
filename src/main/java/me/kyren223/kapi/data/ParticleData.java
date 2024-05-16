@@ -48,7 +48,7 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Holds the data for a particle.<br>
@@ -56,6 +56,7 @@ import org.jetbrains.annotations.NotNull;
  * See {@link ParticleRender} for rendering particles.
  */
 @Kapi
+@NullMarked
 public class ParticleData {
     private static final String PARTICLE_IS_NOT_REDSTONE = "Particle is not REDSTONE";
     private Particle particle;
@@ -72,16 +73,19 @@ public class ParticleData {
      * It's recommended to use {@link ParticleBuilder} for easier particle creation.
      *
      * @param particle The particle to display
-     * @param count The number of particles to display
-     * @param spreadX The spread of the particles on the X axis
-     * @param spreadY The spread of the particles on the Y axis
-     * @param spreadZ The spread of the particles on the Z axis
-     * @param extra The extra data of the particle
-     * @param data The data of the particle
-     * @param force Whether the particle should be forced to be displayed
+     * @param count    The number of particles to display
+     * @param spreadX  The spread of the particles on the X axis
+     * @param spreadY  The spread of the particles on the Y axis
+     * @param spreadZ  The spread of the particles on the Z axis
+     * @param extra    The extra data of the particle
+     * @param data     The data of the particle
+     * @param force    Whether the particle should be forced to be displayed
      */
     @Kapi
-    public ParticleData(Particle particle, int count, double spreadX, double spreadY, double spreadZ, double extra, Object data, boolean force) {
+    public ParticleData(
+            Particle particle, int count, double spreadX, double spreadY, double spreadZ, double extra, Object data,
+            boolean force
+    ) {
         this.particle = particle;
         this.count = count;
         this.spreadX = spreadX;
@@ -305,26 +309,26 @@ public class ParticleData {
         }
         
         world.spawnParticle(
-            particle,
-            location,
-            count,
-            spreadX,
-            spreadY,
-            spreadZ,
-            extra,
-            data,
-            force
+                particle,
+                location,
+                count,
+                spreadX,
+                spreadY,
+                spreadZ,
+                extra,
+                data,
+                force
         );
     }
     
     /**
      * Spawns the particle at the given location.
      *
-     * @param world The world to spawn the particle in
+     * @param world  The world to spawn the particle in
      * @param vector The X, Y, and Z coordinates to spawn the particle at
      */
     @Kapi
-    public void spawn(@NotNull World world, Vector vector) {
+    public void spawn(World world, Vector vector) {
         world.spawnParticle(
                 particle,
                 vector.getX(),
@@ -344,12 +348,12 @@ public class ParticleData {
      * Spawns the particle at the given location.
      *
      * @param world The world to spawn the particle in
-     * @param x The X coordinate to spawn the particle at
-     * @param y The Y coordinate to spawn the particle at
-     * @param z The Z coordinate to spawn the particle at
+     * @param x     The X coordinate to spawn the particle at
+     * @param y     The Y coordinate to spawn the particle at
+     * @param z     The Z coordinate to spawn the particle at
      */
     @Kapi
-    public void spawn(@NotNull World world, double x, double y, double z) {
+    public void spawn(World world, double x, double y, double z) {
         world.spawnParticle(
                 particle,
                 x,

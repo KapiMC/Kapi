@@ -42,6 +42,8 @@ package me.kyren223.kapi.engine.ecs;
 
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.engine.Object3D;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -50,22 +52,32 @@ import java.util.function.Consumer;
  * Implementing this interface yourself is not recommended nor supported.
  */
 @Kapi
+@NullMarked
 public interface EcsEntity {
     
-    // Component management
-    @Kapi void set(String key, Object value);
-    @Kapi Object get(String key);
-    @Kapi boolean has(String key);
-    @Kapi  void remove(String key);
+    @Kapi
+    void set(String key, @Nullable Object value);
     
-    // Utility
-    @Kapi default void setIfAbsent(String key, Object value) {
+    @Kapi
+    @Nullable
+    Object get(String key);
+    
+    @Kapi
+    boolean has(String key);
+    
+    @Kapi
+    void remove(String key);
+    
+    @Kapi
+    default void setIfAbsent(String key, Object value) {
         if (!has(key)) {
             set(key, value);
         }
     }
     
-    // System management
-    @Kapi Object3D addSystem(SystemTrigger trigger, Consumer<Object3D> system);
-    @Kapi void triggerEvent(String event);
+    @Kapi
+    Object3D addSystem(SystemTrigger trigger, Consumer<Object3D> system);
+    
+    @Kapi
+    void triggerEvent(String event);
 }

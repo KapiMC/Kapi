@@ -53,6 +53,7 @@ import java.util.List;
  */
 @Kapi
 @ApiStatus.Experimental
+// TODO Add @NullMarked
 public class StringArgumentType implements ArgumentType<String> {
     
     private boolean toLowerCase;
@@ -105,7 +106,7 @@ public class StringArgumentType implements ArgumentType<String> {
     
     @Kapi
     @Override
-    public Result<String, String> parse(List<String> arguments) {
+    public Result<String,String> parse(List<String> arguments) {
         String input = arguments.remove(0);
         String output;
         if (toLowerCase) {

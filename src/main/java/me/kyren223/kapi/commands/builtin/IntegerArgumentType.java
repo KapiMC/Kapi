@@ -55,6 +55,7 @@ import java.util.function.Predicate;
  */
 @Kapi
 @ApiStatus.Experimental
+// TODO Add @NullMarked
 public class IntegerArgumentType implements ArgumentType<Integer> {
     
     private boolean suggest;
@@ -151,7 +152,7 @@ public class IntegerArgumentType implements ArgumentType<Integer> {
     
     @Kapi
     @Override
-    public Result<Integer, String> parse(List<String> arguments) {
+    public Result<Integer,String> parse(List<String> arguments) {
         String input = arguments.remove(0);
         int output;
         try {

@@ -41,10 +41,10 @@
 package me.kyren223.kapi.utility;
 
 
-import me.kyren223.kapi.core.Kplugin;
 import me.kyren223.kapi.annotations.Kapi;
+import me.kyren223.kapi.core.Kplugin;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.logging.Level;
 
@@ -55,18 +55,19 @@ import java.util.logging.Level;
  * not System.out.println or System.err.println.
  */
 @Kapi
+@NullMarked
 public class Log {
     
     private Log() {
         throw new AssertionError("Log should not be instantiated");
     }
     
+    @SuppressWarnings("NotNullFieldNotInitialized")
     private static String prefix;
     
-    private static @NotNull String format(@NotNull String message, @NotNull String color) {
-        String prefix = Log.prefix;
-        prefix += Utils.col(color + message);
-        return prefix;
+    private static String format(String message, String color) {
+        if (prefix.isEmpty()) return "";
+        return prefix + Utils.col(color + message);
     }
     
     /**
@@ -80,31 +81,31 @@ public class Log {
      * @param prefix The prefix for all log messages
      */
     @Kapi
-    public static void setPrefix(@NotNull String prefix) {
+    public static void setPrefix(String prefix) {
         Log.prefix = Utils.col(prefix);
     }
     
-    private static @NotNull String getError(@NotNull String message) {
+    private static String getError(String message) {
         return format(message, "&c");
     }
     
-    private static @NotNull String getWarn(@NotNull String message) {
+    private static String getWarn(String message) {
         return format(message, "&e");
     }
     
-    private static @NotNull String getInfo(@NotNull String message) {
+    private static String getInfo(String message) {
         return format(message, "&9");
     }
     
-    private static @NotNull String getSuccess(@NotNull String message) {
+    private static String getSuccess(String message) {
         return format(message, "&a");
     }
     
-    private static @NotNull String getDebug(@NotNull String message) {
+    private static String getDebug(String message) {
         return format(message, "&3");
     }
     
-    private static @NotNull String getLog(@NotNull String message) {
+    private static String getLog(String message) {
         return format(message, "");
     }
     
@@ -117,7 +118,7 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void error(@NotNull String message) {
+    public static void error(String message) {
         Kplugin.get().getLogger().severe(() -> getError(message));
     }
     
@@ -130,14 +131,15 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void error(@NotNull String message, @NotNull CommandSender... senders) {
+    public static void error(String message, CommandSender... senders) {
         for (CommandSender sender : senders) {
             sender.sendMessage(getError(message));
         }
     }
     
     /**
-     * Logs an error message to all senders on the server (through Kplugin.get().getServer()'s Broadcast).<br>
+     * Logs an error message to all senders on the server (through Kplugin.get().getServer()'s
+     * Broadcast).<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It applies `&amp;c` color code before the message.
@@ -145,7 +147,7 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void broadcastError(@NotNull String message) {
+    public static void broadcastError(String message) {
         Kplugin.get().getServer().broadcastMessage(getError(message));
     }
     
@@ -158,7 +160,7 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void warn(@NotNull String message) {
+    public static void warn(String message) {
         Kplugin.get().getLogger().warning(() -> getWarn(message));
     }
     
@@ -171,14 +173,15 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void warn(@NotNull String message, @NotNull CommandSender... senders) {
+    public static void warn(String message, CommandSender... senders) {
         for (CommandSender sender : senders) {
             sender.sendMessage(getWarn(message));
         }
     }
     
     /**
-     * Logs a warning message to all senders on the server (through Kplugin.get().getServer()'s Broadcast).<br>
+     * Logs a warning message to all senders on the server (through Kplugin.get().getServer()'s
+     * Broadcast).<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It applies `&amp;e` color code before the message.
@@ -186,7 +189,7 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void broadcastWarn(@NotNull String message) {
+    public static void broadcastWarn(String message) {
         Kplugin.get().getServer().broadcastMessage(getWarn(message));
     }
     
@@ -199,7 +202,7 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void info(@NotNull String message) {
+    public static void info(String message) {
         Kplugin.get().getLogger().info(() -> getInfo(message));
     }
     
@@ -212,14 +215,15 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void info(@NotNull String message, @NotNull CommandSender... senders) {
+    public static void info(String message, CommandSender... senders) {
         for (CommandSender sender : senders) {
             sender.sendMessage(getInfo(message));
         }
     }
     
     /**
-     * Logs an info message to all senders on the server (through Kplugin.get().getServer()'s Broadcast).<br>
+     * Logs an info message to all senders on the server (through Kplugin.get().getServer()'s
+     * Broadcast).<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It applies `&amp;9` color code before the message.
@@ -227,7 +231,7 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void broadcastInfo(@NotNull String message) {
+    public static void broadcastInfo(String message) {
         Kplugin.get().getServer().broadcastMessage(getInfo(message));
     }
     
@@ -240,7 +244,7 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void success(@NotNull String message) {
+    public static void success(String message) {
         Kplugin.get().getLogger().info(() -> getSuccess(message));
     }
     
@@ -253,14 +257,15 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void success(@NotNull String message, @NotNull CommandSender... senders) {
+    public static void success(String message, CommandSender... senders) {
         for (CommandSender sender : senders) {
             sender.sendMessage(getSuccess(message));
         }
     }
     
     /**
-     * Logs a success message to all senders on the server (through Kplugin.get().getServer()'s Broadcast).<br>
+     * Logs a success message to all senders on the server (through Kplugin.get().getServer()'s
+     * Broadcast).<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It applies `&amp;a` color code before the message.
@@ -268,7 +273,7 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void broadcastSuccess(@NotNull String message) {
+    public static void broadcastSuccess(String message) {
         Kplugin.get().getServer().broadcastMessage(getSuccess(message));
     }
     
@@ -283,7 +288,7 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void debug(@NotNull String message) {
+    public static void debug(String message) {
         if (!Kplugin.get().isDebug()) return;
         Kplugin.get().getLogger().log(Level.INFO, () -> getDebug(message));
     }
@@ -299,7 +304,7 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void debug(@NotNull String message, @NotNull CommandSender... senders) {
+    public static void debug(String message, CommandSender... senders) {
         if (!Kplugin.get().isDebug()) return;
         for (CommandSender sender : senders) {
             sender.sendMessage(getDebug(message));
@@ -307,7 +312,8 @@ public class Log {
     }
     
     /**
-     * Logs a debug message to all senders on the server (through Kplugin.get().getServer()'s Broadcast).<br>
+     * Logs a debug message to all senders on the server (through Kplugin.get().getServer()'s
+     * Broadcast).<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It applies `&amp;3` color code before the message.<br>
@@ -317,7 +323,7 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void broadcastDebug(@NotNull String message) {
+    public static void broadcastDebug(String message) {
         if (!Kplugin.get().isDebug()) return;
         Kplugin.get().getServer().broadcastMessage(getDebug(message));
     }
@@ -331,7 +337,7 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void log(@NotNull String message) {
+    public static void log(String message) {
         Kplugin.get().getLogger().info(() -> getLog(message));
     }
     
@@ -344,14 +350,15 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void log(@NotNull String message, @NotNull CommandSender... senders) {
+    public static void log(String message, CommandSender... senders) {
         for (CommandSender sender : senders) {
             sender.sendMessage(getLog(message));
         }
     }
     
     /**
-     * Logs a message to all senders on the server (through Kplugin.get().getServer()'s Broadcast).<br>
+     * Logs a message to all senders on the server (through Kplugin.get().getServer()'s
+     * Broadcast).<br>
      * This method is prefixed by the plugin's prefix,
      * see {@link Log#setPrefix(String)}<br>
      * It does not apply any color codes.
@@ -359,7 +366,7 @@ public class Log {
      * @param message The message to log
      */
     @Kapi
-    public static void broadcastLog(@NotNull String message) {
+    public static void broadcastLog(String message) {
         Kplugin.get().getServer().broadcastMessage(getLog(message));
     }
     

@@ -38,47 +38,51 @@
  * - Kyren223
  */
 
-package me.kyren223.kapi.commands;
+package me.kyren223.kapi.data;
 
-import me.kyren223.kapi.annotations.Kapi;
-import me.kyren223.kapi.data.Result;
-import org.jetbrains.annotations.ApiStatus;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
-import java.util.List;
-
-/**
- * Represents a Command Argument Type.
- *
- * @param <T> The java type of the argument.
- */
-@Kapi
-@ApiStatus.Internal
-// TODO Add @NullMarked
-public interface ArgumentType<T> {
-    /**
-     * For classes that implement {@link ArgumentType}, this method parses the argument.<br>
-     *
-     * @param arguments The list of command arguments that haven't been parsed yet<br>
-     *                  A list is being used because the argument may be a multi-word string.<br>
-     *                  Guaranteed to have at least one element.<br>
-     *                  <br>
-     *                  Note: This is a mutable list, you should remove all the arguments you've parsed.<br>
-     *                  Removing the parsed arguments ensures that the next argument type
-     *                  won't parse the same arguments.<br>
-     * @return A Result containing the parsed argument or an error message.
-     */
-    @Kapi
-    Result<T,String> parse(List<String> arguments);
+// TODO Finish Option
+@NullMarked
+public class Option<T> {
     
-    /**
-     * Should NOT be called by the user.<br>
-     * <br>
-     * This should only be implemented by classes that implement {@link ArgumentType}.<br>
-     * To add a suggestion value, you should call the
-     * {@link SuggestionCommandContext#addSuggestion(String)} method.<br>
-     *
-     * @param context The context of the suggestion.
-     */
-    @Kapi
-    void getSuggestions(SuggestionCommandContext context);
+    private static final Option<?> NONE = new Option<>(null);
+    
+    private final @Nullable T value;
+    
+    private Option(@Nullable T value) {
+        this.value = value;
+    }
+    
+    public static <T> Option<T> of(T value) {
+        return new Option<>(value);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static <T> Option<T> ofNullable(@Nullable T value) {
+        if (value == null) return (Option<T>) NONE;
+        return new Option<>(value);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static <T> Option<T> empty() {
+        return (Option<T>) NONE;
+    }
+    
+    
+    public boolean isEmpty() {
+        return value == null;
+    }
+    
+    public boolean isPresent() {
+        return value != null;
+    }
+    
+    // Rust-like methods
+    
+    @SuppressWarnings("unchecked")
+    public static <T> Option<T> none() {
+        return (Option<T>) NONE;
+    }
 }

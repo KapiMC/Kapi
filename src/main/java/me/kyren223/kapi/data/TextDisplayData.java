@@ -47,8 +47,8 @@ import org.bukkit.Color;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.TextDisplay;
 import org.bukkit.util.Transformation;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Holds the data for a text display.
@@ -56,6 +56,7 @@ import org.jetbrains.annotations.Nullable;
  * See {@link TextDisplayBuilder} for creating new instances.
  */
 @Kapi
+@NullMarked
 public class TextDisplayData extends DisplayData {
     
     private @Nullable String text;
@@ -65,11 +66,11 @@ public class TextDisplayData extends DisplayData {
     private boolean shadowed;
     private boolean seeThrough;
     private boolean defaultBackground;
-    private @NotNull TextDisplay.TextAlignment alignment;
+    private TextDisplay.TextAlignment alignment;
     
     @Kapi
     public TextDisplayData(
-            @NotNull Transformation transformation,
+            Transformation transformation,
             int interpolationDuration,
             float viewRange,
             float shadowRadius,
@@ -77,9 +78,9 @@ public class TextDisplayData extends DisplayData {
             float displayWidth,
             float displayHeight,
             int interpolationDelay,
-            @NotNull Display.Billboard billboard,
-            @NotNull Color glowColorOverride,
-            @NotNull Display.Brightness brightness,
+            Display.Billboard billboard,
+            Color glowColorOverride,
+            Display.Brightness brightness,
             @Nullable String text,
             int lineWidth,
             @Nullable Color backgroundColor,
@@ -87,9 +88,13 @@ public class TextDisplayData extends DisplayData {
             boolean shadowed,
             boolean seeThrough,
             boolean defaultBackground,
-            @NotNull TextDisplay.TextAlignment alignment
+            TextDisplay.TextAlignment alignment
     ) {
-        super(transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength, displayWidth, displayHeight, interpolationDelay, billboard, glowColorOverride, brightness);
+        super(
+                transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength,
+                displayWidth, displayHeight, interpolationDelay, billboard, glowColorOverride,
+                brightness
+        );
         this.text = text;
         this.lineWidth = lineWidth;
         this.backgroundColor = backgroundColor;
@@ -107,7 +112,7 @@ public class TextDisplayData extends DisplayData {
      * @param data The data to copy
      */
     @Kapi
-    public TextDisplayData(@NotNull TextDisplayData data) {
+    public TextDisplayData(TextDisplayData data) {
         super(data);
         this.text = data.getText();
         this.lineWidth = data.getLineWidth();
@@ -125,8 +130,7 @@ public class TextDisplayData extends DisplayData {
      * @return the displayed text.
      */
     @Kapi
-    @Nullable
-    public String getText() {
+    public @Nullable String getText() {
         return text;
     }
     
@@ -167,9 +171,8 @@ public class TextDisplayData extends DisplayData {
      * @deprecated API subject to change
      */
     @Kapi
-    @Nullable
     @Deprecated
-    public Color getBackgroundColor() {
+    public @Nullable Color getBackgroundColor() {
         return backgroundColor;
     }
     
@@ -271,7 +274,6 @@ public class TextDisplayData extends DisplayData {
      * @return text alignment
      */
     @Kapi
-    @NotNull
     public TextDisplay.TextAlignment getAlignment() {
         return alignment;
     }
@@ -282,7 +284,7 @@ public class TextDisplayData extends DisplayData {
      * @param alignment new alignment
      */
     @Kapi
-    public void setAlignment(@NotNull TextDisplay.TextAlignment alignment) {
+    public void setAlignment(TextDisplay.TextAlignment alignment) {
         this.alignment = alignment;
     }
 }

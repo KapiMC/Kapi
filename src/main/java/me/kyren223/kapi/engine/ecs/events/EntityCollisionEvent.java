@@ -38,47 +38,80 @@
  * - Kyren223
  */
 
-package me.kyren223.kapi.commands;
+package me.kyren223.kapi.engine.ecs.events;
 
 import me.kyren223.kapi.annotations.Kapi;
-import me.kyren223.kapi.data.Result;
-import org.jetbrains.annotations.ApiStatus;
+import me.kyren223.kapi.engine.Object3D;
+import me.kyren223.kapi.engine.ecs.System;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
- * Represents a Command Argument Type.
- *
- * @param <T> The java type of the argument.
+ * Stores information about an entity collision event.<br>
+ * See {@link System#entityCollision(Object3D, Consumer)} for more information.
  */
 @Kapi
-@ApiStatus.Internal
-// TODO Add @NullMarked
-public interface ArgumentType<T> {
-    /**
-     * For classes that implement {@link ArgumentType}, this method parses the argument.<br>
-     *
-     * @param arguments The list of command arguments that haven't been parsed yet<br>
-     *                  A list is being used because the argument may be a multi-word string.<br>
-     *                  Guaranteed to have at least one element.<br>
-     *                  <br>
-     *                  Note: This is a mutable list, you should remove all the arguments you've parsed.<br>
-     *                  Removing the parsed arguments ensures that the next argument type
-     *                  won't parse the same arguments.<br>
-     * @return A Result containing the parsed argument or an error message.
-     */
-    @Kapi
-    Result<T,String> parse(List<String> arguments);
+@NullMarked
+public class EntityCollisionEvent {
+    private final Object3D collider;
+    private final List<Entity> collidedEntities;
+    private final List<LivingEntity> collidedLivingEntities;
+    private final List<Player> collidedPlayers;
+    
+    public EntityCollisionEvent(
+            final Object3D collider, final Collection<Entity> collidedEntities
+    ) {
+        this.collider = collider;
+        this.collidedEntities = new ArrayList<>();
+        this.collidedLivingEntities = new ArrayList<>();
+        this.collidedPlayers = new ArrayList<>();
+        for (Entity entity : collidedEntities) {
+            collidedEntities.add(entity);
+            if (entity instanceof LivingEntity livingEntity) {
+                collidedLivingEntities.add(livingEntity);
+                if (livingEntity instanceof Player player) {
+                    collidedPlayers.add(player);
+                }
+            }
+        }
+    }
     
     /**
-     * Should NOT be called by the user.<br>
-     * <br>
-     * This should only be implemented by classes that implement {@link ArgumentType}.<br>
-     * To add a suggestion value, you should call the
-     * {@link SuggestionCommandContext#addSuggestion(String)} method.<br>
-     *
-     * @param context The context of the suggestion.
+     * @return The collider that was collided with.
      */
     @Kapi
-    void getSuggestions(SuggestionCommandContext context);
+    public Object3D getCollider() {
+        return collider;
+    }
+    
+    /**
+     * @return The entities that were collided with the collider.
+     */
+    @Kapi
+    public List<Entity> getEntities() {
+        return collidedEntities;
+    }
+    
+    /**
+     * @return The living entities that were collided with the collider.
+     */
+    @Kapi
+    public List<LivingEntity> getLivingEntities() {
+        return collidedLivingEntities;
+    }
+    
+    /**
+     * @return The players that were collided with the collider.
+     */
+    @Kapi
+    public List<Player> getPlayers() {
+        return collidedPlayers;
+    }
 }

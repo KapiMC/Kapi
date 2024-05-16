@@ -44,6 +44,8 @@ import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.core.Kplugin;
 import me.kyren223.kapi.data.TimeUnit;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BooleanSupplier;
@@ -54,12 +56,12 @@ import java.util.function.Predicate;
  * A utility builder class that includes a bunch of useful methods for running tasks.
  */
 @Kapi
-@SuppressWarnings("JavadocDeclaration")
+@NullMarked
 public class Task {
     
     private final Consumer<TaskData> task;
-    private Consumer<TaskEndData> onEnd;
-    private Predicate<TaskData> condition;
+    private @Nullable Consumer<TaskEndData> onEnd;
+    private @Nullable Predicate<TaskData> condition;
     private int delay;
     private int interval;
     private int effectiveDuration;
@@ -79,8 +81,8 @@ public class Task {
     
     /**
      * Creates a new task with the specified task consumer.<br>
-     * The initial state of the task is equivalent to the following:<br>
-     * Task.delay(1).schedule();<br>
+     * The initial state of the task is equivalent to the following:
+     * <pre><code>Task.delay(1).schedule();</code></pre>
      * Which means the task will run once on the next server tick.
      *
      * @param task The task consumer
@@ -104,12 +106,13 @@ public class Task {
      */
     @Kapi
     public static Task run(Runnable task) {
-        return Task.run(t -> task.run());
+        return me.kyren223.kapi.utility.Task.run(t -> task.run());
     }
     
     /**
      * Sets the initial delay for the task.<br>
-     * Note: tasks cannot run before the next tick, so any values less than 1 will be treated as 1.
+     * Note: tasks cannot run before the next tick,
+     * so any values less than 1 will be treated as 1.
      *
      * @param delayInTicks The delay in ticks
      * @return The task builder for chaining
@@ -123,15 +126,17 @@ public class Task {
     
     /**
      * Sets the initial delay for the task.<br>
-     * Note: tasks cannot run before the next tick, so any values less than 1 will be treated as 1.<br>
+     * Note: tasks cannot run before the next tick,
+     * so any values less than 1 will be treated as 1.<br>
      * <br>
      * Note: the maximum number of ticks is {@link Integer#MAX_VALUE},
      * which is about 1242 days.
      *
-     * @param delay The delay
+     * @param delay    The delay
      * @param timeUnit The time unit of the delay
      * @return The task builder for chaining
-     * @throws IllegalArgumentException if the delay is less than 1 or more than {@link Integer#MAX_VALUE} ticks
+     * @throws IllegalArgumentException if the delay is less than 1 or more than
+     *                                  {@link Integer#MAX_VALUE} ticks
      * @see #delay(int)
      */
     @Kapi
@@ -140,7 +145,8 @@ public class Task {
         if (ticks < 1) {
             throw new IllegalArgumentException("Delay cannot be less than 1");
         } else if (ticks > Integer.MAX_VALUE) {
-            throw new IllegalArgumentException("Delay cannot be more than " + Integer.MAX_VALUE + " ticks");
+            throw new IllegalArgumentException(
+                    "Delay cannot be more than " + Integer.MAX_VALUE + " ticks");
         }
         return delay((int) ticks);
     }
@@ -181,7 +187,8 @@ public class Task {
      * @param interval The interval
      * @param timeUnit The time unit of the interval
      * @return The task builder for chaining
-     * @throws IllegalArgumentException if the interval is less than 1 or more than {@link Integer#MAX_VALUE} ticks
+     * @throws IllegalArgumentException if the interval is less than 1 or more than
+     *                                  {@link Integer#MAX_VALUE} ticks
      * @see #interval(int)
      * @see #interval()
      */
@@ -191,16 +198,18 @@ public class Task {
         if (ticks < 1) {
             throw new IllegalArgumentException("Interval cannot be less than 1");
         } else if (ticks > Integer.MAX_VALUE) {
-            throw new IllegalArgumentException("Interval cannot be more than " + Integer.MAX_VALUE + " ticks");
+            throw new IllegalArgumentException(
+                    "Interval cannot be more than " + Integer.MAX_VALUE + " ticks");
         }
         return interval((int) ticks);
     }
     
     /**
      * Sets the delay and interval for the task.<br>
-     * Identical to calling delay(delay).interval(interval).
+     * Identical to calling:
+     * <pre><code>delay(delay).interval(interval)</code></pre>
      *
-     * @param delay The delay in ticks
+     * @param delay    The delay in ticks
      * @param interval The interval in ticks
      * @return The task builder for chaining
      * @see #delay(int)
@@ -214,9 +223,10 @@ public class Task {
     
     /**
      * Sets the delay and interval for the task.<br>
-     * Identical to calling delay(delay, timeUnit).interval(interval, timeUnit).
+     * Identical to calling:
+     * <pre><code>delay(delay, timeUnit).interval(interval, timeUnit)</code></pre>
      *
-     * @param delay The delay
+     * @param delay    The delay
      * @param interval The interval
      * @param timeUnit The time unit of the delay and interval
      * @return The task builder for chaining
@@ -318,7 +328,8 @@ public class Task {
     
     /**
      * Sets the onEnd runnable for the task.<br>
-     * This runnable will be executed immediately after (on the same tick) when the task ends.
+     * This runnable will be executed immediately
+     * after the task ends (on the same tick).
      *
      * @param onEnd The onEnd runnable
      * @return The task builder for chaining
@@ -335,12 +346,15 @@ public class Task {
      * Effective duration is the duration of the task after the initial delay.<br>
      * <br>
      * This method is one of the 5 methods that control the duration of the task.<br>
-     * - {@link #effectiveDuration(int)}<br>
-     * - {@link #effectiveDuration(int, TimeUnit)}<br>
-     * - {@link #totalDuration(int)}<br>
-     * - {@link #totalDuration(int, TimeUnit)}<br>
-     * - {@link #repeat(int)}<br>
-     * If you call more than one of these methods, only the last one will take effect, the rest will be ignored.
+     * The others are:
+     * <ul>
+     *     <li>{@link #effectiveDuration(int, TimeUnit)}</li>
+     *     <li>{@link #totalDuration(int)}</li>
+     *     <li>{@link #totalDuration(int, TimeUnit)}</li>
+     *     <li>{@link #repeat(int)}</li>
+     * </ul>
+     * If you call more than one of these methods,
+     * only the last one will take effect, the rest will be ignored.
      *
      * @param durationInTicks The duration in ticks
      * @return The task builder for chaining
@@ -359,17 +373,21 @@ public class Task {
      * Effective duration is the duration of the task after the initial delay.<br>
      * <br>
      * This method is one of the 5 methods that control the duration of the task.<br>
-     * - {@link #effectiveDuration(int)}<br>
-     * - {@link #effectiveDuration(int, TimeUnit)}<br>
-     * - {@link #totalDuration(int)}<br>
-     * - {@link #totalDuration(int, TimeUnit)}<br>
-     * - {@link #repeat(int)}<br>
-     * If you call more than one of these methods, only the last one will take effect, the rest will be ignored.
+     * The others are:
+     * <ul>
+     *     <li>{@link #effectiveDuration(int)}</li>
+     *     <li>{@link #totalDuration(int, TimeUnit)}</li>
+     *     <li>{@link #totalDuration(int)}</li>
+     *     <li>{@link #repeat(int)}</li>
+     * </ul>
+     * If you call more than one of these methods,
+     * only the last one will take effect, the rest will be ignored.
      *
      * @param duration The duration
      * @param timeUnit The time unit of the duration
      * @return The task builder for chaining
-     * @throws IllegalArgumentException if the duration is less than 1 or more than {@link Integer#MAX_VALUE} ticks
+     * @throws IllegalArgumentException if the duration is less than 1 or more than
+     *                                  {@link Integer#MAX_VALUE} ticks
      * @see #effectiveDuration(int)
      */
     @Kapi
@@ -378,7 +396,8 @@ public class Task {
         if (ticks < 1) {
             throw new IllegalArgumentException("Duration cannot be less than 1");
         } else if (ticks > Integer.MAX_VALUE) {
-            throw new IllegalArgumentException("Duration cannot be more than " + Integer.MAX_VALUE + " ticks");
+            throw new IllegalArgumentException(
+                    "Duration cannot be more than " + Integer.MAX_VALUE + " ticks");
         }
         return effectiveDuration((int) ticks);
     }
@@ -388,12 +407,15 @@ public class Task {
      * Total duration is the duration of the task including the initial delay.<br>
      * <br>
      * This method is one of the 5 methods that control the duration of the task.<br>
-     * - {@link #effectiveDuration(int)}<br>
-     * - {@link #effectiveDuration(int, TimeUnit)}<br>
-     * - {@link #totalDuration(int)}<br>
-     * - {@link #totalDuration(int, TimeUnit)}<br>
-     * - {@link #repeat(int)}<br>
-     * If you call more than one of these methods, only the last one will take effect, the rest will be ignored.
+     * The others are:
+     * <ul>
+     *     <li>{@link #effectiveDuration(int, TimeUnit)}</li>
+     *     <li>{@link #effectiveDuration(int)}</li>
+     *     <li>{@link #totalDuration(int, TimeUnit)}</li>
+     *     <li>{@link #repeat(int)}</li>
+     * </ul>
+     * If you call more than one of these methods,
+     * only the last one will take effect, the rest will be ignored.
      *
      * @param durationInTicks The duration in ticks
      * @return The task builder for chaining
@@ -412,17 +434,21 @@ public class Task {
      * Total duration is the duration of the task including the initial delay.<br>
      * <br>
      * This method is one of the 5 methods that control the duration of the task.<br>
-     * - {@link #effectiveDuration(int)}<br>
-     * - {@link #effectiveDuration(int, TimeUnit)}<br>
-     * - {@link #totalDuration(int)}<br>
-     * - {@link #totalDuration(int, TimeUnit)}<br>
-     * - {@link #repeat(int)}<br>
-     * If you call more than one of these methods, only the last one will take effect, the rest will be ignored.
+     * The others are:
+     * <ul>
+     *     <li>{@link #effectiveDuration(int)}</li>
+     *     <li>{@link #effectiveDuration(int, TimeUnit)}</li>
+     *     <li>{@link #totalDuration(int)}</li>
+     *     <li>{@link #repeat(int)}</li>
+     * </ul>
+     * If you call more than one of these methods,
+     * only the last one will take effect, the rest will be ignored.
      *
      * @param duration The duration
      * @param timeUnit The time unit of the duration
      * @return The task builder for chaining
-     * @throws IllegalArgumentException if the duration is less than 1 or more than {@link Integer#MAX_VALUE} ticks
+     * @throws IllegalArgumentException if the duration is less than 1 or more than
+     *                                  {@link Integer#MAX_VALUE} ticks
      * @see #totalDuration(int, TimeUnit)
      */
     @Kapi
@@ -431,7 +457,8 @@ public class Task {
         if (ticks < 1) {
             throw new IllegalArgumentException("Duration cannot be less than 1");
         } else if (ticks > Integer.MAX_VALUE) {
-            throw new IllegalArgumentException("Duration cannot be more than " + Integer.MAX_VALUE + " ticks");
+            throw new IllegalArgumentException(
+                    "Duration cannot be more than " + Integer.MAX_VALUE + " ticks");
         }
         return totalDuration((int) ticks);
     }
@@ -441,12 +468,15 @@ public class Task {
      * The task will stop running after the specified number of times.<br>
      * <br>
      * This method is one of the 5 methods that control the duration of the task.<br>
-     * - {@link #effectiveDuration(int)}<br>
-     * - {@link #effectiveDuration(int, TimeUnit)}<br>
-     * - {@link #totalDuration(int)}<br>
-     * - {@link #totalDuration(int, TimeUnit)}<br>
-     * - {@link #repeat(int)}<br>
-     * If you call more than one of these methods, only the last one will take effect, the rest will be ignored.
+     * The others are:
+     * <ul>
+     *     <li>{@link #effectiveDuration(int)}</li>
+     *     <li>{@link #effectiveDuration(int, TimeUnit)}</li>
+     *     <li>{@link #totalDuration(int)}</li>
+     *     <li>{@link #totalDuration(int, TimeUnit)}</li>
+     * </ul>
+     * If you call more than one of these methods,
+     * only the last one will take effect, the rest will be ignored.
      *
      * @param times The number of times to repeat the task
      * @return The task builder for chaining
@@ -465,13 +495,17 @@ public class Task {
      * If effective duration, total duration or a repeat count is set,
      * but the interval is not set, the interval will be set to 1 tick.<br>
      * <br>
-     * If the delay is less than 1 tick, it will be treated as 1 tick and the task will run on the next tick.<br>
+     * If the delay is less than 1 tick,
+     * it will be treated as 1 tick and the task will run on the
+     * next tick.<br>
      * The earliest a task can run is on the next tick.<br>
      * <br>
      * In the case of a task ending "naturally" or being cancelled,
-     * the onEnd consumer (if exists) will be executed, and the task will not run again.<br>
+     * the onEnd consumer (if exists) will be executed,
+     * and the task will not run again.<br>
      * <br>
-     * The task uses runTaskTimer if an interval is set, otherwise it uses runTaskLater.<br>
+     * The task uses runTaskTimer if an interval is set,
+     * otherwise it uses runTaskLater.<br>
      */
     @Kapi
     public void schedule() {
@@ -509,9 +543,12 @@ public class Task {
         }
     }
     
-    private static boolean shouldEnd(TaskData data, int times, int effectiveDuration, int totalDuration) {
+    private static boolean shouldEnd(
+            TaskData data, int times, int effectiveDuration, int totalDuration
+    ) {
         boolean repeatEnd = times != -1 && data.timesRan >= times;
-        boolean effectiveDurationEnd = effectiveDuration != -1 && data.effectiveDuration >= effectiveDuration;
+        boolean effectiveDurationEnd =
+                effectiveDuration != -1 && data.effectiveDuration >= effectiveDuration;
         boolean totalDurationEnd = totalDuration != -1 && data.totalDuration >= totalDuration;
         return repeatEnd || effectiveDurationEnd || totalDurationEnd;
     }
@@ -549,7 +586,8 @@ public class Task {
         
         /**
          * Gets the number of times the task has run.<br>
-         * This does not include the current run, so the value will be 0 for the first run.
+         * This does not include the current run,
+         * so the value will be 0 for the first run.
          *
          * @return The number of times the task has run
          */
@@ -559,7 +597,8 @@ public class Task {
         }
         
         /**
-         * Gets the effective duration of the task, which is the duration of the task after the initial delay.
+         * Gets the effective duration of the task,
+         * which is the duration of the task after the initial delay.
          *
          * @return The effective duration of the task
          */
@@ -602,8 +641,10 @@ public class Task {
         
         /**
          * Returns true if the task was cancelled, otherwise false.<br>
-         * A task is considered cancelled if the task consumer called {@link TaskData#cancel()}.<br>
-         * The task is not considered cancelled if the task ended naturally due to the duration or condition.
+         * A task is considered cancelled if the task consumer called
+         * {@link TaskData#cancel()}.<br>
+         * The task is not considered cancelled if the task
+         * ended naturally due to the duration or condition.
          *
          * @return If the task was cancelled
          */
@@ -624,7 +665,8 @@ public class Task {
         
         /**
          * Gets the number of times the task has run.<br>
-         * This does not include the current run, so the value will be 0 for the first run.
+         * This does not include the current run,
+         * so the value will be 0 for the first run.
          *
          * @return The number of times the task has run
          */
@@ -634,7 +676,8 @@ public class Task {
         }
         
         /**
-         * Gets the effective duration of the task, which is the duration of the task after the initial delay.
+         * Gets the effective duration of the task,
+         * which is the duration of the task after the initial delay.
          *
          * @return The effective duration of the task
          */

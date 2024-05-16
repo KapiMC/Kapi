@@ -53,6 +53,7 @@ import java.util.List;
  */
 @Kapi
 @ApiStatus.Experimental
+// TODO Add @NullMarked
 public class BooleanArgumentType implements ArgumentType<Boolean> {
     
     private boolean suggest;
@@ -74,7 +75,7 @@ public class BooleanArgumentType implements ArgumentType<Boolean> {
     
     @Kapi
     @Override
-    public Result<Boolean, String> parse(List<String> arguments) {
+    public Result<Boolean,String> parse(List<String> arguments) {
         String input = arguments.remove(0);
         if (input.equalsIgnoreCase("true")) {
             return Result.ok(true);

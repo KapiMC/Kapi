@@ -6,7 +6,7 @@
 
     <groupId>me.kyren223</groupId>
     <artifactId>Kapi</artifactId>
-    <version>1.1.0-alpha1</version>
+    <version>1.1.0-alpha10</version>
     <packaging>jar</packaging>
     <name>Kapi</name>
 
@@ -96,11 +96,13 @@
                     <target>17</target>
 
                     <!-- NOTE COMMENT TO INCLUDE KAPI INIT CLASS -->
-                    <excludes><exclude>**/*KapiInit*.*</exclude></excludes>
+                    <excludes>
+                        <exclude>**/*KapiInit*.*</exclude>
+                    </excludes>
                     <!-- NOTE UNCOMMENT TO EXCLUDE KAPI INIT CLASS -->
-
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -168,6 +170,11 @@
             <groupId>dev.triumphteam</groupId>
             <artifactId>triumph-gui</artifactId>
             <version>3.1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jspecify</groupId>
+            <artifactId>jspecify</artifactId>
+            <version>0.3.0</version>
         </dependency>
     </dependencies>
 </project>

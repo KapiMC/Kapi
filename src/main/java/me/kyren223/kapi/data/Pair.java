@@ -41,18 +41,24 @@
 package me.kyren223.kapi.data;
 
 import me.kyren223.kapi.annotations.Kapi;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A simple pair of two objects.
+ *
  * @param <T> The first object
  * @param <U> The second object
  */
 @Kapi
+@NullMarked
 public class Pair<T, U> {
-    @Kapi private T first;
-    @Kapi private U second;
+    @Kapi
+    private @Nullable T first;
+    @Kapi
+    private @Nullable U second;
     
-    public Pair(T first, U second) {
+    public Pair(@Nullable T first, @Nullable U second) {
         this.first = first;
         this.second = second;
     }
@@ -62,22 +68,22 @@ public class Pair<T, U> {
     }
     
     @Kapi
-    public T getFirst() {
+    public @Nullable T getFirst() {
         return first;
     }
     
     @Kapi
-    public void setFirst(T first) {
+    public void setFirst(@Nullable T first) {
         this.first = first;
     }
     
     @Kapi
-    public U getSecond() {
+    public @Nullable U getSecond() {
         return second;
     }
     
     @Kapi
-    public void setSecond(U second) {
+    public void setSecond(@Nullable U second) {
         this.second = second;
     }
     
@@ -88,7 +94,7 @@ public class Pair<T, U> {
      * @return A new pair with the same values as this pair
      */
     @Kapi
-    public Pair<T, U> copy() {
+    public Pair<T,U> copy() {
         return new Pair<>(first, second);
     }
     
@@ -107,15 +113,27 @@ public class Pair<T, U> {
     /**
      * Creates a new pair with the given values.
      *
-     * @param first The first value
+     * @param first  The first value
      * @param second The second value
-     * @param <T> The type of the first value
-     * @param <U> The type of the second value
+     * @param <T>    The type of the first value
+     * @param <U>    The type of the second value
      * @return A new pair with the given values
      */
     @Kapi
-    public static <T, U> Pair<T, U> of(T first, U second) {
+    public static <T, U> Pair<T,U> of(@Nullable T first, @Nullable U second) {
         return new Pair<>(first, second);
+    }
+    
+    /**
+     * Creates a new pair with no values.
+     *
+     * @param <T> The type of the first value
+     * @param <U> The type of the second value
+     * @return A new pair with no values (first = null, second = null)
+     */
+    @Kapi
+    public static <T, U> Pair<T,U> of() {
+        return new Pair<>();
     }
     
 }
