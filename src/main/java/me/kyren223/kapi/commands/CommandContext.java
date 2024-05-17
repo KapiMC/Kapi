@@ -147,7 +147,7 @@ public class CommandContext {
     @Kapi
     public Option<Player> getPlayer() {
         if (sender instanceof Player player) {
-            return Option.of(player);
+            return Option.some(player);
         } else return Option.none();
     }
     
@@ -169,9 +169,9 @@ public class CommandContext {
     @SuppressWarnings("unchecked")
     public <T> Option<T> getArg(String name, Class<T> clazz) {
         Object value = arguments.get(name);
-        if (clazz.isInstance(value)) {
-            return Option.of((T) value);
-        } else return Option.none();
+        if (value == null) return Option.none();
+        if (!clazz.isInstance(value)) return Option.none();
+        return Option.some((T) value);
     }
     
     /**
@@ -188,7 +188,7 @@ public class CommandContext {
      */
     @Kapi
     public Option<Object> getArg(String name) {
-        return Option.ofNullable(arguments.get(name));
+        return Option.of(arguments.get(name));
     }
     
     

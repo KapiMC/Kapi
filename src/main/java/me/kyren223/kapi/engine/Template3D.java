@@ -209,7 +209,7 @@ public class Template3D {
      */
     @Kapi
     public Option<Pair<Matrix4f,Template3D>> getChild(String name) {
-        return Option.ofNullable(children.get(name));
+        return Option.of(children.get(name));
     }
     
     

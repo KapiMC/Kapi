@@ -357,7 +357,7 @@ public class Object3D implements EcsEntity {
      */
     @Kapi
     public Option<Object3D> getChild(String name) {
-        return Option.ofNullable(children.get(name));
+        return Option.of(children.get(name));
     }
     
     /**

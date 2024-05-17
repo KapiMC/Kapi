@@ -134,8 +134,8 @@ public class ArgumentBuilder<T> {
      * @param message     The error message if the requirement is not met (can be null)
      * @return this argument builder for chaining
      */
-    public ArgumentBuilder<T> require(Predicate<CommandContext> requirement, @Nullable String message) {
-        requirements.add(Pair.of(requirement, Option.ofNullable(message)));
+    public ArgumentBuilder<T> require(Predicate<CommandContext> requirement, String message) {
+        requirements.add(Pair.of(requirement, Option.some(message)));
         return this;
     }
     
@@ -149,7 +149,8 @@ public class ArgumentBuilder<T> {
      */
     @Kapi
     public ArgumentBuilder<T> require(Predicate<CommandContext> requirement) {
-        return require(requirement, null);
+        requirements.add(Pair.of(requirement, Option.none()));
+        return this;
     }
     
     /**
