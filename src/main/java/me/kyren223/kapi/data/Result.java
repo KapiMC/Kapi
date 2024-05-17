@@ -62,7 +62,6 @@ import java.util.function.Supplier;
 @NullMarked
 public class Result<T, E> {
     
-    // Adding some random comment
     // IMPORTANT NOTE: Internal Assumption (ok == null && err == null || ok != null && err != null) == false
     private final @Nullable T ok;
     private final @Nullable E err;

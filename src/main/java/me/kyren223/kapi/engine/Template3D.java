@@ -175,8 +175,8 @@ public class Template3D {
      * @return The removed child's template
      */
     @Kapi
-    public Template3D removeChild(String name) {
-        return children.remove(name).getSecond();
+    public Option<Template3D> removeChild(String name) {
+        return Option.of(children.remove(name)).map(Pair::getSecond);
     }
     
     /**
