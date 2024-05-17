@@ -40,34 +40,33 @@
 package me.kyren223.kapi.commands;
 
 import me.kyren223.kapi.annotations.Kapi;
+import me.kyren223.kapi.data.Option;
 import me.kyren223.kapi.data.Pair;
 import org.jetbrains.annotations.ApiStatus;
+import org.jspecify.annotations.NullMarked;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
- * A utility class for building arguments.
+ * A utility class for building command arguments.
  */
 @Kapi
 @ApiStatus.Internal
-// TODO Add @NullMarked
+@NullMarked
 public class ArgumentBuilder<T> {
     
     private final T parent;
     private final Map<Pair<ArgumentType<?>,String>,ArgumentBuilder<ArgumentBuilder<T>>> args;
     
     // Pre-conditions consumers
-    private final List<Pair<String,Predicate<CommandContext>>> requirements;
+    private final List<Pair<Predicate<CommandContext>,Option<String>>> requirements;
     
     // Final execution consumer
-    private Consumer<ExecutionCommandContext> executor;
-    private Consumer<SuggestionCommandContext> suggestion;
+    private @Nullable Consumer<ExecutionCommandContext> executor;
+    private @Nullable Consumer<SuggestionCommandContext> suggestion;
     
     private ArgumentBuilder(T parent) {
         this.parent = parent;
@@ -94,14 +93,15 @@ public class ArgumentBuilder<T> {
     @Kapi
     public ArgumentBuilder<ArgumentBuilder<T>> argument(ArgumentType<?> type, String name) {
         ArgumentBuilder<ArgumentBuilder<T>> argumentBuilder = construct(this);
-        args.put(new Pair<>(type, name), argumentBuilder);
+        args.put(Pair.of(type, name), argumentBuilder);
         return argumentBuilder;
     }
     
     /**
      * Adds a new argument to the command without a way to access it.<br>
      * If you want to be able to access the argument, use {@link #argument(ArgumentType, String)}.<br>
-     * This is useful for arguments like literals that are used for branching.
+     * This is useful for arguments like literals that are used for branching.<br>
+     * This uses a {@link UUID#randomUUID()#toString()} as the name.
      *
      * @param type The type of the argument
      * @return A new argument builder with the parent being this argument builder
@@ -109,7 +109,7 @@ public class ArgumentBuilder<T> {
     @Kapi
     public ArgumentBuilder<ArgumentBuilder<T>> argument(ArgumentType<?> type) {
         ArgumentBuilder<ArgumentBuilder<T>> argumentBuilder = construct(this);
-        args.put(new Pair<>(type, null), argumentBuilder);
+        args.put(Pair.of(type, UUID.randomUUID().toString()), argumentBuilder);
         return argumentBuilder;
     }
     
@@ -129,19 +129,19 @@ public class ArgumentBuilder<T> {
      * Adds a requirement to the command.
      * See {@link #require(Predicate)} if you don't want to provide an error message.
      *
-     * @param message     The error message if the requirement is not met (can be null)
      * @param requirement A predicate that checks whether the requirement is met<br>
      *                    Takes a {@link CommandContext} as an argument
+     * @param message     The error message if the requirement is not met (can be null)
      * @return this argument builder for chaining
      */
-    public ArgumentBuilder<T> require(@Nullable String message, Predicate<CommandContext> requirement) {
-        requirements.add(new Pair<>(message, requirement));
+    public ArgumentBuilder<T> require(Predicate<CommandContext> requirement, @Nullable String message) {
+        requirements.add(Pair.of(requirement, Option.ofNullable(message)));
         return this;
     }
     
     /**
      * Adds a requirement to the command.<br>
-     * See {@link #require(String, Predicate)} if you want to provide an error message.
+     * See {@link #require(Predicate, String)} if you want to provide an error message.
      *
      * @param requirement A predicate that checks whether the requirement is met<br>
      *                    Takes a {@link CommandContext} as an argument
@@ -149,7 +149,7 @@ public class ArgumentBuilder<T> {
      */
     @Kapi
     public ArgumentBuilder<T> require(Predicate<CommandContext> requirement) {
-        return require(null, requirement);
+        return require(requirement, null);
     }
     
     /**
@@ -185,14 +185,16 @@ public class ArgumentBuilder<T> {
         return args;
     }
     
-    List<Pair<String,Predicate<CommandContext>>> getRequirements() {
+    List<Pair<Predicate<CommandContext>,Option<String>>> getRequirements() {
         return requirements;
     }
     
+    @Nullable
     Consumer<ExecutionCommandContext> getExecutor() {
         return executor;
     }
     
+    @Nullable
     Consumer<SuggestionCommandContext> getSuggestion() {
         return suggestion;
     }

@@ -46,6 +46,8 @@ import me.kyren223.kapi.commands.SuggestionCommandContext;
 import me.kyren223.kapi.data.Result;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -55,12 +57,12 @@ import java.util.function.Predicate;
  */
 @Kapi
 @ApiStatus.Experimental
-// TODO Add @NullMarked
+@NullMarked
 public class DoubleArgumentType implements ArgumentType<Double> {
     
     private double min;
     private double max;
-    private Predicate<Double> predicate;
+    private @Nullable Predicate<Double> predicate;
     private String errorMessage;
     
     private DoubleArgumentType() {

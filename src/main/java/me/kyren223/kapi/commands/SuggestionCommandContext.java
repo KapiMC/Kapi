@@ -44,6 +44,7 @@ import me.kyren223.kapi.annotations.Kapi;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.ApiStatus;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +56,7 @@ import java.util.List;
  */
 @Kapi
 @ApiStatus.Internal
-// TODO Add @NullMarked
+@NullMarked
 public class SuggestionCommandContext extends CommandContext {
     
     private final List<String> returnValue;

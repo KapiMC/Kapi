@@ -41,11 +41,12 @@
 package me.kyren223.kapi.commands;
 
 import me.kyren223.kapi.annotations.Kapi;
-import me.kyren223.kapi.data.Result;
+import me.kyren223.kapi.data.Option;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -60,7 +61,7 @@ import java.util.Map;
  */
 @Kapi
 @ApiStatus.Internal
-// TODO Add @NullMarked
+@NullMarked
 public class CommandContext {
     
     private final CommandSender sender;
@@ -141,41 +142,13 @@ public class CommandContext {
     /**
      * Gets the player instance of the sender.<br>
      *
-     * @return A Result containing the player or an error message.
+     * @return A player or none if the sender is not a player.
      */
     @Kapi
-    public Result<Player,String> getPlayer() {
+    public Option<Player> getPlayer() {
         if (sender instanceof Player player) {
-            return Result.ok(player);
-        } else {
-            return Result.err("Sender is not a player!");
-        }
-    }
-    
-    /**
-     * @return The player instance of the sender or null if the sender is not a player.
-     */
-    @Kapi
-    public Player getPlayerOrNull() {
-        if (sender instanceof Player player) {
-            return player;
-        } else {
-            return null;
-        }
-    }
-    
-    /**
-     * Gets the player instance of the sender.<br>
-     *
-     * @return The player instance of the sender.
-     * @throws IllegalStateException If the sender is not a player.
-     */
-    public Player getPlayerOrThrow() {
-        if (sender instanceof Player player) {
-            return player;
-        } else {
-            throw new IllegalStateException("Sender is not a player!");
-        }
+            return Option.of(player);
+        } else return Option.none();
     }
     
     /**
@@ -184,31 +157,38 @@ public class CommandContext {
      * Note, only previous and current arguments can be accessed.<br>
      * If you need to "look ahead" for logic, you should use
      * {@link #getArg(int)} or {@link #getArgs()} instead.<br>
-     * These methods return the original arguments which spigot provided.<br>
+     * These methods return the original string arguments which spigot provided.<br>
      * <br>
-     * All possible error messages:
-     * <ul>
-     *     <li>Argument not found: {name}</li>
-     *     <li>Invalid type for argument: {name}</li>
-     * </ul>
      *
      * @param name  The name of the argument.
      * @param clazz The class of the argument.
      * @param <T>   The type of the argument.
-     * @return A Result containing the parsed argument or an error message.
+     * @return The parsed argument or none if the argument is not found.
      */
     @Kapi
-    public <T> Result<T,String> getArg(String name, Class<T> clazz) {
-        if (!arguments.containsKey(name)) {
-            return Result.err("Argument not found: " + name);
-        }
-        
+    @SuppressWarnings("unchecked")
+    public <T> Option<T> getArg(String name, Class<T> clazz) {
         Object value = arguments.get(name);
-        if (value != null && !clazz.isInstance(value)) {
-            return Result.err("Invalid type for argument: " + name);
-        }
-        
-        return Result.ok(clazz.cast(value));
+        if (clazz.isInstance(value)) {
+            return Option.of((T) value);
+        } else return Option.none();
+    }
+    
+    /**
+     * Gets a parsed argument by name.<br>
+     * <br>
+     * Note, only previous and current arguments can be accessed.<br>
+     * If you need to "look ahead" for logic, you should use
+     * {@link #getArg(int)} or {@link #getArgs()} instead.<br>
+     * These methods return the original string arguments which spigot provided.<br>
+     * <br>
+     *
+     * @param name The name of the argument.
+     * @return The parsed argument or none if the argument is not found.
+     */
+    @Kapi
+    public Option<Object> getArg(String name) {
+        return Option.ofNullable(arguments.get(name));
     }
     
     

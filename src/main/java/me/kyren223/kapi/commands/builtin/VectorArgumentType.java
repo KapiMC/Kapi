@@ -46,6 +46,7 @@ import me.kyren223.kapi.commands.SuggestionCommandContext;
 import me.kyren223.kapi.data.Result;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.ApiStatus;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 
@@ -54,7 +55,7 @@ import java.util.List;
  */
 @Kapi
 @ApiStatus.Experimental
-// TODO Add @NullMarked
+@NullMarked
 public class VectorArgumentType implements ArgumentType<Vector> {
     
     @Override

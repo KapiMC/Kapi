@@ -42,6 +42,8 @@
 package me.kyren223.kapi.commands;
 
 import me.kyren223.kapi.annotations.Kapi;
+import me.kyren223.kapi.data.Option;
+import me.kyren223.kapi.data.Pair;
 import me.kyren223.kapi.data.Result;
 import me.kyren223.kapi.utility.KapiRegistry;
 import me.kyren223.kapi.utility.Log;
@@ -50,10 +52,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.ApiStatus;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import static me.kyren223.kapi.commands.builtin.LiteralArgumentType.literal;
 
@@ -62,15 +68,16 @@ import static me.kyren223.kapi.commands.builtin.LiteralArgumentType.literal;
  */
 @Kapi
 @ApiStatus.Internal
-// TODO Remove this annotation
+@NullMarked
 public class CommandBuilder {
     
     private final String name;
-    private ArgumentBuilder<CommandBuilder> argumentBuilder;
-    private BiConsumer<ExecutionCommandContext,String> failureHandler;
+    private final ArgumentBuilder<CommandBuilder> argumentBuilder;
+    private @Nullable BiConsumer<ExecutionCommandContext,Option<String>> failureHandler;
     
     private CommandBuilder(String name) {
         this.name = name;
+        this.argumentBuilder = ArgumentBuilder.construct(this);
     }
     
     /**
@@ -81,9 +88,7 @@ public class CommandBuilder {
      */
     @Kapi
     public static ArgumentBuilder<CommandBuilder> create(String name) {
-        CommandBuilder command = new CommandBuilder(name);
-        command.argumentBuilder = ArgumentBuilder.construct(command);
-        return command.argumentBuilder;
+        return new CommandBuilder(name).argumentBuilder;
     }
     
     /**
@@ -113,7 +118,7 @@ public class CommandBuilder {
      * @return the command builder for chaining
      */
     @Kapi
-    public CommandBuilder onFail(BiConsumer<ExecutionCommandContext,String> failureHandler) {
+    public CommandBuilder onFail(BiConsumer<ExecutionCommandContext,Option<String>> failureHandler) {
         this.failureHandler = failureHandler;
         return this;
     }
@@ -129,8 +134,7 @@ public class CommandBuilder {
      */
     public CommandBuilder autoFailHandler() {
         return onFail((context, message) -> {
-            if (message == null) return;
-            Log.error(message, context.getSender());
+            message.ifPresent(msg -> Log.error(msg, context.getSender()));
         });
     }
     
@@ -150,12 +154,12 @@ public class CommandBuilder {
         
         while (true) {
             // Check if all requirements are met
-            for (var requirement : builder.getRequirements()) {
-                if (requirement.getSecond().test(context)) continue;
+            for (Pair<Predicate<CommandContext>,Option<String>> requirement : builder.getRequirements()) {
+                if (requirement.getFirst().test(context)) continue;
                 
                 // Failed requirement
                 if (failureHandler != null) {
-                    failureHandler.accept(context, requirement.getFirst());
+                    failureHandler.accept(context, requirement.getSecond());
                 }
                 
                 return context.getReturnValue();
@@ -169,14 +173,12 @@ public class CommandBuilder {
                 break;
             }
             
-            
             // Choose the next argument
             boolean hasNext = false;
-            var nextArgs = builder.getArgs();
-            for (var nextArgKey : nextArgs.keySet()) {
+            for (Pair<ArgumentType<?>,String> nextArgKey : builder.getArgs().keySet()) {
                 ArgumentType<?> nextType = nextArgKey.getFirst();
                 String nextArgumentName = nextArgKey.getSecond();
-                ArgumentBuilder<?> nextBuilder = nextArgs.get(nextArgKey);
+                ArgumentBuilder<?> nextBuilder = builder.getArgs().get(nextArgKey);
                 
                 // Try to parse the next argument
                 Result<?,String> nextResult = nextType.parse(arguments);
@@ -196,7 +198,12 @@ public class CommandBuilder {
         // TODO if executor doesn't exist that means the path is invalid
         // And must be handled by the failure handler
         // Otherwise it's valid, the next args r just optional and can be ignored
-        builder.getExecutor().accept(context);
+        Consumer<ExecutionCommandContext> executor = builder.getExecutor();
+        if (executor != null) {
+            executor.accept(context);
+        } else if (failureHandler != null) {
+            failureHandler.accept(context, Option.none());
+        }
         
         return context.getReturnValue();
     }

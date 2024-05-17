@@ -46,6 +46,8 @@ import me.kyren223.kapi.commands.SuggestionCommandContext;
 import me.kyren223.kapi.data.Result;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -55,13 +57,13 @@ import java.util.function.Predicate;
  */
 @Kapi
 @ApiStatus.Experimental
-// TODO Add @NullMarked
+@NullMarked
 public class IntegerArgumentType implements ArgumentType<Integer> {
     
     private boolean suggest;
     private int min;
     private int max;
-    private Predicate<Integer> predicate;
+    private @Nullable Predicate<Integer> predicate;
     private String errorMessage;
     
     private IntegerArgumentType() {

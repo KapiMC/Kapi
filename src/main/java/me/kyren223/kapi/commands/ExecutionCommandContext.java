@@ -44,6 +44,7 @@ import me.kyren223.kapi.annotations.Kapi;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.ApiStatus;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Represents the context of a command during execution (CommandExecutor).<br>
@@ -52,7 +53,7 @@ import org.jetbrains.annotations.ApiStatus;
  */
 @Kapi
 @ApiStatus.Internal
-// TODO Add @NullMarked
+@NullMarked
 public class ExecutionCommandContext extends CommandContext {
     
     private boolean returnValue;

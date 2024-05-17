@@ -357,10 +357,7 @@ public class Object3D implements EcsEntity {
      */
     @Kapi
     public Option<Object3D> getChild(String name) {
-        if (children.containsKey(name)) {
-            return Option.of(children.get(name));
-        }
-        return Option.none();
+        return Option.ofNullable(children.get(name));
     }
     
     /**
@@ -586,7 +583,7 @@ public class Object3D implements EcsEntity {
         if (trigger.isEvent()) {
             events.computeIfAbsent(trigger.getEvent(), k -> new ArrayList<>()).add(system);
         } else {
-            tasks.add(new Pair<>(trigger, system));
+            tasks.add(Pair.of(trigger, system));
         }
         return this;
     }

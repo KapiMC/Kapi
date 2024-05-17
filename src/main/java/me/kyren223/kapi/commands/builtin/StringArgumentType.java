@@ -45,6 +45,7 @@ import me.kyren223.kapi.commands.ArgumentType;
 import me.kyren223.kapi.commands.SuggestionCommandContext;
 import me.kyren223.kapi.data.Result;
 import org.jetbrains.annotations.ApiStatus;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 
@@ -53,7 +54,7 @@ import java.util.List;
  */
 @Kapi
 @ApiStatus.Experimental
-// TODO Add @NullMarked
+@NullMarked
 public class StringArgumentType implements ArgumentType<String> {
     
     private boolean toLowerCase;
@@ -75,10 +76,10 @@ public class StringArgumentType implements ArgumentType<String> {
     }
     
     /**
-     * Converts the input to lower case.
+     * Converts the input to lowercase.
      *
      * @return this, for chaining
-     * @throws IllegalStateException if already converting to upper case
+     * @throws IllegalStateException if already converting to uppercase
      */
     @Kapi
     public StringArgumentType toLowerCase() {
@@ -90,10 +91,10 @@ public class StringArgumentType implements ArgumentType<String> {
     }
     
     /**
-     * Converts the input to upper case.
+     * Converts the input to uppercase.
      *
      * @return this, for chaining
-     * @throws IllegalStateException if already converting to lower case
+     * @throws IllegalStateException if already converting to lowercase
      */
     @Kapi
     public StringArgumentType toUpperCase() {

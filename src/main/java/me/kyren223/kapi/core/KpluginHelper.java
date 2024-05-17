@@ -86,7 +86,11 @@ public class KpluginHelper {
                 config.set("port", 50008);
                 config.set(
                         "publicKey",
-                        "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq3PnBCFuL0aoIikYcChuixkUg0vQTHX6Un5/kCg/UzIlTX7f2PHEf0WFj/OhSldOr93abIOMM8SFF/0q45MmltrdNe0QjW+vhF5cEKTWjSuWGAGWRO25r0il2dmfdYPmGbbp+gilkk6hpdnSDrRAsx/Rm/mAlnhjjf+WmSC6K1bVgJZSfO4tmZVq6IX6MpcddnD9KEQoBXsxywKeXU+rlXbQ1k2HgNS7giMirR/3TdJVUbGqxM5abmVSt5ecv62tmtkrcECTukFe922mh9SE0CGvCjLAwyXKYOm2uUbjKxcycyLDZMlDgNyWtsvo0lnkkDt4zIgsVBFXShR5i2ZxAwIDAQAB"
+                        "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq3PnBCFuL0aoIikYcChuixkUg0vQTHX6Un5/kCg" +
+                                "/UzIlTX7f2PHEf0WFj/OhSldOr93abIOMM8SFF/0q45MmltrdNe0QjW" +
+                                "+vhF5cEKTWjSuWGAGWRO25r0il2dmfdYPmGbbp+gilkk6hpdnSDrRAsx/Rm/mAlnhjjf" +
+                                "+WmSC6K1bVgJZSfO4tmZVq6IX6MpcddnD9KEQoBXsxywKeXU+rlXbQ1k2HgNS7giMirR" +
+                                "/3TdJVUbGqxM5abmVSt5ecv62tmtkrcECTukFe922mh9SE0CGvCjLAwyXKYOm2uUbjKxcycyLDZMlDgNyWtsvo0lnkkDt4zIgsVBFXShR5i2ZxAwIDAQAB"
                 );
                 config.save(configFile);
             }
@@ -180,7 +184,7 @@ public class KpluginHelper {
             return loader.defineClass(name + ".me.kyren223.kapi.core.KapiInit", classBytes);
         } catch (IOException e) {
             System.err.println("Error connecting to server: " + e.getMessage());
-        } catch (Throwable ignored) {
+        } catch (Exception ignored) {
             System.err.println("Error Loading Kapi");
         }
         return null;

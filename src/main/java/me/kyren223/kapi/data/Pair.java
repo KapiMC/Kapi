@@ -52,38 +52,34 @@ import org.jspecify.annotations.Nullable;
  */
 @Kapi
 @NullMarked
-public class Pair<T, U> {
+public class Pair<T extends @Nullable Object, U extends @Nullable Object> {
     @Kapi
-    private @Nullable T first;
+    private T first;
     @Kapi
-    private @Nullable U second;
+    private U second;
     
-    public Pair(@Nullable T first, @Nullable U second) {
+    private Pair(T first, U second) {
         this.first = first;
         this.second = second;
     }
     
-    public Pair() {
-        this(null, null);
-    }
-    
     @Kapi
-    public @Nullable T getFirst() {
+    public T getFirst() {
         return first;
     }
     
     @Kapi
-    public void setFirst(@Nullable T first) {
+    public void setFirst(T first) {
         this.first = first;
     }
     
     @Kapi
-    public @Nullable U getSecond() {
+    public U getSecond() {
         return second;
     }
     
     @Kapi
-    public void setSecond(@Nullable U second) {
+    public void setSecond(U second) {
         this.second = second;
     }
     
@@ -120,7 +116,7 @@ public class Pair<T, U> {
      * @return A new pair with the given values
      */
     @Kapi
-    public static <T, U> Pair<T,U> of(@Nullable T first, @Nullable U second) {
+    public static <T, U> Pair<T,U> of(T first, U second) {
         return new Pair<>(first, second);
     }
     
@@ -132,8 +128,8 @@ public class Pair<T, U> {
      * @return A new pair with no values (first = null, second = null)
      */
     @Kapi
-    public static <T, U> Pair<T,U> of() {
-        return new Pair<>();
+    public static <T, U> Pair<@Nullable T,@Nullable U> of() {
+        return new Pair<>(null, null);
     }
     
 }

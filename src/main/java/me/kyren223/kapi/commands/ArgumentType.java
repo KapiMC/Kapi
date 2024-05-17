@@ -43,17 +43,18 @@ package me.kyren223.kapi.commands;
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.data.Result;
 import org.jetbrains.annotations.ApiStatus;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 
 /**
  * Represents a Command Argument Type.
  *
- * @param <T> The java type of the argument.
+ * @param <T> The java type of the argument (cannot be null).
  */
 @Kapi
-@ApiStatus.Internal
-// TODO Add @NullMarked
+@ApiStatus.Experimental
+@NullMarked
 public interface ArgumentType<T> {
     /**
      * For classes that implement {@link ArgumentType}, this method parses the argument.<br>

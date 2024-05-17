@@ -43,6 +43,8 @@ package me.kyren223.kapi.data;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
+import java.util.function.Consumer;
+
 // TODO Finish Option
 @NullMarked
 public class Option<T> {
@@ -79,10 +81,19 @@ public class Option<T> {
         return value != null;
     }
     
+    public void ifPresent(Consumer<T> consumer) {
+        if (value != null) consumer.accept(value);
+    }
+    
+    public void ifAbsent(Runnable runnable) {
+        if (value == null) runnable.run();
+    }
+    
     // Rust-like methods
     
     @SuppressWarnings("unchecked")
     public static <T> Option<T> none() {
         return (Option<T>) NONE;
     }
+    
 }

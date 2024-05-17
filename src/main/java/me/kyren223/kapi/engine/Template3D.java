@@ -150,7 +150,7 @@ public class Template3D {
      */
     @Kapi
     public void addChild(String name, Template3D child) {
-        children.put(name, new Pair<>(new Matrix4f(), child));
+        children.put(name, Pair.of(new Matrix4f(), child));
     }
     
     /**
@@ -165,7 +165,7 @@ public class Template3D {
     public void addChild(
             String name, Template3D child, Matrix4f transform
     ) {
-        children.put(name, new Pair<>(transform, child));
+        children.put(name, Pair.of(transform, child));
     }
     
     /**
@@ -209,9 +209,7 @@ public class Template3D {
      */
     @Kapi
     public Option<Pair<Matrix4f,Template3D>> getChild(String name) {
-        if (children.containsKey(name)) {
-            return Option.of(children.get(name));
-        } else return Option.none();
+        return Option.ofNullable(children.get(name));
     }
     
     
@@ -241,7 +239,7 @@ public class Template3D {
         if (trigger.isEvent()) {
             events.computeIfAbsent(trigger.getEvent(), k -> new ArrayList<>()).add(system);
         } else {
-            tasks.add(new Pair<>(trigger, system));
+            tasks.add(Pair.of(trigger, system));
         }
         return this;
     }

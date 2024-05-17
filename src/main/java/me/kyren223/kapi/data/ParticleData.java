@@ -46,9 +46,11 @@ import me.kyren223.kapi.utility.ParticleBuilder;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.Particle.DustOptions;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Holds the data for a particle.<br>
@@ -65,7 +67,7 @@ public class ParticleData {
     private double spreadY;
     private double spreadZ;
     private double extra;
-    private Object data;
+    private @Nullable Object data;
     private boolean force;
     
     /**
@@ -83,8 +85,9 @@ public class ParticleData {
      */
     @Kapi
     public ParticleData(
-            Particle particle, int count, double spreadX, double spreadY, double spreadZ, double extra, Object data,
-            boolean force
+            Particle particle, int count,
+            double spreadX, double spreadY, double spreadZ,
+            double extra, @Nullable Object data, boolean force
     ) {
         this.particle = particle;
         this.count = count;
@@ -211,7 +214,7 @@ public class ParticleData {
     }
     
     @Kapi
-    public Object getData() {
+    public @Nullable Object getData() {
         return data;
     }
     
@@ -242,11 +245,11 @@ public class ParticleData {
      * @throws IllegalStateException If the particle is not REDSTONE
      */
     @Kapi
-    public Particle.DustOptions getRedstoneData() {
+    public @Nullable DustOptions getRedstoneData() {
         if (particle != Particle.REDSTONE) {
             throw new IllegalStateException(PARTICLE_IS_NOT_REDSTONE);
         }
-        return (Particle.DustOptions) data;
+        return (DustOptions) data;
     }
     
     /**
@@ -254,13 +257,18 @@ public class ParticleData {
      *
      * @param color The color of the particle
      * @throws IllegalStateException If the particle is not REDSTONE
+     * @throws NullPointerException  If data (dust options) is null
      */
     @Kapi
     public void setRedstoneColor(Color color) {
         if (particle != Particle.REDSTONE) {
             throw new IllegalStateException(PARTICLE_IS_NOT_REDSTONE);
         }
-        this.data = new Particle.DustOptions(color, getRedstoneData().getSize());
+        DustOptions data = (DustOptions) this.data;
+        if (data == null) {
+            throw new NullPointerException("setRedstoneColor called on an object with null data");
+        }
+        this.data = new DustOptions(color, data.getSize());
     }
     
     /**
@@ -274,7 +282,11 @@ public class ParticleData {
         if (particle != Particle.REDSTONE) {
             throw new IllegalStateException(PARTICLE_IS_NOT_REDSTONE);
         }
-        this.data = new Particle.DustOptions(getRedstoneData().getColor(), size);
+        DustOptions data = (DustOptions) this.data;
+        if (data == null) {
+            throw new NullPointerException("setRedstoneSize called on an object with null data");
+        }
+        this.data = new DustOptions(data.getColor(), size);
     }
     
     /**
