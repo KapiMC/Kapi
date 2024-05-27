@@ -123,16 +123,14 @@ public class KpluginHelper {
         Kplugin.userLicense = license;
         
         if (server == null || server.isEmpty()) {
-            System.out.println(
-                    "Kapi server not found! Please set the server IP in the kapi.yml file.");
+            System.out.println("Kapi server not found! Please set the server IP in the kapi.yml file.");
             return null;
         }
         
         try (
                 Socket socket = new Socket(server, port);
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(socket.getInputStream()))
+                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))
         ) {
             KeyPair keyPair = CryptoUtils.generateRsaKeyPair();
             PrivateKey privateKey = keyPair.getPrivate();
@@ -143,7 +141,7 @@ public class KpluginHelper {
             String mac = Base64.getEncoder().encodeToString(ni.getHardwareAddress());
             String payload = salt + ":" + hashedPublicKey + ":" +
                     plugin.getKapiDeveloperLicense() + ":" + license + ":" +
-                    mac + ":" + plugin.getPluginName();
+                    mac + ":" + name;
             String encryptedPayload = CryptoUtils.encryptRsa(
                     payload,
                     CryptoUtils.stringToPublicKey(serverPublicKey).unwrap()
