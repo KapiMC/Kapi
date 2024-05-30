@@ -49,8 +49,16 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+import java.util.stream.Stream;
 
 /**
  * A utility class that manages configuration files.<br>
@@ -120,9 +128,10 @@ public class DocumentStore {
     
     /**
      * Gets the document from memory.<br>
-     * If the document doesn't exist, an empty document will be created.<br>
+     * If the document doesn't exist, it'll be loaded with {@link #loadDocument(String)}.<br>
      * Modifications to the document will not be saved to disk,
-     * but will be saved to memory
+     * but will be saved to memory, see {@link #saveDocument(String)}
+     * or {@link #getAndWriteDocument(String, Consumer)} to save to disk.
      *
      * @param path The path to the document
      * @return The document
@@ -130,8 +139,36 @@ public class DocumentStore {
     @Kapi
     public static FileConfiguration getDocument(String path) {
         path = getPath(path);
-        if (!documentExists(path)) createDocument(path);
+        if (!documentExists(path)) loadDocument(path);
         return a.get(path);
+    }
+    
+    /**
+     * Gets the document and passes it to a consumer.<br>
+     * Uses {@link #getDocument(String)} internally.
+     *
+     * @param path     The path to the document
+     * @param consumer The consumer to pass the document to
+     */
+    @Kapi
+    public static void getAndWriteDocument(String path, Consumer<FileConfiguration> consumer) {
+        consumer.accept(getDocument(path));
+        saveDocument(path);
+    }
+    
+    /**
+     * Loads a document and returns it.<br>
+     * Reads the document from disk, if it doesn't exist on disk,
+     * it will create a new empty document.
+     *
+     * @param path The path to the document
+     * @return The document
+     */
+    @Kapi
+    public static FileConfiguration loadAndGetDocument(String path) {
+        loadDocument(path);
+        assert documentExists(path);
+        return getDocument(path);
     }
     
     /**
@@ -167,7 +204,13 @@ public class DocumentStore {
     }
     
     /**
-     * Loads all documents from the plugin's data folder.
+     * Loads all documents from the plugin's data folder.<br>
+     * <br>
+     * You can specify a `.kapignore` file in the data folder of the plugin.<br>
+     * This file contains a list of regex patterns to ignore.<br>
+     * Each line in the file is a regex pattern.<br>
+     * Start a line with `#` to ignore it.<br>
+     * All lines are trimmed before being used, and blank/empty lines are skipped.
      */
     @Kapi
     public static void loadDocuments() {
@@ -176,17 +219,48 @@ public class DocumentStore {
             Log.info("Created data folder for plugin");
             return;
         }
-        File[] files = Kplugin.get().getDataFolder().listFiles();
-        if (files == null) {
-            Log.error("Failed to load documents, no files found");
-            return;
-        }
-        Arrays.stream(files).forEach(file -> {
-            if (file.isFile() && file.getName().endsWith(".yml")) {
-                loadDocument(file.getName());
+        
+        // Load .kapignore file
+        final List<Pattern> ignorePatterns = new ArrayList<>();
+        File ignoreFile = new File(Kplugin.get().getDataFolder(), ".kapignore");
+        if (ignoreFile.exists()) {
+            try {
+                Files.readAllLines(ignoreFile.toPath()).forEach(pattern -> {
+                    pattern = pattern.trim();
+                    if (pattern.isEmpty() || pattern.isBlank()) return;
+                    if (pattern.startsWith("#")) return;
+                    ignorePatterns.add(Pattern.compile(pattern));
+                });
+            } catch (IOException e) {
+                Log.warn("Failed to load .kapignore file");
+                
+            } catch (PatternSyntaxException e) {
+                Log.error(".kapignore file contains invalid regex pattern, ignoring entire file");
+                ignorePatterns.clear();
             }
-        });
-        Log.success("Loaded " + a.size() + " documents successfully");
+        }
+        
+        AtomicInteger count = new AtomicInteger();
+        try (Stream<Path> walk = Files.walk(Kplugin.get().getDataFolder().toPath())) {
+            walk.filter(Files::isRegularFile)
+                .filter(file -> file.getFileName().toString().endsWith(".yml"))
+                .filter(file -> {
+                    for (Pattern pattern : ignorePatterns) {
+                        if (pattern.matcher(file.getFileName().toString()).matches()) {
+                            return false;
+                        }
+                    }
+                    return true;
+                })
+                .forEach(file -> {
+                    loadDocument(file.getFileName().toString());
+                    count.getAndIncrement();
+                });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        
+        Log.success("Loaded " + count.get() + " documents");
     }
     
     /**
