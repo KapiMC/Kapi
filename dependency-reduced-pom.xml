@@ -5,7 +5,7 @@
     <groupId>me.kyren223</groupId>
     <artifactId>Kapi</artifactId>
     <name>Kapi</name>
-    <version>1.1.0-rc4-ki</version>
+    <version>1.1.0-rc5-ki</version>
     <build>
         <resources>
             <resource>
