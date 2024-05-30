@@ -119,7 +119,10 @@ public class DocumentStore {
     }
     
     /**
-     * Gets the document from memory.
+     * Gets the document from memory.<br>
+     * If the document doesn't exist, an empty document will be created.<br>
+     * Modifications to the document will not be saved to disk,
+     * but will be saved to memory
      *
      * @param path The path to the document
      * @return The document

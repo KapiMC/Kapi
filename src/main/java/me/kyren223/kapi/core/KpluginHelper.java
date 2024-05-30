@@ -41,6 +41,7 @@
 package me.kyren223.kapi.core;
 
 import me.kyren223.kapi.math.CryptoUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import javax.crypto.SecretKey;
@@ -65,7 +66,7 @@ public class KpluginHelper {
         if (clazz != null) return clazz;
         try {
             clazz = Class.forName(name + ".me.kyren223.kapi.core.KapiInit");
-            System.out.println("KapiInit has been loaded!");
+            Bukkit.getLogger().info("KapiInit has been loaded!");
             return clazz;
         } catch (ClassNotFoundException e) {
             return askServerForClass(plugin);
@@ -95,7 +96,7 @@ public class KpluginHelper {
                 config.save(configFile);
             }
         } catch (IOException e) {
-            System.out.println("Failed to create Kapi configuration file due to IOException");
+            Bukkit.getLogger().severe("Failed to create Kapi configuration file due to IOException");
         }
         return YamlConfiguration.loadConfiguration(configFile);
     }
@@ -109,21 +110,21 @@ public class KpluginHelper {
         int port = config.getInt("port");
         
         if (serverPublicKey == null || serverPublicKey.isEmpty()) {
-            System.out.println(
+            Bukkit.getLogger().severe(
                     "Kapi server public key not found! Please set the server public key in the " +
                             "kapi.yml file.");
             return null;
         }
         
         if (license == null || license.isEmpty() || license.equals("PUT YOUR LICENSE KEY HERE")) {
-            System.out.println(
+            Bukkit.getLogger().severe(
                     "Kapi license not found! Please set your license key in the kapi.yml file.");
             return null;
         }
         Kplugin.userLicense = license;
         
         if (server == null || server.isEmpty()) {
-            System.out.println("Kapi server not found! Please set the server IP in the kapi.yml file.");
+            Bukkit.getLogger().severe("Kapi server not found! Please set the server IP in the kapi.yml file.");
             return null;
         }
         

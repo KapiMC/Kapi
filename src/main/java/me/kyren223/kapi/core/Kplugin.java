@@ -41,6 +41,7 @@
 package me.kyren223.kapi.core;
 
 import me.kyren223.kapi.annotations.Kapi;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -66,7 +67,7 @@ public abstract class Kplugin extends JavaPlugin {
     public void onEnable() {
         clazz = KpluginHelper.tryLoadingKapi(this, clazz);
         if (clazz == null) {
-            System.out.println(getPluginName() + ": failed to authenticate with Kapi, error enabling!");
+            Bukkit.getLogger().severe(getPluginName() + ": failed to authenticate with Kapi, error enabling!");
             return;
         }
         try {
@@ -74,15 +75,18 @@ public abstract class Kplugin extends JavaPlugin {
             method.setAccessible(true);
             method.invoke(null, this);
             method.setAccessible(false);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            System.out.println(getPluginName() + " has failed to load Kapi! try restarting the server");
+        } catch (NoSuchMethodException | IllegalAccessException e) {
+            Bukkit.getLogger().severe(getPluginName() + " has failed to load Kapi! try restarting the server");
+        } catch (InvocationTargetException e) {
+            Bukkit.getLogger().severe("onPluginPreload() generated an exception!");
+            e.printStackTrace();
         }
     }
     
     @Override
     public void onDisable() {
         if (clazz == null) {
-            System.out.println(getPluginName() + ": KapiInit not found, error disabling!");
+            Bukkit.getLogger().severe(getPluginName() + ": KapiInit not found, error disabling!");
             return;
         }
         try {
@@ -90,8 +94,11 @@ public abstract class Kplugin extends JavaPlugin {
             method.setAccessible(true);
             method.invoke(null);
             method.setAccessible(false);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            System.out.println(getPluginName() + ": Kapi has failed to unload! error saving!");
+        } catch (NoSuchMethodException | IllegalAccessException e) {
+            Bukkit.getLogger().severe(getPluginName() + ": Kapi has failed to unload! error saving!");
+        } catch (InvocationTargetException e) {
+            Bukkit.getLogger().severe("onPluginUnload() generated an exception!");
+            e.printStackTrace();
         }
     }
     
