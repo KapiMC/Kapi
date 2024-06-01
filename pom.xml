@@ -97,7 +97,7 @@
                     
                     <!-- @formatter:off -->
                     <!-- IMPORTANT NOTE COMMENT TO INCLUDE KAPI INIT CLASS -->
-<!--                    <excludes><exclude>**/*KapiInit*.*</exclude></excludes>-->
+                    <excludes><exclude>**/*KapiInit*.*</exclude></excludes>
                     <!-- IMPORTANT NOTE UNCOMMENT TO EXCLUDE KAPI INIT CLASS -->
                     <!-- @formatter:on -->
                 
