@@ -44,6 +44,7 @@ import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.core.Kplugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -64,9 +65,13 @@ import java.util.stream.Stream;
  * A utility class that manages configuration files.<br>
  * Allows CRUD operations on documents (.yml configs).<br>
  * Documents are saved and loaded automatically.
+ *
+ * @deprecated Use {@link Config} instead
  */
 @Kapi
 @NullMarked
+@Deprecated(since = "1.1.0", forRemoval = true)
+@ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
 public class DocumentStore {
     
     private DocumentStore() {
@@ -106,8 +111,11 @@ public class DocumentStore {
      * If the document exists as a file but wasn't loaded yet, it will get loaded.
      *
      * @param path The path to the document
+     * @deprecated Use {@link Config} instead, which has no equivalent method
      */
     @Kapi
+    @Deprecated(since = "1.1.0", forRemoval = true)
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
     public static void createDocument(String path) {
         path = getPath(path);
         if (documentExists(path)) return;
@@ -119,8 +127,11 @@ public class DocumentStore {
      *
      * @param path The path to the document
      * @return True if the document exists, false otherwise
+     * @deprecated Use {@link Config#exists(String)} instead
      */
     @Kapi
+    @Deprecated(since = "1.1.0", forRemoval = true)
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
     public static boolean documentExists(String path) {
         path = getPath(path);
         return a.containsKey(path);
@@ -135,8 +146,11 @@ public class DocumentStore {
      *
      * @param path The path to the document
      * @return The document
+     * @deprecated Use {@link Config#get(String)} instead
      */
     @Kapi
+    @Deprecated(since = "1.1.0", forRemoval = true)
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
     public static FileConfiguration getDocument(String path) {
         path = getPath(path);
         if (!documentExists(path)) loadDocument(path);
@@ -149,8 +163,11 @@ public class DocumentStore {
      *
      * @param path     The path to the document
      * @param consumer The consumer to pass the document to
+     * @deprecated Use {@link Config#getAndWrite(String, Consumer)} instead
      */
     @Kapi
+    @Deprecated(since = "1.1.0", forRemoval = true)
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
     public static void getAndWriteDocument(String path, Consumer<FileConfiguration> consumer) {
         consumer.accept(getDocument(path));
         saveDocument(path);
@@ -163,8 +180,11 @@ public class DocumentStore {
      *
      * @param path The path to the document
      * @return The document
+     * @deprecated Use {@link Config#get(String)} instead
      */
     @Kapi
+    @Deprecated(since = "1.1.0", forRemoval = true)
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
     public static FileConfiguration loadAndGetDocument(String path) {
         loadDocument(path);
         assert documentExists(path);
@@ -176,8 +196,11 @@ public class DocumentStore {
      *
      * @param path The path to the document
      * @return The document, or null if it doesn't exist
+     * @deprecated Use {@link Config#get(String)} instead
      */
     @Kapi
+    @Deprecated(since = "1.1.0", forRemoval = true)
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
     private static @Nullable FileConfiguration getDocumentFromDisk(String path) {
         File file = new File(Kplugin.get().getDataFolder(), path);
         if (!file.exists()) return null;
@@ -190,8 +213,11 @@ public class DocumentStore {
      * If the document doesn't exist, it will create a new empty document.
      *
      * @param path Path to the document
+     * @deprecated Use {@link Config} instead, which has no equivalent method
      */
     @Kapi
+    @Deprecated(since = "1.1.0", forRemoval = true)
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
     public static void loadDocument(String path) {
         path = getPath(path);
         
@@ -211,8 +237,12 @@ public class DocumentStore {
      * Each line in the file is a regex pattern.<br>
      * Start a line with `#` to ignore it.<br>
      * All lines are trimmed before being used, and blank/empty lines are skipped.
+     *
+     * @deprecated Use {@link Config}, which has no equivalent method
      */
     @Kapi
+    @Deprecated(since = "1.1.0", forRemoval = true)
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
     public static void loadDocuments() {
         boolean created = Kplugin.get().getDataFolder().mkdirs();
         if (created) {
@@ -267,8 +297,11 @@ public class DocumentStore {
      * Saves the document to disk.
      *
      * @param path The path to the document.
+     * @deprecated Use {@link Config#write(String, YamlConfiguration)} instead
      */
     @Kapi
+    @Deprecated(since = "1.1.0", forRemoval = true)
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
     public static void saveDocument(String path) {
         path = getPath(path);
         FileConfiguration document = a.get(path);
@@ -282,8 +315,12 @@ public class DocumentStore {
     /**
      * Saves all documents to disk,
      * see {@link #saveDocument(String)} for a single document.
+     *
+     * @deprecated {@link Config} should be used, which has no equivalent method
      */
     @Kapi
+    @Deprecated(since = "1.1.0", forRemoval = true)
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
     public static void saveDocuments() {
         a.forEach((path, document) -> saveDocument(path));
         Log.success("Saved " + a.size() + " documents successfully");
