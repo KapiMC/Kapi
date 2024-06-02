@@ -49,17 +49,8 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-import java.util.stream.Stream;
 
 /**
  * A utility class that manages configuration files.<br>
@@ -244,53 +235,6 @@ public class DocumentStore {
     @Deprecated(since = "1.1.0", forRemoval = true)
     @ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
     public static void loadDocuments() {
-        boolean created = Kplugin.get().getDataFolder().mkdirs();
-        if (created) {
-            Log.info("Created data folder for plugin");
-            return;
-        }
-        
-        // Load .kapignore file
-        final List<Pattern> ignorePatterns = new ArrayList<>();
-        File ignoreFile = new File(Kplugin.get().getDataFolder(), ".kapignore");
-        if (ignoreFile.exists()) {
-            try {
-                Files.readAllLines(ignoreFile.toPath()).forEach(pattern -> {
-                    pattern = pattern.trim();
-                    if (pattern.isEmpty() || pattern.isBlank()) return;
-                    if (pattern.startsWith("#")) return;
-                    ignorePatterns.add(Pattern.compile(pattern));
-                });
-            } catch (IOException e) {
-                Log.warn("Failed to load .kapignore file");
-                
-            } catch (PatternSyntaxException e) {
-                Log.error(".kapignore file contains invalid regex pattern, ignoring entire file");
-                ignorePatterns.clear();
-            }
-        }
-        
-        AtomicInteger count = new AtomicInteger();
-        try (Stream<Path> walk = Files.walk(Kplugin.get().getDataFolder().toPath())) {
-            walk.filter(Files::isRegularFile)
-                .filter(file -> file.getFileName().toString().endsWith(".yml"))
-                .filter(file -> {
-                    for (Pattern pattern : ignorePatterns) {
-                        if (pattern.matcher(file.getFileName().toString()).matches()) {
-                            return false;
-                        }
-                    }
-                    return true;
-                })
-                .forEach(file -> {
-                    loadDocument(file.getFileName().toString());
-                    count.getAndIncrement();
-                });
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        
-        Log.success("Loaded " + count.get() + " documents");
     }
     
     /**
@@ -303,13 +247,6 @@ public class DocumentStore {
     @Deprecated(since = "1.1.0", forRemoval = true)
     @ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
     public static void saveDocument(String path) {
-        path = getPath(path);
-        FileConfiguration document = a.get(path);
-        try {
-            document.save(new File(Kplugin.get().getDataFolder(), path));
-        } catch (IOException e) {
-            Log.error("Failed to save document " + path);
-        }
     }
     
     /**
@@ -322,7 +259,5 @@ public class DocumentStore {
     @Deprecated(since = "1.1.0", forRemoval = true)
     @ApiStatus.ScheduledForRemoval(inVersion = "1.2.0")
     public static void saveDocuments() {
-        a.forEach((path, document) -> saveDocument(path));
-        Log.success("Saved " + a.size() + " documents successfully");
     }
 }
