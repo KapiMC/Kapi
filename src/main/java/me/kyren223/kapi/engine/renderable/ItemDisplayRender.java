@@ -224,7 +224,8 @@ public class ItemDisplayRender extends ItemDisplayData implements Renderable {
     
     @Kapi
     @Override
-    public ItemDisplayRender clone() {
+    public Renderable clone() {
         return new ItemDisplayRender(new ItemDisplayData(this));
     }
+    
 }
