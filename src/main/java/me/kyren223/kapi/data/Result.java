@@ -213,7 +213,7 @@ public class Result<T, E> {
      * @param mapper The mapper to apply to the Ok value contained in this result
      * @param <U>    The type of the Ok value returned by the mapper
      * @return A new result with the mapped Ok value, or an Err result if this result is an Err
-     * @see #mapOr(Function, U)
+     * @see #mapOr(Function, Object)
      * @see #mapOrElse(Function, Supplier)
      */
     @Kapi
@@ -245,7 +245,7 @@ public class Result<T, E> {
      * @param <U>      The type of the Ok value returned by the mapper
      * @return A new result with the mapped Ok value, or the supplied value if this result is an Err
      * @see #map(Function)
-     * @see #mapOr(Function, U)
+     * @see #mapOr(Function, Object)
      */
     @Kapi
     public <U> U mapOrElse(Function<T,U> mapper, Supplier<U> supplier) {

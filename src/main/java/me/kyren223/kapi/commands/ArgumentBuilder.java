@@ -101,7 +101,7 @@ public class ArgumentBuilder<T> {
      * Adds a new argument to the command without a way to access it.<br>
      * If you want to be able to access the argument, use {@link #argument(ArgumentType, String)}.<br>
      * This is useful for arguments like literals that are used for branching.<br>
-     * This uses a {@link UUID#randomUUID()#toString()} as the name.
+     * This uses a {@link UUID#randomUUID()} as the name and calls {@code toString()} on it.
      *
      * @param type The type of the argument
      * @return A new argument builder with the parent being this argument builder

@@ -24,6 +24,13 @@
 hs_err_pid*
 replay_pid*
 
+### Gradle template
+gradle/
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
 ### Maven template
 target/
 pom.xml.tag

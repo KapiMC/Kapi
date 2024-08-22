@@ -66,7 +66,7 @@ public class Utils {
      * <ul>
      *     <li>&amp; - converts to {@link ChatColor#COLOR_CHAR} which is '§' </li>
      *     <li>#[a-fA-F0-9]{6} - converts to hex color codes</li>
-     *     <li>&# - Converts to '#', used to escape hex</li>
+     *     <li>&amp;# - Converts to '#', used to escape hex</li>
      * </ul>
      *
      * @param s The string to color
