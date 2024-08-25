@@ -17,6 +17,12 @@
 
 <h3>Demos and Examples can be seen <a href="http://kapimc.github.io/docs/category/demos">Here</a></h3>
 
+# 💡 Why Kapi?
+
+As a longtime user of the Spigot API, I became frustrated with how minimal it is. Even basic tasks required too much boilerplate, and every time I started a new project, I found myself copy pasting the same utility functions over and over again.
+
+I built Kapi to solve this problem by offering a "batteries included" framework that simplifies plugin development, allowing you to build both simple and complex plugins with ease.
+
 # ✨ Features
 
 - 📚 **Templating System**: Easily create and manage impressive visual effects
