@@ -11,7 +11,6 @@ import me.kyren223.kapi.engine.ecs.System;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.Collection;

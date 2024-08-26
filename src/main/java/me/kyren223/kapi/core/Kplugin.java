@@ -8,8 +8,8 @@ package me.kyren223.kapi.core;
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.utility.Log;
 import me.kyren223.kapi.utility.Task;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -22,86 +22,74 @@ public abstract class Kplugin extends JavaPlugin {
     private static @Nullable Kplugin plugin;
     
     @Override
-    public void onEnable() {
-        Log.setPrefix("&8[&9" + "TODO" + "I&8] &r");
-        Log.info("KAPI has been enabled!");
-        onPluginPreload();
-        Task.run(this::onPluginLoad).delay(1).schedule();
+    public final void onEnable() {
+        Log.setPrefix("&8[&9" + getDescription().getName() + "&8] &r");
+        Log.info("Kapi has fully loaded!");
+        try {
+            onPluginPreload();
+        } catch (RuntimeException e) {
+            Log.error("An error occurred while preloading the plugin!");
+            throw e;
+        }
+        Task.run(() -> {
+            try {
+                onPluginLoad();
+            } catch (RuntimeException e) {
+                Log.error("An error occurred while loading the plugin!");
+                throw e;
+            }
+        }).delay(1).schedule();
     }
     
     @Override
-    public void onDisable() {
-        onPluginUnload();
-        Log.info("KAPI has been disabled!");
+    public final void onDisable() {
+        try {
+            onPluginUnload();
+        } catch (RuntimeException e) {
+            Log.error("An error occurred while unloading the plugin!");
+            e.printStackTrace();
+            Log.warn("Attempting to unload Kapi anyway...");
+        }
         plugin = null;
+        Log.info("Kapi has been unloaded!");
     }
     
     /**
-     * The developer's License Key for Kapi.<br>
-     * This is the key you received when you purchased Kapi.<br>
-     * If this is set to null, the plugin will not be loaded correctly.
-     */
-    @Kapi
-    public abstract String getKapiDeveloperLicense();
-    
-    /**
-     * The name of the plugin.<br>
-     * Must adhere to the following regex:
-     * <pre><code>[a-zA-Z_][a-zA-Z0-9_]*</code></pre>
-     * <ul>
-     *     <li>Starts with a letter or underscore</li>
-     *     <li>Contains only letters, numbers, underscores</li>
-     * </ul>
+     * Called immediately after Kapi has been fully loaded,
+     * in the same game-tick as the onEnable method.
+     * <p>
+     * For initializations, it's recommended to use {@link #onPluginLoad()} instead of this method,
+     * this is due to how Bukkit/Spigot works, some methods like {@link Bukkit#broadcastMessage(String)}
+     * will not work if called in the onEnable method.
      *
-     * @return The name of the plugin
-     */
-    @Kapi
-    public abstract String getPluginName();
-    
-    /**
-     * Called at the "preload" phase.<br>
-     * Used as a replacement to the onEnable method in Bukkit plugins.<br>
-     * For initializations, it's recommended to use {@link #onPluginLoad()} instead of this method.<br>
-     * <br>
-     * The preload phase comes after Kapi has been fully loaded,
-     * it's called in the same game tick as the onEnable method.
+     * @since 0.1.0
      */
     @Kapi
     public abstract void onPluginPreload();
     
     /**
-     * Called at the "load" phase.<br>
-     * This method should be used for initialization of the plugin.<br>
-     * {@link #onPluginPreload()} can be used only if absolutely needed, otherwise use this method.<br>
-     * <br>
-     * The load phase comes after the onEnable method has finished.<br>
-     * It'll be called 1 tick after the onEnable method (by using a 1-tick delayed Bukkit Task).<br>
-     * This means Kapi has been fully loaded and the {@link #onPluginPreload()} method has been called.
+     * Called 1 game-tick after Kapi loads and {@link #onPluginPreload()} finishes.
+     * This method should be used for initialization of the plugin.
      */
     @Kapi
     public abstract void onPluginLoad();
     
     /**
-     * Called at the "unload" phase.<br>
-     * Used as a replacement to the onDisable method in Bukkit plugins.<br>
-     * <br>
-     * The unload phase comes before Kapi unloads itself, so you can still use Kapi methods here.<br>
-     * It's called as the first thing in the onDisable method.<br>
-     * Immediately after it, Kapi unloads and then the onDisable method finishes.
+     * Called when the plugin is about to be disabled.
+     * Kapi unloads only after this method finishes,
+     * so you can still use Kapi methods here.
      */
     @Kapi
     public abstract void onPluginUnload();
     
     /**
-     * Gets the instance of the plugin.
-     *
      * @return The instance of the plugin
      * @throws IllegalStateException If the plugin has not been enabled yet
      */
     @Kapi
     public static Kplugin get() {
         if (plugin == null) {
-            throw new IllegalStateException("KAPI has not been enabled yet!");
+            throw new IllegalStateException("Kapi has not been enabled yet!");
         }
         return plugin;
     }

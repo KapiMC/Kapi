@@ -7,7 +7,6 @@ package me.kyren223.kapi.data;
 
 import me.kyren223.kapi.annotations.Kapi;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;

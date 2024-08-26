@@ -11,7 +11,6 @@ import org.bukkit.entity.Display;
 import org.bukkit.util.Transformation;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * Holds the common data for all displays.<br>

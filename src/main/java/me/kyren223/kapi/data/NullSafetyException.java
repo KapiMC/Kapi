@@ -6,7 +6,6 @@
 package me.kyren223.kapi.data;
 
 import me.kyren223.kapi.annotations.Kapi;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * Used in {@link Result} and {@link Option},

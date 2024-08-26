@@ -7,7 +7,6 @@ package me.kyren223.kapi.utility;
 
 import me.kyren223.kapi.annotations.Kapi;
 import org.bukkit.Color;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * A utility class that includes a bunch of predefined colors.<br>

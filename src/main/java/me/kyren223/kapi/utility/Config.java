@@ -8,7 +8,6 @@ package me.kyren223.kapi.utility;
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.core.Kplugin;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.jspecify.annotations.NullMarked;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +17,6 @@ import java.util.function.Consumer;
  * A utility class that manages configuration files.<br>
  * Allows CRUD operations on documents (.yml configs).
  */
-@NullMarked
 @Kapi
 public class Config {
     

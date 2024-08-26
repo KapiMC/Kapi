@@ -9,7 +9,6 @@ import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.data.Option;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
 
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;

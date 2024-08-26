@@ -12,7 +12,6 @@ import org.bukkit.Color;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Display;
 import org.bukkit.util.Transformation;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * Holds the data for a block display.<br>

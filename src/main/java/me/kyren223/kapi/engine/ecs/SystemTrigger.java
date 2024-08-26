@@ -6,7 +6,6 @@
 package me.kyren223.kapi.engine.ecs;
 
 import me.kyren223.kapi.annotations.Kapi;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**

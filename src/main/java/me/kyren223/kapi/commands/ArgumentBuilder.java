@@ -8,7 +8,6 @@ import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.data.Option;
 import me.kyren223.kapi.data.Pair;
 import org.jetbrains.annotations.ApiStatus;
-import org.jspecify.annotations.NullMarked;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -20,7 +19,7 @@ import java.util.function.Predicate;
  */
 @Kapi
 @ApiStatus.Internal
-class ArgumentBuilder<T> {
+public class ArgumentBuilder<T> {
     
     private final T parent;
     private final Map<Pair<ArgumentType<?>,String>,ArgumentBuilder<ArgumentBuilder<T>>> args;

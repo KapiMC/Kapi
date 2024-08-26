@@ -8,7 +8,6 @@ package me.kyren223.kapi.commands;
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.data.Result;
 import org.jetbrains.annotations.ApiStatus;
-import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ import java.util.List;
  */
 @Kapi
 @ApiStatus.Experimental
-interface ArgumentType<T> {
+public interface ArgumentType<T> {
     /**
      * For classes that implement {@link ArgumentType}, this method parses the argument.<br>
      *

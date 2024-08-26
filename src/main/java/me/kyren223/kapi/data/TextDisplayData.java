@@ -12,7 +12,6 @@ import org.bukkit.Color;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.TextDisplay;
 import org.bukkit.util.Transformation;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**

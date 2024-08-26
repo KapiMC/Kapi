@@ -8,7 +8,6 @@ package me.kyren223.kapi.engine;
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.engine.renderable.Renderable;
 import org.bukkit.util.Vector;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * Represents a point in 3D space and a renderable object.

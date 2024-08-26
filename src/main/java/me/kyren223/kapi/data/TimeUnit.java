@@ -6,7 +6,6 @@
 package me.kyren223.kapi.data;
 
 import me.kyren223.kapi.annotations.Kapi;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * Utility class for converting minecraft time durations between different units.<br>
