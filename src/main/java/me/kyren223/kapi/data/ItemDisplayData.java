@@ -22,7 +22,6 @@ import org.jspecify.annotations.Nullable;
  * See {@link ItemDisplayBuilder} for creating new instances.
  */
 @Kapi
-@NullMarked
 public class ItemDisplayData extends DisplayData {
     
     private @Nullable ItemStack itemStack;

@@ -19,7 +19,6 @@ import java.util.List;
  */
 @Kapi
 @ApiStatus.Experimental
-@NullMarked
 public class LiteralArgumentType implements ArgumentType<String> {
     
     private final String literal;

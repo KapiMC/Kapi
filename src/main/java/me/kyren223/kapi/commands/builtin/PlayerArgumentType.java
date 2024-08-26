@@ -21,7 +21,6 @@ import java.util.List;
  */
 @Kapi
 @ApiStatus.Experimental
-@NullMarked
 public class PlayerArgumentType implements ArgumentType<Player> {
     
     private boolean suggest;

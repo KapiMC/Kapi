@@ -21,7 +21,6 @@ import java.util.function.Predicate;
  * A utility builder class that includes a bunch of useful methods for running tasks.
  */
 @Kapi
-@NullMarked
 public class Task {
     
     private final Consumer<TaskData> task;

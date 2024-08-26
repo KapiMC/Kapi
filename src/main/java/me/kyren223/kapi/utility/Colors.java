@@ -14,7 +14,6 @@ import org.jspecify.annotations.NullMarked;
  * For the built-in bukkit colors, see {@link org.bukkit.Color}.<br>
  */
 @Kapi
-@NullMarked
 public class Colors {
     
     private Colors() {

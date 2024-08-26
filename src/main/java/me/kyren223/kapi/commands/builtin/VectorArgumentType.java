@@ -20,7 +20,6 @@ import java.util.List;
  */
 @Kapi
 @ApiStatus.Experimental
-@NullMarked
 public class VectorArgumentType implements ArgumentType<Vector> {
     
     @Override

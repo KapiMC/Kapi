@@ -21,7 +21,6 @@ import java.util.List;
  */
 @Kapi
 @ApiStatus.Internal
-@NullMarked
 public class SuggestionCommandContext extends CommandContext {
     
     private final List<String> returnValue;

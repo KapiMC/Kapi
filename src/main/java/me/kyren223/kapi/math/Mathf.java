@@ -21,7 +21,6 @@ import org.jspecify.annotations.NullMarked;
  * that are not present in the standard libraries.
  */
 @Kapi
-@NullMarked
 public class Mathf {
     
     private Mathf() {

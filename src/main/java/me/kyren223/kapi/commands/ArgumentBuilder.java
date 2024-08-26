@@ -20,8 +20,7 @@ import java.util.function.Predicate;
  */
 @Kapi
 @ApiStatus.Internal
-@NullMarked
-public class ArgumentBuilder<T> {
+class ArgumentBuilder<T> {
     
     private final T parent;
     private final Map<Pair<ArgumentType<?>,String>,ArgumentBuilder<ArgumentBuilder<T>>> args;

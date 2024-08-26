@@ -20,7 +20,6 @@ import org.jspecify.annotations.Nullable;
  * Used to render text displays.
  */
 @Kapi
-@NullMarked
 public class TextDisplayRender extends TextDisplayData implements Renderable {
     
     private @Nullable TextDisplay entity;

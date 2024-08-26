@@ -15,7 +15,6 @@ import org.jspecify.annotations.NullMarked;
  * Used for rendering particles.
  */
 @Kapi
-@NullMarked
 public class ParticleRender implements Renderable {
     
     private ParticleData particle;

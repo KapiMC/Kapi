@@ -8,13 +8,11 @@ package me.kyren223.kapi.utility;
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.data.BlockDisplayData;
 import org.bukkit.block.data.BlockData;
-import org.jspecify.annotations.NullMarked;
 
 /**
  * A builder for {@link BlockDisplayData}.
  */
 @Kapi
-@NullMarked
 public class BlockDisplayBuilder extends DisplayBuilder<BlockDisplayBuilder> {
     
     private final BlockData block;

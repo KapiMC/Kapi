@@ -17,7 +17,6 @@ import org.jspecify.annotations.Nullable;
  * A builder for {@link TextDisplayData}.
  */
 @Kapi
-@NullMarked
 public class TextDisplayBuilder extends DisplayBuilder<TextDisplayBuilder> {
     
     private @Nullable String text;

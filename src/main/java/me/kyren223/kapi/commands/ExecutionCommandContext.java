@@ -18,7 +18,6 @@ import org.jspecify.annotations.NullMarked;
  */
 @Kapi
 @ApiStatus.Internal
-@NullMarked
 public class ExecutionCommandContext extends CommandContext {
     
     private boolean returnValue;

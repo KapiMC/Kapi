@@ -20,7 +20,6 @@ import org.jspecify.annotations.NullMarked;
  * See {@link BlockDisplayBuilder} for creating new instances.
  */
 @Kapi
-@NullMarked
 public class BlockDisplayData extends DisplayData {
     
     private BlockData block;

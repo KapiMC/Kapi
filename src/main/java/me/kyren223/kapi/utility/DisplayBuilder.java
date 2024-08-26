@@ -15,7 +15,6 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.jspecify.annotations.NullMarked;
 
-@NullMarked
 public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     /*

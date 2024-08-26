@@ -19,7 +19,6 @@ import java.util.List;
  */
 @Kapi
 @ApiStatus.Experimental
-@NullMarked
 public class BooleanArgumentType implements ArgumentType<Boolean> {
     
     private boolean suggest;

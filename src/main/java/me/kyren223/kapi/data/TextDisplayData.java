@@ -21,7 +21,6 @@ import org.jspecify.annotations.Nullable;
  * See {@link TextDisplayBuilder} for creating new instances.
  */
 @Kapi
-@NullMarked
 public class TextDisplayData extends DisplayData {
     
     private @Nullable String text;

@@ -24,7 +24,6 @@ import java.util.function.Supplier;
  * @param <E> The type of the Err value
  */
 @Kapi
-@NullMarked
 public class Result<T, E> {
     
     // IMPORTANT NOTE: Internal Assumption (ok == null && err == null || ok != null && err != null) == false

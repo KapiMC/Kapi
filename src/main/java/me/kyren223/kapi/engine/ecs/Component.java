@@ -20,7 +20,6 @@ import java.util.function.Consumer;
  * and reduces the chance of typos from using strings directly.
  */
 @Kapi
-@NullMarked
 public class Component {
     
     private Component() {

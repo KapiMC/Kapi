@@ -23,7 +23,6 @@ import org.jspecify.annotations.Nullable;
  * See {@link ParticleRender} for rendering particles.
  */
 @Kapi
-@NullMarked
 public class ParticleData {
     private static final String PARTICLE_IS_NOT_REDSTONE = "Particle is not REDSTONE";
     private Particle particle;

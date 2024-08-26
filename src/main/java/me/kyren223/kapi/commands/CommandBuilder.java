@@ -33,7 +33,6 @@ import static me.kyren223.kapi.commands.builtin.LiteralArgumentType.literal;
  */
 @Kapi
 @ApiStatus.Internal
-@NullMarked
 public class CommandBuilder {
     
     private final String name;

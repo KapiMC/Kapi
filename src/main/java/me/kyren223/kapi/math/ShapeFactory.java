@@ -19,7 +19,6 @@ import java.util.List;
  * A factory for creating shapes.
  */
 @Kapi
-@NullMarked
 public class ShapeFactory {
     
     private ShapeFactory() {

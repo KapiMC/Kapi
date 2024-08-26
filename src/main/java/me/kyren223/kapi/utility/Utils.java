@@ -18,7 +18,6 @@ import java.util.regex.PatternSyntaxException;
  * A utility class that includes a bunch of useful methods.
  */
 @Kapi
-@NullMarked
 public class Utils {
     
     private Utils() {

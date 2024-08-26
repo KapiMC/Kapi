@@ -16,7 +16,6 @@ import org.jspecify.annotations.Nullable;
  * A builder for {@link ItemDisplayData}.
  */
 @Kapi
-@NullMarked
 public class ItemDisplayBuilder extends DisplayBuilder<ItemDisplayBuilder> {
     
     private @Nullable ItemStack item;

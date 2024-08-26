@@ -26,7 +26,6 @@ import java.util.Map;
  */
 @Kapi
 @ApiStatus.Internal
-@NullMarked
 public class CommandContext {
     
     private final CommandSender sender;

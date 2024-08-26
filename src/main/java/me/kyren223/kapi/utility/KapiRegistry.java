@@ -20,7 +20,6 @@ import org.jspecify.annotations.Nullable;
  * A utility class for registering commands and event listeners.
  */
 @Kapi
-@NullMarked
 public class KapiRegistry {
     
     private KapiRegistry() {

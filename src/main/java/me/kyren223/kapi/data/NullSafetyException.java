@@ -14,7 +14,6 @@ import org.jspecify.annotations.NullMarked;
  * For example, in {@link Result#unwrap()} when the result is Err.
  */
 @Kapi
-@NullMarked
 public class NullSafetyException extends RuntimeException {
     
     public NullSafetyException(String message) {

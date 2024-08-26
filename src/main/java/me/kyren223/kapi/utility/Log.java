@@ -20,7 +20,6 @@ import java.util.logging.Level;
  * not System.out.println or System.err.println.
  */
 @Kapi
-@NullMarked
 public class Log {
     
     private Log() {
@@ -254,7 +253,7 @@ public class Log {
      */
     @Kapi
     public static void debug(String message) {
-        if (!Kplugin.get().isDebug()) return;
+//        if (!Kplugin.get().isDebug()) return;
         Kplugin.get().getLogger().log(Level.INFO, () -> getDebug(message));
     }
     
@@ -270,7 +269,7 @@ public class Log {
      */
     @Kapi
     public static void debug(String message, CommandSender... senders) {
-        if (!Kplugin.get().isDebug()) return;
+//        if (!Kplugin.get().isDebug()) return;
         for (CommandSender sender : senders) {
             sender.sendMessage(getDebug(message));
         }
@@ -289,7 +288,7 @@ public class Log {
      */
     @Kapi
     public static void broadcastDebug(String message) {
-        if (!Kplugin.get().isDebug()) return;
+//        if (!Kplugin.get().isDebug()) return;
         Kplugin.get().getServer().broadcastMessage(getDebug(message));
     }
     

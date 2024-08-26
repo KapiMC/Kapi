@@ -15,7 +15,6 @@ import org.jspecify.annotations.NullMarked;
  * Units range from ticks to days. Ticks are the smallest unit in minecraft.
  */
 @Kapi
-@NullMarked
 public enum TimeUnit {
     TICKS(1),
     SECONDS(20),

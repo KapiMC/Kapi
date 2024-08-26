@@ -15,7 +15,6 @@ import org.jspecify.annotations.NullMarked;
  * Represents an object that can be rendered by a {@link Object3D}.
  */
 @Kapi
-@NullMarked
 public interface Renderable {
     @Kapi
     void spawn(World world, Vector point);

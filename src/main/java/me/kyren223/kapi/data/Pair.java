@@ -16,7 +16,6 @@ import org.jspecify.annotations.Nullable;
  * @param <U> The second object
  */
 @Kapi
-@NullMarked
 public class Pair<T extends @Nullable Object, U extends @Nullable Object> {
     @Kapi
     private T first;

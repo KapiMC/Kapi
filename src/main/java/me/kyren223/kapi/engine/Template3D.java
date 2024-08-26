@@ -24,7 +24,6 @@ import java.util.stream.Stream;
  * Represents a 3D object template.
  */
 @Kapi
-@NullMarked
 public class Template3D {
     private final List<Point> points;
     private final HashMap<String,Pair<Matrix4f,Template3D>> children;

@@ -19,7 +19,6 @@ import java.util.List;
  */
 @Kapi
 @ApiStatus.Experimental
-@NullMarked
 public class StringArgumentType implements ArgumentType<String> {
     
     private boolean toLowerCase;

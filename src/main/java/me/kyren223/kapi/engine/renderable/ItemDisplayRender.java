@@ -21,7 +21,6 @@ import org.jspecify.annotations.Nullable;
  * Used to render item displays.
  */
 @Kapi
-@NullMarked
 public class ItemDisplayRender extends ItemDisplayData implements Renderable {
     
     private @Nullable ItemDisplay entity;

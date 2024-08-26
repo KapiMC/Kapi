@@ -17,7 +17,6 @@ import java.util.function.Consumer;
  * Implementing this interface yourself is not recommended nor supported.
  */
 @Kapi
-@NullMarked
 public interface EcsEntity {
     
     @Kapi

@@ -21,7 +21,6 @@ import org.jspecify.annotations.NullMarked;
  * {@link ItemDisplayData}, {@link BlockDisplayData} and {@link TextDisplayData}.
  */
 @Kapi
-@NullMarked
 public abstract class DisplayData {
     
     private Transformation transformation;

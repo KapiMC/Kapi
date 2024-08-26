@@ -43,7 +43,6 @@ import java.util.function.Consumer;
  * see {@link #entityCollision(Object3D, Consumer)} for an example.<br>
  */
 @Kapi
-@NullMarked
 public class System {
     
     private System() {

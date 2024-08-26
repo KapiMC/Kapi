@@ -23,8 +23,7 @@ import java.util.function.Supplier;
  * @param <T> The type of the value contained in this option
  */
 @Kapi
-@NullMarked
-public class Option<T> {
+class Option<T> {
     
     private static final Option<?> NONE = new Option<>(null);
     

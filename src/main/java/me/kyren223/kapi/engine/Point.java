@@ -14,7 +14,6 @@ import org.jspecify.annotations.NullMarked;
  * Represents a point in 3D space and a renderable object.
  */
 @Kapi
-@NullMarked
 public class Point {
     private double x;
     private double y;

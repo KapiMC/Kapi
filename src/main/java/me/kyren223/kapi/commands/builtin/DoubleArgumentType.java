@@ -22,7 +22,6 @@ import java.util.function.Predicate;
  */
 @Kapi
 @ApiStatus.Experimental
-@NullMarked
 public class DoubleArgumentType implements ArgumentType<Double> {
     
     private double min;

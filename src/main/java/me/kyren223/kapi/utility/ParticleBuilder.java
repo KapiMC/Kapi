@@ -17,7 +17,6 @@ import org.jspecify.annotations.Nullable;
  * A builder for creating {@link ParticleData} objects.
  */
 @Kapi
-@NullMarked
 public class ParticleBuilder {
     private final Particle particle;
     private int count;

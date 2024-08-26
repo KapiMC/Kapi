@@ -13,7 +13,6 @@ import org.jspecify.annotations.Nullable;
  * Represents when a system should be executed.
  */
 @Kapi
-@NullMarked
 public final class SystemTrigger {
     
     // Built-in event names

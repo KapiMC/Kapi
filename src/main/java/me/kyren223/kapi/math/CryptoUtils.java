@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
  * Utility class for cryptographic operations.
  */
 @Kapi
-@NullMarked
 public class CryptoUtils {
     
     private CryptoUtils() {

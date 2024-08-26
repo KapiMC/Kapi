@@ -19,8 +19,7 @@ import java.util.List;
  */
 @Kapi
 @ApiStatus.Experimental
-@NullMarked
-public interface ArgumentType<T> {
+interface ArgumentType<T> {
     /**
      * For classes that implement {@link ArgumentType}, this method parses the argument.<br>
      *

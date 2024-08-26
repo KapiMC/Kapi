@@ -22,7 +22,6 @@ import java.util.function.Predicate;
  */
 @Kapi
 @ApiStatus.Experimental
-@NullMarked
 public class IntegerArgumentType implements ArgumentType<Integer> {
     
     private boolean suggest;
