@@ -7,17 +7,14 @@
 package me.kyren223.kapi.commands;
 
 import me.kyren223.kapi.annotations.Kapi;
+import me.kyren223.kapi.core.Kplugin;
 import me.kyren223.kapi.data.Option;
 import me.kyren223.kapi.data.Pair;
 import me.kyren223.kapi.data.Result;
-import me.kyren223.kapi.utility.KapiRegistry;
 import me.kyren223.kapi.utility.Log;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.ApiStatus;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -56,12 +53,11 @@ public class CommandBuilder {
     }
     
     /**
-     * Registers the command to the Kapi command registry.
-     * Uses {@link KapiRegistry#register(String, CommandExecutor, TabCompleter)}.
+     * Registers the command.
      */
     @Kapi
     public void register() {
-        KapiRegistry.register(name, this::onCommand, this::onTabComplete);
+        Kplugin.get().registerCommand(name, this::onCommand, this::onTabComplete);
     }
     
     /**
@@ -173,10 +169,10 @@ public class CommandBuilder {
     }
     
     private List<String> onTabComplete(
-            CommandSender sender, Command command, String label, String[] args
+        CommandSender sender, Command command, String label, String[] args
     ) {
         SuggestionCommandContext context =
-                new SuggestionCommandContext(sender, command, label, args);
+            new SuggestionCommandContext(sender, command, label, args);
         
         return context.getReturnValue();
     }

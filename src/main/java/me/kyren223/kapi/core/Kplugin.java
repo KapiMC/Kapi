@@ -7,7 +7,7 @@ package me.kyren223.kapi.core;
 
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.utility.Log;
-import me.kyren223.kapi.utility.Task;
+import me.kyren223.kapi.utility.TaskBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -37,14 +37,14 @@ public abstract class Kplugin extends JavaPlugin {
             Log.error("An error occurred while preloading the plugin!");
             throw e;
         }
-        Task.run(() -> {
+        TaskBuilder.create(() -> {
             try {
                 onPluginLoad();
             } catch (RuntimeException e) {
                 Log.error("An error occurred while loading the plugin!");
                 throw e;
             }
-        }).delay(1).schedule();
+        }).schedule();
     }
     
     @Override
@@ -62,7 +62,7 @@ public abstract class Kplugin extends JavaPlugin {
     
     /**
      * Called immediately after Kapi has been fully loaded,
-     * in the same game-tick as the onEnable method.
+     * in the same server tick as the onEnable method.
      * <p>
      * For initializations, it's recommended to use {@link #onPluginLoad()} instead of this method,
      * this is due to how Bukkit/Spigot works, some methods like {@link Bukkit#broadcastMessage(String)}
@@ -74,7 +74,7 @@ public abstract class Kplugin extends JavaPlugin {
     public abstract void onPluginPreload();
     
     /**
-     * Called 1 game-tick after Kapi loads and {@link #onPluginPreload()} finishes.
+     * Called one server tick after Kapi loads and {@link #onPluginPreload()} finishes.
      * This method should be used for initialization of the plugin.
      */
     @Kapi

@@ -10,7 +10,7 @@ import me.kyren223.kapi.data.Option;
 import me.kyren223.kapi.data.Pair;
 import me.kyren223.kapi.engine.ecs.EcsEntity;
 import me.kyren223.kapi.engine.ecs.SystemTrigger;
-import me.kyren223.kapi.utility.Task;
+import me.kyren223.kapi.utility.TaskBuilder;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
@@ -50,8 +50,8 @@ public class Object3D implements EcsEntity {
      * @param parent    The parent of this object, null if this object has no parent
      */
     public Object3D(
-            Template3D template, World world, Matrix4f transform,
-            @Nullable Object3D parent
+        Template3D template, World world, Matrix4f transform,
+        @Nullable Object3D parent
     ) {
         this.parent = parent;
         this.world = world;
@@ -275,7 +275,7 @@ public class Object3D implements EcsEntity {
      * @param transform The transform of the child relative to this template
      */
     public void addChild(
-            String name, Template3D child, Matrix4f transform
+        String name, Template3D child, Matrix4f transform
     ) {
         Object3D object = child.newInstance(world, transform, this);
         children.put(name, object);
@@ -368,8 +368,8 @@ public class Object3D implements EcsEntity {
         children.values().forEach(child -> child.spawn(renderInterval));
         
         points.forEach(point -> point.getRenderable().spawn(
-                world, Vector.fromJOML(
-                        getWorldTransform().transformPosition(point.getVector().toVector3f()))
+            world, Vector.fromJOML(
+                getWorldTransform().transformPosition(point.getVector().toVector3f()))
         ));
         
         triggerEvent(SystemTrigger.SPAWN_EVENT);
@@ -378,15 +378,22 @@ public class Object3D implements EcsEntity {
             SystemTrigger trigger = task.getFirst();
             Consumer<Object3D> system = task.getSecond();
             assert !trigger.isEvent();
-            Task.run(() -> system.accept(this)).timer(trigger.getDelay(), trigger.getPeriod())
-                .whileCondition(this::shouldContinue).schedule();
+            TaskBuilder.create(() -> system.accept(this))
+                       .delay(trigger.getDelay())
+                       .interval(trigger.getPeriod())
+                       .whileCondition(this::shouldContinue)
+                       .schedule();
         }
-        Task.run(this::render).timer(1, 1).whileCondition(this::shouldContinue).schedule();
+        TaskBuilder.create(this::render)
+                   .delay(1)
+                   .interval(1)
+                   .whileCondition(this::shouldContinue)
+                   .schedule();
     }
     
     /**
      * Spawns this object and all of its children with a render interval of 1<br>
-     *
+     * <p>
      * See {@link #spawn(int)} for more info
      */
     @Kapi
@@ -401,8 +408,8 @@ public class Object3D implements EcsEntity {
     public void despawn() {
         this.cancel = true;
         points.forEach(point -> point.getRenderable().despawn(
-                world, Vector.fromJOML(
-                        getWorldTransform().transformPosition(point.getVector().toVector3f()))
+            world, Vector.fromJOML(
+                getWorldTransform().transformPosition(point.getVector().toVector3f()))
         ));
         children.values().forEach(Object3D::despawn);
         
@@ -541,7 +548,7 @@ public class Object3D implements EcsEntity {
     @Kapi
     @Override
     public Object3D addSystem(
-            SystemTrigger trigger, Consumer<Object3D> system
+        SystemTrigger trigger, Consumer<Object3D> system
     ) {
         if (trigger.isEvent()) {
             events.computeIfAbsent(trigger.getEvent(), k -> new ArrayList<>()).add(system);
