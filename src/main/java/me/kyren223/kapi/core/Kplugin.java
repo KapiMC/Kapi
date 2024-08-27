@@ -23,7 +23,6 @@ public abstract class Kplugin extends JavaPlugin {
     
     @Override
     public final void onEnable() {
-        Log.setPrefix("&8[&9" + getDescription().getName() + "&8] &r");
         Log.info("Kapi has fully loaded!");
         try {
             onPluginPreload();
