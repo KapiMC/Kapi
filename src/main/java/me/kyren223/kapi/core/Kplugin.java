@@ -9,12 +9,19 @@ import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.utility.Log;
 import me.kyren223.kapi.utility.Task;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.Nullable;
 
 /**
- * This class should be extended by the main class of your plugin.<br>
- * Extend this instead of {@link JavaPlugin}<br>
+ * This class should be extended by the main class of your plugin.
+ * Extend this instead of {@link JavaPlugin}
+ * <p>
+ * Write your initialization code in {@link #onPluginLoad()}
+ * and your unloading code in {@link #onPluginUnload()}.
  */
 @Kapi
 public abstract class Kplugin extends JavaPlugin {
@@ -91,5 +98,34 @@ public abstract class Kplugin extends JavaPlugin {
             throw new IllegalStateException("Kapi has not been enabled yet!");
         }
         return plugin;
+    }
+    
+    /**
+     * Registers the given listener.
+     *
+     * @param listener An instance of a class that implements Listener
+     */
+    @Kapi
+    public void registerEvent(Listener listener) {
+        getServer().getPluginManager().registerEvents(listener, this);
+    }
+    
+    /**
+     * Registers a command.
+     *
+     * @param name      The name of the command
+     * @param executor  The executor for the command
+     * @param completer The tab completer for the command or null for no tab completer
+     */
+    @Kapi
+    public void registerCommand(String name, CommandExecutor executor, @Nullable TabCompleter completer) {
+        PluginCommand command = getCommand(name);
+        if (command == null) {
+            throw new IllegalArgumentException(
+                "Command " + name + " does not exist! (did you add it to the plugin.yml file?)");
+        }
+        
+        command.setExecutor(executor);
+        if (completer != null) command.setTabCompleter(completer);
     }
 }
