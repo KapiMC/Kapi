@@ -16,10 +16,13 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
- * Represents a value that can be either Some (value) or None.<br>
+ * Represents a value that can be either Some (value) or None.
  * Similar to Rust's Option type, aims to replace nullable types.
+ * <p>
+ * This class is immutable and thus thread-safe.
+ * The contained value itself may not be thread-safe.
  *
- * @param <T> The type of the value contained in this option
+ * @param <T> the type of the value contained in this option
  */
 @Kapi
 public class Option<T> {
@@ -33,11 +36,9 @@ public class Option<T> {
     }
     
     /**
-     * @param value The value contained in this option
-     * @param <T>   The type of the value contained in this option
+     * @param value the value contained in this option
+     * @param <T>   the type of the value contained in this option
      * @return {@link #some(Object)} if the value is not null, and {@link #none()} if it is null
-     * @see #some(Object)
-     * @see #none()
      */
     @Kapi
     @SuppressWarnings("unchecked")
@@ -47,13 +48,12 @@ public class Option<T> {
     }
     
     /**
-     * Creates a new Option containing the given Non-null value.<br>
-     * See also {@link #of(Object)} for a version that accepts null values.
+     * Creates a new Option containing the given Non-null value.
+     * See {@link #of(Object)} for a version that accepts null values.
      *
-     * @param value The value contained in this option
-     * @param <T>   The type of the value contained in this option
-     * @return A new Option containing the value
-     * @see #none()
+     * @param value the value contained in this option
+     * @param <T>   the type of the value contained in this option
+     * @return a new Option containing the value
      */
     @Kapi
     public static <T> Option<T> some(T value) {
@@ -61,8 +61,8 @@ public class Option<T> {
     }
     
     /**
-     * @param <T> The type of the value contained in this option
-     * @return The None option, can be thought of as a null value
+     * @param <T> the type of the value contained in this option
+     * @return the None variant, similar to null
      * @see #some(Object)
      * @see #of(Object)
      */
@@ -73,7 +73,34 @@ public class Option<T> {
     }
     
     /**
-     * @return True if this option is None, false if it's Some
+     * Pattern matching to safely handle the option.
+     * See {@link #match(Function, Supplier)} for a version that returns a value.
+     *
+     * @param some the function to call if the option is Some
+     * @param none the function to call if the option is None
+     */
+    @Kapi
+    public void match(Consumer<T> some, Runnable none) {
+        if (value != null) some.accept(value);
+        else none.run();
+    }
+    
+    /**
+     * Pattern matching to safely handle the option.
+     * See {@link #match(Consumer, Runnable)} for a version that doesn't return a value.
+     *
+     * @param some the function to call if the option is Some
+     * @param none the function to call if the option is None
+     * @param <U>  the type of the value returned by the functions
+     * @return the value produced by the selected function
+     */
+    @Kapi
+    public <U> U match(Function<T,U> some, Supplier<U> none) {
+        return value != null ? some.apply(value) : none.get();
+    }
+    
+    /**
+     * @return true if the option is None, false if it's Some
      * @see #isSome()
      */
     @Kapi
@@ -82,7 +109,7 @@ public class Option<T> {
     }
     
     /**
-     * @return True if this option is Some, false if it's None
+     * @return true if the option is Some, false if it's None
      * @see #isNone()
      */
     @Kapi
@@ -91,8 +118,8 @@ public class Option<T> {
     }
     
     /**
-     * @param predicate The predicate to test the value with
-     * @return True if the value is Some and the predicate returns true, false otherwise
+     * @param predicate the predicate to test the value with
+     * @return true if the value is Some and the value inside it matches the predicate, false otherwise
      */
     @Kapi
     public boolean isSomeAnd(Predicate<T> predicate) {
@@ -100,28 +127,22 @@ public class Option<T> {
     }
     
     /**
-     * Gets the Some value contained in this option.<br>
-     * <br>
-     * Because this function may throw a NullSafetyException,
-     * its use is generally discouraged.
-     * Instead, prefer calling {@link #unwrapOr(Object)}, or {@link #unwrapOrElse(Supplier)},
-     * or use {@link #get()} and handle the null value yourself.
+     * Because this function may throw, its use is generally discouraged.
+     * Instead, prefer to use pattern matching and handle the None case explicitly,
+     * or call {@link #unwrapOr(Object)}, {@link #unwrapOrElse(Supplier)} or {@link #get()}.
      *
-     * @return The value contained in this option
-     * @throws NullSafetyException If this option is None
-     * @see #expect(String)
+     * @return the contained Some value
+     * @throws NullSafetyException if this option is None
      */
     @Kapi
     public T unwrap() {
-        if (value == null) {
-            throw new NullSafetyException("Called unwrap on a None option");
-        }
-        return value;
+        if (value != null) return value;
+        throw new NullSafetyException("Called unwrap() on a None option");
     }
     
     /**
-     * @param def The default value to return if this option is None
-     * @return The value contained in this option, or the default value if it is None
+     * @param def the default value to return if this option is None
+     * @return the contained Some value, or the default value if it is None
      */
     @Kapi
     public T unwrapOr(T def) {
@@ -129,8 +150,8 @@ public class Option<T> {
     }
     
     /**
-     * @param supplier The supplier to get the default value from if this option is None
-     * @return The value contained in this option, or the supplied value if it is a None
+     * @param supplier the supplier to get the default value from if this option is None
+     * @return the contained Some value, or the supplied value if it is a None
      */
     @Kapi
     public T unwrapOrElse(Supplier<T> supplier) {
@@ -138,35 +159,27 @@ public class Option<T> {
     }
     
     /**
-     * Gets the Some value contained in this option.<br>
-     * <br>
-     * Because this function may throw a NullSafetyException,
-     * its use is generally discouraged.
-     * Instead, prefer calling {@link #unwrapOr(Object)}, or {@link #unwrapOrElse(Supplier)},
-     * or use {@link #get()} and handle the null value yourself.
+     * Because this function may throw, its use is generally discouraged.
+     * Instead, prefer to use pattern matching and handle the None case explicitly,
+     * or call {@link #unwrapOr(Object)}, {@link #unwrapOrElse(Supplier)} or {@link #get()}.
      *
-     * @param message The message the exception will have if this option is None
-     * @return The value contained in this option
-     * @throws NullSafetyException If this option is None
-     * @see #unwrap()
+     * @param message the message the exception will have if this option is None
+     * @return the contained Some value
+     * @throws NullSafetyException if this option is None
      */
     @Kapi
     public T expect(String message) {
-        if (value == null) {
-            throw new NullSafetyException(message);
-        }
-        return value;
+        if (value != null) return value;
+        throw new NullSafetyException(message);
     }
     
     /**
-     * Maps the current value to a different type.<br>
-     * Does nothing if this option is None.
+     * Maps an <code>Option&lt;T&gt;</code> to an <code>Option&lt;U&gt;</code>
+     * by applying a function to the contained value (if Some) or returns None (if None).
      *
-     * @param mapper The mapper to apply to the value contained in this option
-     * @param <U>    The type of the value returned by the mapper
-     * @return A new option with the mapped value, or None if this option is None
-     * @see #mapOr(Function, Object)
-     * @see #mapOrElse(Function, Supplier)
+     * @param mapper the mapper to apply to the Some value
+     * @param <U>    the type of the mapped value
+     * @return a new option with the mapped value, or None if this option is None
      */
     @Kapi
     public <U> Option<U> map(Function<T,U> mapper) {
@@ -174,77 +187,70 @@ public class Option<T> {
     }
     
     /**
-     * Maps the current value to a different type.<br>
-     * Returns the default value if this option is None.
+     * Arguments passed to <code>mapOr</code> are eagerly evaluated.
+     * If you are passing the result of a function call,
+     * it's recommended to use {@link #mapOrElse(Supplier, Function)} which is lazily evaluated.
      *
-     * @param mapper The mapper to apply to the value contained in this option
-     * @param def    The default value to return if this option is None
-     * @param <U>    The type of the value returned by the mapper
-     * @return A new option with the mapped value, or the default value if this option is None
-     * @see #map(Function)
-     * @see #mapOrElse(Function, Supplier)
+     * @param def    the default value to return if this option is None
+     * @param mapper the function to apply to the value contained in this option
+     * @param <U>    the type of the value returned by the mapping function
+     * @return the provided default (if None), or applies a function to the contained value (if Some)
      */
     @Kapi
-    public <U> Option<U> mapOr(Function<T,U> mapper, U def) {
-        return value != null ? Option.some(mapper.apply(value)) : Option.some(def);
+    public <U> U mapOr(U def, Function<T,U> mapper) {
+        return value != null ? mapper.apply(value) : def;
     }
     
     /**
-     * Maps the current value to a different type.<br>
-     * Returns the value supplied by the supplier if this option is None.
-     *
-     * @param mapper   The mapper to apply to the value contained in this option
-     * @param supplier The supplier to get the default value from if this option is None
-     * @param <U>      The type of the value returned by the mapper
-     * @return A new option with the mapped value, or the default supplied value if this option is None
+     * @param def    the supplier to get the default value from if this option is None
+     * @param mapper the function to apply to the value contained in this option if Some
+     * @param <U>    the type of the value to return
+     * @return computes a default function result (if None),
+     *     or applies a different function to the contained value (if Some)
      */
     @Kapi
-    public <U> Option<U> mapOrElse(Function<T,U> mapper, Supplier<U> supplier) {
-        return value != null ? Option.some(mapper.apply(value)) : Option.some(supplier.get());
+    public <U> U mapOrElse(Supplier<U> def, Function<T,U> mapper) {
+        return value != null ? mapper.apply(value) : def.get();
     }
     
     /**
-     * Arguments passed to <code>and</code> are eagerly evaluated.<br>
-     * if you are passing the result of a function call,
+     * Arguments passed to <code>and</code> are eagerly evaluated.
+     * If you are passing the result of a function call,
      * it's recommended to use {@link #andThen(Function)} which is lazily evaluated.
      *
-     * @param optionB The option to apply the function to if this option is Some
-     * @param <U>     The type of the value returned by the function
-     * @return None if this option is None, otherwise returns optionB
+     * @param optB the option to apply the function to if this option is Some
+     * @param <U>  the type of the returned value
+     * @return None if this option is None, otherwise returns optB
      */
     @Kapi
-    public <U> Option<U> and(Option<U> optionB) {
-        return value != null ? optionB : Option.none();
+    public <U> Option<U> and(Option<U> optB) {
+        return value != null ? optB : Option.none();
     }
     
     /**
-     * Some languages call this operation <code>flatMap</code>.
+     * Some languages call this operation flatMap.
      *
-     * @param mapper The mapper to apply to the value contained in this option
-     * @param <U>    The type of the value returned by the mapper
-     * @return None if this option is None,
-     *         otherwise calls the mapper with the wrapped value and returns the result
+     * @param f   the function to apply to the value contained in this option
+     * @param <U> the type of the returned value
+     * @return None if the option is None,
+     *     otherwise calls <code>f</code> with the wrapped value and returns the result
      */
     @Kapi
-    public <U> Option<U> andThen(Function<T,Option<U>> mapper) {
-        return value != null ? mapper.apply(value) : Option.none();
+    public <U> Option<U> andThen(Function<T,Option<U>> f) {
+        return value != null ? f.apply(value) : Option.none();
     }
     
     /**
-     * Tests if the value contained in this option matches the predicate.<br>
-     * Returns None if this option is None or if the predicate returns false,
-     * otherwise returns Some.
-     *
-     * @param predicate The predicate to test the value with
-     * @return Some if this option is Some and the predicate returns true, None otherwise
+     * @param predicate the predicate to test the value with
+     * @return Some if the option is Some and the predicate returns true, otherwise returns None
      */
     @Kapi
     public Option<T> filter(Predicate<T> predicate) {
-        return value != null && predicate.test(value) ? Option.some(value) : Option.none();
+        return value != null && predicate.test(value) ? this : Option.none();
     }
     
     /**
-     * @return The value contained in this option if Some, or null if None
+     * @return the contained value if Some, or null if None
      */
     @Kapi
     public @Nullable T get() {
@@ -252,13 +258,8 @@ public class Option<T> {
     }
     
     /**
-     * Inspects the value contained in this option if it's Some.<br>
-     * If this option is None, the consumer is not called.
-     *
-     * @param consumer The consumer to call if this option is Some
-     * @return This option (for chaining)
-     * @see #ifSome(Consumer)
-     * @see #ifNone(Runnable)
+     * @param consumer the consumer to call if this option is Some
+     * @return this option (for chaining)
      */
     @Kapi
     public Option<T> inspect(Consumer<T> consumer) {
@@ -267,41 +268,50 @@ public class Option<T> {
     }
     
     /**
-     * Converts this option to a Result type.
+     * Converts the <code>Option&lt;T&gt;</code> to a <code>Result&lt;T, E&gt;</code>,
+     * mapping {@link #some(Object)} to {@link Result#ok(Object)} and {@link #none()} to {@link Result#err(Object)}.
+     * Arguments passed to <code>okOr</code> are eagerly evaluated.
+     * If you are passing the result of a function call,
+     * it's recommended to use {@link #okOrElse(Supplier)} which is lazily evaluated.
      *
-     * @param err   The error to return if this option is None
-     * @param <Err> The type of the error
-     * @return An Ok result if this option is Some, or an Err result if this option is None
+     * @param err the error to return if this option is None
+     * @param <E> the type of the error
+     * @return Result.ok(value) if this option is Some, or Result.err(err) if this option is None
      */
     @Kapi
-    public <Err> Result<T,Err> okOr(Err err) {
+    public <E> Result<T,E> okOr(E err) {
         return value != null ? Result.ok(value) : Result.err(err);
     }
     
     /**
-     * Converts this option to a Result type.
+     * Converts the <code>Option&lt;T&gt;</code> to a <code>Result&lt;T, E&gt;</code>,
+     * mapping {@link #some(Object)} to {@link Result#ok(Object)} and {@link #none()} to {@link Result#err(Object)}.
      *
-     * @param supplier The supplier to get the error from if this option is None
-     * @param <Err>    The type of the error
-     * @return An Ok result if this option is Some, or an Err result if this option is None
+     * @param err the function to get the error from if this option is None
+     * @param <E> the type of the error
+     * @return Result.ok(value) if this option is Some, or Result.err(err.get()) if this option is None
      */
     @Kapi
-    public <Err> Result<T,Err> okOrElse(Supplier<Err> supplier) {
-        return value != null ? Result.ok(value) : Result.err(supplier.get());
+    public <E> Result<T,E> okOrElse(Supplier<E> err) {
+        return value != null ? Result.ok(value) : Result.err(err.get());
     }
     
     /**
-     * @param optionB The option to return if this option is None
-     * @return This option if it's Some, or the other option if it's None
+     * Arguments passed to <code>or</code> are eagerly evaluated.
+     * If you are passing the result of a function call,
+     * it's recommended to use {@link #orElse(Supplier)} which is lazily evaluated.
+     *
+     * @param optB the option to return if this option is None
+     * @return this option if it's Some, or the other option if it's None
      */
     @Kapi
-    public Option<T> or(Option<T> optionB) {
-        return value != null ? this : optionB;
+    public Option<T> or(Option<T> optB) {
+        return value != null ? this : optB;
     }
     
     /**
-     * @param supplier The supplier for the other option if this option is None
-     * @return This option if it's Some, or the supplied option if it's None
+     * @param supplier the function for the other option if this option is None
+     * @return this option if it's Some, otherwise returns the supplied option
      */
     @Kapi
     public Option<T> orElse(Supplier<Option<T>> supplier) {
@@ -309,37 +319,32 @@ public class Option<T> {
     }
     
     /**
-     * @param consumer The consumer to call if this option is Some
+     * @return the hash code of the contained value if Some, or 0 if None
+     * @see Objects#hashCode(Object)
      */
-    @Kapi
-    public void ifSome(Consumer<T> consumer) {
-        if (value != null) consumer.accept(value);
-    }
-    
-    /**
-     * @param runnable The runnable to call if this option is None
-     */
-    @Kapi
-    public void ifNone(Runnable runnable) {
-        if (value == null) runnable.run();
-    }
-    
     @Kapi
     @Override
     public int hashCode() {
         return Objects.hashCode(value);
     }
     
+    /**
+     * @param o the object to compare this option to
+     * @return true if the object is an Option and the contained values are equal, false otherwise
+     */
     @Kapi
     @Override
     @Contract(pure = true, value = "null -> false")
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Option<?> option = (Option<?>) obj;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Option<?> option = (Option<?>) o;
         return Objects.equals(value, option.value);
     }
     
+    /**
+     * @return "Some(" + value + ")" if the option is Some, or "None" if it's None
+     */
     @Kapi
     @Override
     public String toString() {

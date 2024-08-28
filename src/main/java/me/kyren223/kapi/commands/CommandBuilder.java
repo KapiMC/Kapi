@@ -98,7 +98,7 @@ public class CommandBuilder {
      */
     public CommandBuilder autoFailHandler() {
         return onFail((context, message) -> {
-            message.ifSome(msg -> Log.error(msg, context.getSender()));
+            message.inspect(msg -> Log.error(msg, context.getSender()));
         });
     }
     

@@ -16,16 +16,19 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
- * A simple result type that can be either an Ok or an Err.<br>
- * Inspired by Rust's Result type.
+ * Represents a value that can be either Ok (value) or Err (error).
+ * Similar to Rust's Result type.
+ * <p>
+ * This class is immutable and thus thread-safe.
+ * The contained values themselves may not be thread-safe.
  *
- * @param <T> The type of the Ok value
- * @param <E> The type of the Err value
+ * @param <T> the type of the Ok value
+ * @param <E> the type of the Err value
  */
 @Kapi
 public class Result<T, E> {
     
-    // IMPORTANT NOTE: Internal Assumption (ok == null && err == null || ok != null && err != null) == false
+    // Assumes that only one of ok and err is non-null and the other is null
     private final @Nullable T ok;
     private final @Nullable E err;
     
@@ -35,29 +38,59 @@ public class Result<T, E> {
     }
     
     /**
-     * @param ok    The Ok value
-     * @param <Ok>  The type of the Ok value
-     * @param <Err> The type of the Err value
-     * @return A new result that stores the Ok value
+     * @param ok  the Ok value
+     * @param <T> the type of the Ok value
+     * @param <E> the type of the Err value
+     * @return a new result that stores the Ok value
      */
     @Kapi
-    public static <Ok, Err> Result<Ok,Err> ok(Ok ok) {
+    public static <T, E> Result<T,E> ok(T ok) {
         return new Result<>(ok, null);
     }
     
     /**
-     * @param err   The Err value
-     * @param <Ok>  The type of the Ok value
-     * @param <Err> The type of the Err value
-     * @return A new result that stores the Err value
+     * @param err the Err value
+     * @param <T> the type of the Ok value
+     * @param <E> the type of the Err value
+     * @return a new result that stores the Err value
      */
     @Kapi
-    public static <Ok, Err> Result<Ok,Err> err(Err err) {
+    public static <T, E> Result<T,E> err(E err) {
         return new Result<>(null, err);
     }
     
+    
     /**
-     * @return True if this result is an Ok, false otherwise
+     * Pattern matching to safely handle the result.
+     * See {@link #match(Function, Function)} for a version that returns a value.
+     *
+     * @param ok  the function to call if the result is Ok
+     * @param err the function to call if the result is Err
+     */
+    @Kapi
+    @SuppressWarnings("DataFlowIssue")
+    public void match(Consumer<T> ok, Consumer<E> err) {
+        if (this.ok != null) ok.accept(this.ok);
+        else err.accept(this.err);
+    }
+    
+    /**
+     * Pattern matching to safely handle the result.
+     * See {@link #match(Consumer, Consumer)} for a version that doesn't return a value.
+     *
+     * @param ok  the function to call if the result is Ok
+     * @param err the function to call if the result is Err
+     * @param <U> the type of the value returned by the functions
+     * @return the value produced by the selected function
+     */
+    @Kapi
+    @SuppressWarnings("DataFlowIssue")
+    public <U> U match(Function<T,U> ok, Function<E,U> err) {
+        return this.ok != null ? ok.apply(this.ok) : err.apply(this.err);
+    }
+    
+    /**
+     * @return true if the result is an Ok, false if it's an Err
      */
     @Kapi
     public boolean isOk() {
@@ -65,8 +98,8 @@ public class Result<T, E> {
     }
     
     /**
-     * @param predicate The predicate to test the Ok value
-     * @return True if this Result is Ok and the predicate is true, false otherwise
+     * @param predicate the predicate to test the Ok value
+     * @return true if the result is Ok and the value inside it matches the predicate, false otherwise
      */
     @Kapi
     public boolean isOkAnd(Predicate<T> predicate) {
@@ -82,8 +115,8 @@ public class Result<T, E> {
     }
     
     /**
-     * @param predicate The predicate to test the Err value
-     * @return True if this Result is Err and the predicate is true, false otherwise
+     * @param predicate the predicate to test the Err value
+     * @return true if the result is Err and the value inside it matches the predicate, false otherwise
      */
     @Kapi
     public boolean isErrAnd(Predicate<E> predicate) {
@@ -91,26 +124,22 @@ public class Result<T, E> {
     }
     
     /**
-     * Gets the Ok value contained in this result.<br>
-     * <br>
-     * Because this function may throw a NullSafetyException,
-     * its use is generally discouraged.
-     * Instead, prefer calling {@link #unwrapOr(Object)}, or {@link #unwrapOrElse(Supplier)},
-     * or use {@link #getOk()} and handle the null value yourself.
+     * Because this function may throw, its use is generally discouraged.
+     * Instead, prefer to use pattern matching and handle the Err case explicitly,
+     * or call {@link #unwrapOr(Object)}, {@link #unwrapOrElse(Supplier)} or {@link #getOk()}.
      *
-     * @return The Ok value
-     * @throws NullSafetyException If this Result is an Err
-     * @see #expect(String)
+     * @return the Ok value
+     * @throws NullSafetyException if the Result is an Err
      */
     @Kapi
     public T unwrap() {
         if (ok != null) return ok;
-        throw new NullSafetyException("Called unwrap on an Err result");
+        throw new NullSafetyException("Called unwrap() on an Err result");
     }
     
     /**
-     * @param def The default value to return if this result is an Err
-     * @return The Ok value contained in this Result, or the default value if it is an Err
+     * @param def the default value to return if this result is an Err
+     * @return the contained Ok value, or the default value if it is an Err
      */
     @Kapi
     public T unwrapOr(T def) {
@@ -118,8 +147,8 @@ public class Result<T, E> {
     }
     
     /**
-     * @param supplier The supplier to get the default value from if this result is an Err
-     * @return The Ok value contained in this result, or the supplied value if it is an Err
+     * @param supplier the supplier to get the default value from if this result is an Err
+     * @return the contained Ok value, or the supplied value if it is an Err
      */
     @Kapi
     public T unwrapOrElse(Supplier<T> supplier) {
@@ -127,30 +156,27 @@ public class Result<T, E> {
     }
     
     /**
-     * @return The Err value if this result is an Err
-     * @throws NullSafetyException If this result is an Ok
-     * @see #expectErr(String)
+     * Because this function may throw, its use is generally discouraged.
+     * Instead, prefer to use pattern matching and handle the Ok case explicitly,
+     * or call {@link #getErr()}.
+     *
+     * @return the Err value if this result is an Err
+     * @throws NullSafetyException if this result is an Ok
      */
     @Kapi
     public E unwrapErr() {
-        if (err == null) {
-            throw new NullSafetyException("Called unwrapErr on an Ok result");
-        }
-        return err;
+        if (err != null) return err;
+        throw new NullSafetyException("Called unwrapErr() on an Ok result");
     }
     
     /**
-     * Gets the Ok value contained in this result.<br>
-     * <br>
-     * Because this function may throw a NullSafetyException,
-     * its use is generally discouraged.
-     * Instead, prefer calling {@link #unwrapOr(Object)}, or {@link #unwrapOrElse(Supplier)},
-     * or use {@link #getOk()} and handle the null value yourself.
+     * Because this function may throw, its use is generally discouraged.
+     * Instead, prefer to use pattern matching and handle the Err case explicitly,
+     * or call {@link #unwrapOr(Object)}, {@link #unwrapOrElse(Supplier)} or {@link #getErr()}.
      *
-     * @param message The message the exception will have if this result is an Err
-     * @return The Ok value contained in this result
-     * @throws NullSafetyException If this result is an Err
-     * @see #unwrap()
+     * @param message the message the exception will have if this result is an Err
+     * @return the contained Ok value
+     * @throws NullSafetyException if this result is an Err
      */
     @Kapi
     public T expect(String message) {
@@ -159,12 +185,13 @@ public class Result<T, E> {
     }
     
     /**
-     * Gets the Err value contained in this result.
+     * Because this function may throw, its use is generally discouraged.
+     * Instead, prefer to use pattern matching and handle the Ok case explicitly,
+     * or call {@link #getOk()}.
      *
-     * @param message The message the exception will have if this result is an Ok value
-     * @return The Err value contained in this result
-     * @throws NullSafetyException If this result is an Ok
-     * @see #unwrapErr()
+     * @param message the message the exception will have if this result is an Ok value
+     * @return the contained Err value
+     * @throws NullSafetyException if this result is an Ok
      */
     @Kapi
     public E expectErr(String message) {
@@ -173,61 +200,57 @@ public class Result<T, E> {
     }
     
     /**
-     * @param mapper The mapper to apply to the Ok value contained in this result
-     * @param <U>    The type of the Ok value returned by the mapper
-     * @return A new result with the mapped Ok value, or an Err result if this result is an Err
-     * @see #mapOr(Function, Object)
-     * @see #mapOrElse(Function, Supplier)
+     * Maps a <code>Result&lt;T,E&gt;</code> to a <code>Result&lt;U,E&gt;</code>
+     * by applying a function to the contained Ok value (if Ok) or returns Err (if Err).
+     *
+     * @param mapper the mapper to apply to the Ok value contained in this result
+     * @param <U>    the type of the Ok value returned by the mapper
+     * @return a new result with the mapped Ok value, or an Err result if this result is an Err
      */
     @Kapi
+    @SuppressWarnings("DataFlowIssue")
     public <U> Result<U,E> map(Function<T,U> mapper) {
-        if (ok != null) {
-            return Result.ok(mapper.apply(ok));
-        } else {
-            assert err != null;
-            return Result.err(err);
-        }
+        return ok != null ? Result.ok(mapper.apply(ok)) : Result.err(err);
     }
     
     /**
-     * @param mapper The mapper to apply to the Ok value contained in this result
-     * @param def    The default value to return if this result is an Err
-     * @param <U>    The type of the Ok value returned by the mapper
-     * @return A new result with the mapped Ok value, or the default value if this result is an Err
-     * @see #map(Function)
-     * @see #mapOrElse(Function, Supplier)
+     * Arguments passed to <code>mapOr</code> are eagerly evaluated.
+     * If you are passing the result of a function call,
+     * it's recommended to use {@link #mapOrElse(Supplier, Function)} which is lazily evaluated.
+     *
+     * @param def    the default value to return if this result is an Err
+     * @param mapper the mapper to apply to the Ok value contained in this result
+     * @param <U>    the type of the Ok value returned by the mapper
+     * @return a new result with the mapped Ok value, or the default value if this result is an Err
      */
     @Kapi
-    public <U> U mapOr(Function<T,U> mapper, U def) {
+    public <U> U mapOr(U def, Function<T,U> mapper) {
         return ok != null ? mapper.apply(ok) : def;
     }
     
     /**
-     * @param mapper   The mapper to apply to the Ok value contained in this result
-     * @param supplier The supplier for the default value if this result is an Err
-     * @param <U>      The type of the Ok value returned by the mapper
-     * @return A new result with the mapped Ok value, or the supplied value if this result is an Err
-     * @see #map(Function)
-     * @see #mapOr(Function, Object)
+     * @param def    the supplier to get the default value from if this result is an Err
+     * @param mapper the mapper to apply to the Ok value contained in this result
+     * @param <U>    the type of the Ok value returned by the mapper
+     * @return a new result with the mapped Ok value, or the supplied value if this result is an Err
      */
     @Kapi
-    public <U> U mapOrElse(Function<T,U> mapper, Supplier<U> supplier) {
-        return ok != null ? mapper.apply(ok) : supplier.get();
+    public <U> U mapOrElse(Supplier<U> def, Function<T,U> mapper) {
+        return ok != null ? mapper.apply(ok) : def.get();
     }
     
     /**
-     * @param mapper The mapper to apply to the Err value contained in this result
-     * @param <F>    The type of the Err value returned by the mapper
-     * @return A new result with the mapped Err value, or this Ok result if this result is an Ok
+     * Maps a <code>Result&lt;T,E&gt;</code> to a <code>Result&lt;T,F&gt;</code>
+     * by applying a function to the contained Err value (if Err) or returns Ok (if Ok).
+     *
+     * @param mapper the mapper to apply to the Err value contained in this result
+     * @param <F>    the type of the Err value returned by the mapper
+     * @return a new result with the mapped Err value, or this Ok result if this result is an Ok
      */
     @Kapi
+    @SuppressWarnings("DataFlowIssue")
     public <F> Result<T,F> mapErr(Function<E,F> mapper) {
-        if (ok != null) {
-            return Result.ok(ok);
-        } else {
-            assert err != null;
-            return Result.err(mapper.apply(err));
-        }
+        return ok != null ? Result.ok(ok) : Result.err(mapper.apply(err));
     }
     
     /**
@@ -235,45 +258,33 @@ public class Result<T, E> {
      * if you are passing the result of a function call,
      * it's recommended to use {@link #andThen(Function)} which is lazily evaluated.
      *
-     * @param resultB The result to apply the function to if this result is an Ok
-     * @param <U>     The type of the value returned by the function
-     * @return None if this option is None, otherwise returns optionB
+     * @param res the result to apply the function to if this result is an Ok
+     * @param <U> the type of the value returned by the function
+     * @return <code>res</code> if the result is Ok, otherwise returns the Err value of this result
      */
     @Kapi
-    public <U> Result<U,E> and(Result<U,E> resultB) {
-        if (ok != null) {
-            return resultB;
-        } else {
-            assert err != null;
-            return Result.err(err);
-        }
+    @SuppressWarnings("DataFlowIssue")
+    public <U> Result<U,E> and(Result<U,E> res) {
+        return ok != null ? res : Result.err(err);
     }
     
     /**
-     * Some languages call this operation <code>flatMap</code>.
+     * This function can be used for control flow based on <code>Result</code> values.
      *
-     * @param mapper The mapper to apply to the Ok value contained in this result
-     * @param <U>    The type of the value returned by the mapper
-     * @return Err if this result is an Err,
-     *         otherwise calls the mapper with the wrapped Ok value and returns the result
+     * @param f   the function to apply to the Ok value contained in this result
+     * @param <U> the type of the value returned by the function
+     * @return the result of calling <code>f</code> if this result is Ok,
+     *     otherwise returns the Err value of this result
      */
     @Kapi
-    public <U> Result<U,E> andThen(Function<T,Result<U,E>> mapper) {
-        if (ok != null) {
-            return mapper.apply(ok);
-        } else {
-            assert err != null;
-            return Result.err(err);
-        }
+    @SuppressWarnings("DataFlowIssue")
+    public <U> Result<U,E> andThen(Function<T,Result<U,E>> f) {
+        return ok != null ? f.apply(ok) : Result.err(err);
     }
     
     /**
-     * Tests if the Ok value contained in this result matches the predicate.<br>
-     * Returns Err if this result is Err or if the predicate returns false,
-     * otherwise returns Ok.
-     *
-     * @param predicate The predicate to test the Ok value with
-     * @return Ok if this result is Ok and the predicate returns true, Err otherwise
+     * @param predicate the predicate to test the Ok value with
+     * @return Ok if the result is Ok and the predicate returns true, otherwise returns Err
      */
     @Kapi
     public Result<T,E> filter(Predicate<T> predicate) {
@@ -286,7 +297,7 @@ public class Result<T, E> {
     }
     
     /**
-     * @return The Ok value contained in this result if it is Ok, or null if it is Err
+     * @return the contained Ok value if this result is Ok, or null if it is Err
      */
     @Kapi
     public @Nullable T getOk() {
@@ -294,7 +305,7 @@ public class Result<T, E> {
     }
     
     /**
-     * @return The Err value contained in this result if it is Err, or null if it is Ok
+     * @return the contained Err value if this result is Err, or null if it is Ok
      */
     @Kapi
     public @Nullable E getErr() {
@@ -302,14 +313,8 @@ public class Result<T, E> {
     }
     
     /**
-     * Inspects the Ok value contained in this result if it's Ok.<br>
-     * If this result is Err, the consumer is not called.
-     *
-     * @param consumer The consumer to call if this result is Ok
-     * @return This result (for chaining)
-     * @see #ifOk(Consumer)
-     * @see #ifErr(Consumer)
-     * @see #inspectErr(Consumer)
+     * @param consumer the consumer to call if this result is Ok
+     * @return this result (for chaining)
      */
     @Kapi
     public Result<T,E> inspect(Consumer<T> consumer) {
@@ -318,14 +323,8 @@ public class Result<T, E> {
     }
     
     /**
-     * Inspects the Err value contained in this result if it's Err.<br>
-     * If this result is Ok, the consumer is not called.
-     *
-     * @param consumer The consumer to call if this result is Err
-     * @return This result (for chaining)
-     * @see #ifOk(Consumer)
-     * @see #ifErr(Consumer)
-     * @see #inspect(Consumer)
+     * @param consumer the consumer to call if this result is Err
+     * @return this result (for chaining)
      */
     @Kapi
     public Result<T,E> inspectErr(Consumer<E> consumer) {
@@ -350,38 +349,27 @@ public class Result<T, E> {
     }
     
     /**
-     * @param resultB The result to return if this result is Err
-     * @return This result if it's Ok, or the other result if it's Err
+     * Arguments passed to <code>or</code> are eagerly evaluated.
+     * If you are passing the result of a function call,
+     * it's recommended to use {@link #orElse(Supplier)} which is lazily evaluated.
+     *
+     * @param res the result to return if this result is Err
+     * @param <F> the type of the other result
+     * @return this result if it's Ok, or the other result if it's Err
      */
     @Kapi
-    public <F> Result<T,F> or(Result<T,F> resultB) {
-        return ok != null ? Result.ok(ok) : resultB;
+    public <F> Result<T,F> or(Result<T,F> res) {
+        return ok != null ? Result.ok(ok) : res;
     }
     
     /**
-     * @param supplier The supplier to get the other result if this result is Err
-     * @param <F>      The type of the other result
-     * @return This result if it's Ok, or the supplied result if it's Err
+     * @param supplier the function for the other result if this result is Err
+     * @param <F>      the type of the other result
+     * @return this result if it's Ok, or the supplied result if it's Err
      */
     @Kapi
     public <F> Result<T,F> orElse(Supplier<Result<T,F>> supplier) {
         return ok != null ? Result.ok(ok) : supplier.get();
-    }
-    
-    /**
-     * @param consumer The consumer to call if this result is Ok
-     */
-    @Kapi
-    public void ifOk(Consumer<T> consumer) {
-        if (ok != null) consumer.accept(ok);
-    }
-    
-    /**
-     * @param consumer The consumer to call if this result is Err
-     */
-    @Kapi
-    public void ifErr(Consumer<E> consumer) {
-        if (err != null) consumer.accept(err);
     }
     
     /**
@@ -402,12 +390,20 @@ public class Result<T, E> {
         throw new NullSafetyException("Called unwrapOrThrow on an Err result that is not a RuntimeException");
     }
     
+    /**
+     * @return the combined hash code of either Ok or Err and null
+     * @see Objects#hash(Object...)
+     */
     @Kapi
     @Override
     public int hashCode() {
         return Objects.hash(ok, err);
     }
     
+    /**
+     * @param o the object to compare this result to
+     * @return true if the object is a Result and the contained values are equal, false otherwise
+     */
     @Kapi
     @Override
     @Contract(pure = true, value = "null -> false")
@@ -418,6 +414,9 @@ public class Result<T, E> {
         return Objects.equals(ok, result.ok) && Objects.equals(err, result.err);
     }
     
+    /**
+     * @return "Ok(" + ok + ")" if the result is Ok, or "Err(" + err + ")" if it is Err
+     */
     @Kapi
     @Override
     public String toString() {
