@@ -7,6 +7,7 @@ package me.kyren223.kapi.utility;
 
 import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.core.Kplugin;
+import me.kyren223.kapi.data.Result;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -14,8 +15,7 @@ import java.io.IOException;
 import java.util.function.Consumer;
 
 /**
- * A utility class that manages configuration files.<br>
- * Allows CRUD operations on documents (.yml configs).
+ * A utility class for working with config (YAML) files.
  */
 @Kapi
 public class Config {
@@ -25,27 +25,18 @@ public class Config {
     }
     
     /**
-     * @return The data folder (usually "plugins/&lt;plugin&gt;")
+     * @param path the path to the config file (relative to the data folder)
+     * @return the config file
      * @see Kplugin#getDataFolder()
      */
     @Kapi
-    public static File getRoot() {
-        return Kplugin.get().getDataFolder();
-    }
-    
-    /**
-     * @param path The path to the config file (relative to the data folder)
-     * @return The config file
-     * @see #getRoot()
-     */
-    @Kapi
     public static File getPath(String path) {
-        return new File(getRoot(), path);
+        return new File(Kplugin.get().getDataFolder(), path);
     }
     
     /**
-     * @param path The path to the config file (relative to the data folder)
-     * @return True if the config file exists, false otherwise
+     * @param path the path to the config file (relative to the data folder)
+     * @return true if the config file exists on disk, false otherwise
      */
     @Kapi
     public static boolean exists(String path) {
@@ -53,11 +44,8 @@ public class Config {
     }
     
     /**
-     * Gets a config.<br>
-     * If any errors occur, an empty config will be returned.
-     *
-     * @param path The path to the config file (relative to the data folder)
-     * @return The config
+     * @param path the path to the config file (relative to the data folder)
+     * @return the config, or an empty config if any errors occur
      */
     @Kapi
     public static YamlConfiguration get(String path) {
@@ -65,52 +53,44 @@ public class Config {
     }
     
     /**
-     * Writes to a config.<br>
-     * If any errors occur, false will be returned.<br>
-     * <br>
-     * This method will overwrite the config if it already exists.<br>
-     * For a method that will not overwrite the config,
-     * see {@link #writeIfAbsent(String, YamlConfiguration)}
+     * Saves the config to the given path.
+     * <p>
+     * This method will overwrite the config if it already exists.
+     * See {@link #writeIfAbsent(String, YamlConfiguration)}
+     * for a method that will not overwrite the config.
      *
-     * @param path   The path to the config file (relative to the data folder)
-     * @param config The config to write to
-     * @return True if the config was written to, false otherwise
-     * @see #writeIfAbsent(String, YamlConfiguration)
+     * @param path   the path to the config file (relative to the data folder)
+     * @param config the config to write to the file
+     * @return an Err result in case of an IOException, otherwise Ok (Void)
      */
     @Kapi
-    public static boolean write(String path, YamlConfiguration config) {
+    public static Result<Void,IOException> write(String path, YamlConfiguration config) {
         try {
             config.save(getPath(path));
-            return true;
+            return Result.ok(null);
         } catch (IOException e) {
-            return false;
+            return Result.err(e);
         }
     }
     
     /**
-     * Writes to a config.<br>
-     * If any errors occur, false will be returned.<br>
-     * <br>
-     * This method will not overwrite the config if it already exists.<br>
-     * For a method that will overwrite the config,
-     * see {@link #write(String, YamlConfiguration)}
+     * Saves the config to the given path if a file at the given path doesn't exist.
      *
-     * @param path   The path to the config file (relative to the data folder)
-     * @param config The config to write to
-     * @return True if the config was written to, false otherwise
-     * @see #write(String, YamlConfiguration)
+     * @param path   the path to the config file (relative to the data folder)
+     * @param config the config to write to the file
+     * @return an Option containing the IOException on failure, otherwise None
      */
     @Kapi
-    public static boolean writeIfAbsent(String path, YamlConfiguration config) {
+    public static Result<Void,IOException> writeIfAbsent(String path, YamlConfiguration config) {
         if (exists(path)) {
-            return false;
+            return Result.ok(null);
         }
         return write(path, config);
     }
     
     /**
-     * @param path The path to the config file (relative to the data folder)
-     * @return True if the config file was deleted, false otherwise
+     * @param path the path to the config file (relative to the data folder)
+     * @return true if the config file was deleted, false otherwise
      */
     @Kapi
     public static boolean delete(String path) {
@@ -118,22 +98,15 @@ public class Config {
     }
     
     /**
-     * Modifies a config.<br>
-     * If any errors occur, false will be returned.<br>
-     * <br>
-     * Reads the config, passes it to the consumer, and then writes the config back to disk.<br>
-     * For more information,
-     * see {@link #get(String)}
-     * and {@link #write(String, YamlConfiguration)}.
+     * Reads the config, passes it to the function for modification,
+     * and then writes the config back to disk.
      *
-     * @param path     The path to the config file (relative to the data folder)
-     * @param consumer The consumer to apply to the config
-     * @return True if the config was able to be written to disk, false otherwise
-     * @see #get(String)
-     * @see #write(String, YamlConfiguration)
+     * @param path     the path to the config file (relative to the data folder)
+     * @param consumer the consumer to apply to the config
+     * @return an Err result in case of an IOException, otherwise Ok (Void)
      */
     @Kapi
-    public static boolean getAndWrite(String path, Consumer<YamlConfiguration> consumer) {
+    public static Result<Void,IOException> getAndWrite(String path, Consumer<YamlConfiguration> consumer) {
         YamlConfiguration config = get(path);
         consumer.accept(config);
         return write(path, config);
