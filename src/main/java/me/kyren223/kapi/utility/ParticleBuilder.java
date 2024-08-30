@@ -10,14 +10,14 @@ import me.kyren223.kapi.data.ParticleData;
 import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.util.Vector;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 /**
- * A builder for creating {@link ParticleData} objects.
+ * A builder for creating {@link ParticleData}.
  */
 @Kapi
 public class ParticleBuilder {
+    
     private final Particle particle;
     private int count;
     private double spreadX;
@@ -39,10 +39,8 @@ public class ParticleBuilder {
     }
     
     /**
-     * Creates a new particle builder.<br>
-     * For redstone particles, using {@link #createRedstone(Color, float)}
-     * is recommended.<br>
-     * <br>
+     * Creates a new particle builder.
+     * <p>
      * All values will be set to their default values, which are:
      * <ul>
      *     <li>count = 1;
@@ -54,8 +52,8 @@ public class ParticleBuilder {
      *     <li>force = false;
      * </ul>
      *
-     * @param particle The particle to create
-     * @return A new particle builder
+     * @param particle the particle to create
+     * @return a new particle builder
      * @see #createRedstone(Color, float)
      */
     @Kapi
@@ -64,13 +62,12 @@ public class ParticleBuilder {
     }
     
     /**
-     * Creates a new particle builder with a redstone particle.<br>
+     * Creates a new particle builder with a redstone particle.
      * For more information see {@link #create(Particle)}.
      *
-     * @param color The color of the redstone particle
-     * @param size  The size of the redstone particle
-     * @return A new particle builder
-     * @see #create(Particle)
+     * @param color the color of the redstone particle
+     * @param size  the size of the redstone particle
+     * @return a new particle builder
      */
     @Kapi
     public static ParticleBuilder createRedstone(Color color, float size) {
@@ -78,10 +75,8 @@ public class ParticleBuilder {
     }
     
     /**
-     * Sets the count of the particle.
-     *
-     * @param count The count
-     * @return This builder for chaining
+     * @param count the number of particles
+     * @return this, for chaining
      */
     @Kapi
     public ParticleBuilder count(int count) {
@@ -90,12 +85,13 @@ public class ParticleBuilder {
     }
     
     /**
-     * Sets the spread of the particle.
+     * Spread indicates the maximum distance from the origin
+     * where particles are able to spawn.
      *
-     * @param spreadX The spread on the x-axis
-     * @param spreadY The spread on the y-axis
-     * @param spreadZ The spread on the z-axis
-     * @return This builder for chaining
+     * @param spreadX the maximum spread on the x-axis
+     * @param spreadY the maximum spread on the y-axis
+     * @param spreadZ the maximum spread on the z-axis
+     * @return this, for chaining
      */
     @Kapi
     public ParticleBuilder spread(double spreadX, double spreadY, double spreadZ) {
@@ -106,10 +102,11 @@ public class ParticleBuilder {
     }
     
     /**
-     * Sets the spread of the particle.
+     * Spread indicates the maximum distance from the origin
+     * where particles are able to spawn.
      *
-     * @param spread The spread on all axes
-     * @return This builder for chaining
+     * @param spread the maximum spread on each axis
+     * @return this, for chaining
      */
     @Kapi
     public ParticleBuilder spread(Vector spread) {
@@ -120,10 +117,11 @@ public class ParticleBuilder {
     }
     
     /**
-     * Sets the spread of the particle.
+     * Spread indicates the maximum distance from the origin
+     * where particles are able to spawn.
      *
-     * @param spread The spread on all axes
-     * @return This builder for chaining
+     * @param spread the maximum spread on all axes
+     * @return this, for chaining
      */
     @Kapi
     public ParticleBuilder spread(double spread) {
@@ -134,10 +132,12 @@ public class ParticleBuilder {
     }
     
     /**
-     * Sets the extra data of the particle.
+     * The extra data is a value that can be used to modify the particle.
+     * Usually it indicates the speed of the particle, but it may differ
+     * depending on the particle.
      *
-     * @param extra The extra data
-     * @return This builder for chaining
+     * @param extra the extra data
+     * @return this, for chaining
      */
     @Kapi
     public ParticleBuilder extra(double extra) {
@@ -146,10 +146,11 @@ public class ParticleBuilder {
     }
     
     /**
-     * Sets the data of the particle.
+     * The data is extra attributes of the particle.
+     * For example, the dust options of a redstone particle.
      *
-     * @param data The data
-     * @return This builder for chaining
+     * @param data the data of the particle
+     * @return this, for chaining
      */
     @Kapi
     public ParticleBuilder data(final @Nullable Object data) {
@@ -158,10 +159,11 @@ public class ParticleBuilder {
     }
     
     /**
-     * Sets whether the particle should be forced to be displayed.
+     * When force is true, the particle(s) will be sent to all players.
+     * When force is false, the particle(s) will be sent to players within 32.0 blocks (exclusive).
      *
-     * @param force Whether to force the particle
-     * @return This builder for chaining
+     * @param force whether to forcibly send the particle to all players or not
+     * @return this, for chaining
      */
     @Kapi
     public ParticleBuilder force(boolean force) {
@@ -170,9 +172,7 @@ public class ParticleBuilder {
     }
     
     /**
-     * Builds the particle data.
-     *
-     * @return The particle data
+     * @return the built particle data
      */
     @Kapi
     public ParticleData build() {

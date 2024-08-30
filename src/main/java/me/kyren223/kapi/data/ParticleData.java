@@ -6,7 +6,6 @@
 package me.kyren223.kapi.data;
 
 import me.kyren223.kapi.annotations.Kapi;
-import me.kyren223.kapi.engine.renderable.ParticleRender;
 import me.kyren223.kapi.utility.ParticleBuilder;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -17,12 +16,12 @@ import org.bukkit.util.Vector;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Holds the data for a particle.<br>
- * Use {@link ParticleBuilder} for easier particle creation.<br>
- * See {@link ParticleRender} for rendering particles.
+ * Holds the data for a particle.
+ * Use {@link ParticleBuilder} to easily create this class.
  */
 @Kapi
 public class ParticleData {
+    
     private static final String PARTICLE_IS_NOT_REDSTONE = "Particle is not REDSTONE";
     private Particle particle;
     private int count;
@@ -34,8 +33,8 @@ public class ParticleData {
     private boolean force;
     
     /**
-     * Creates a new ParticleData object with the given data.<br>
-     * It's recommended to use {@link ParticleBuilder} for easier particle creation.
+     * Creates a new ParticleData object with the given data.
+     * It's recommended to use {@link ParticleBuilder} to easily create this class.
      *
      * @param particle The particle to display
      * @param count    The number of particles to display
@@ -48,9 +47,9 @@ public class ParticleData {
      */
     @Kapi
     public ParticleData(
-            Particle particle, int count,
-            double spreadX, double spreadY, double spreadZ,
-            double extra, @Nullable Object data, boolean force
+        Particle particle, int count,
+        double spreadX, double spreadY, double spreadZ,
+        double extra, @Nullable Object data, boolean force
     ) {
         this.particle = particle;
         this.count = count;
@@ -63,9 +62,9 @@ public class ParticleData {
     }
     
     /**
-     * Copy constructor<br>
-     * <br>
-     * Note: This does not make a deep copy of the data object
+     * Copy constructor.
+     * <p>
+     * This is a shallow copy due to the data object not being deep copied.
      *
      * @param data The data to copy
      */
@@ -81,60 +80,109 @@ public class ParticleData {
         this.force = data.isForce();
     }
     
+    /**
+     * @return the particle type
+     */
     @Kapi
     public Particle getParticle() {
         return particle;
     }
     
+    /**
+     * @param particle the particle type
+     */
     @Kapi
     public void setParticle(Particle particle) {
         this.particle = particle;
     }
     
+    /**
+     * @return the number of particles
+     */
     @Kapi
     public int getCount() {
         return count;
     }
     
+    /**
+     * @param count the number of particles
+     */
     @Kapi
     public void setCount(int count) {
         this.count = count;
     }
     
+    /**
+     * The spread is the maximum distance from the origin
+     * where particles are able to spawn.
+     *
+     * @return the spread on the X axis
+     */
     @Kapi
     public double getSpreadX() {
         return spreadX;
     }
     
+    /**
+     * The spread is the maximum distance from the origin
+     * where particles are able to spawn.
+     *
+     * @param spreadX the spread on the X axis
+     */
     @Kapi
     public void setSpreadX(double spreadX) {
         this.spreadX = spreadX;
     }
     
+    /**
+     * The spread is the maximum distance from the origin
+     * where particles are able to spawn.
+     *
+     * @return the spread on the Y axis
+     */
     @Kapi
     public double getSpreadY() {
         return spreadY;
     }
     
+    /**
+     * The spread is the maximum distance from the origin
+     * where particles are able to spawn.
+     *
+     * @param spreadY the spread on the Y axis
+     */
     @Kapi
     public void setSpreadY(double spreadY) {
         this.spreadY = spreadY;
     }
     
+    /**
+     * The spread is the maximum distance from the origin
+     * where particles are able to spawn.
+     *
+     * @return the spread on the Z axis
+     */
     @Kapi
     public double getSpreadZ() {
         return spreadZ;
     }
     
+    /**
+     * The spread is the maximum distance from the origin
+     * where particles are able to spawn.
+     *
+     * @param spreadZ the spread on the Z axis
+     */
     @Kapi
     public void setSpreadZ(double spreadZ) {
         this.spreadZ = spreadZ;
     }
     
     /**
-     * Gets the spread of the particle.
+     * The spread is the maximum distance from the origin
+     * where particles are able to spawn.
      *
-     * @return A new vector with the spread
+     * @return a new vector with the spread of all axes
      */
     @Kapi
     public Vector getSpread() {
@@ -142,10 +190,10 @@ public class ParticleData {
     }
     
     /**
-     * Sets the spread of the particle.<br>
-     * Note: modifying the given vector after setting it will not affect the spread.
+     * The spread is the maximum distance from the origin
+     * where particles are able to spawn.
      *
-     * @param vector The new spread
+     * @param vector the new spread
      */
     @Kapi
     public void setSpread(Vector vector) {
@@ -155,9 +203,10 @@ public class ParticleData {
     }
     
     /**
-     * Sets the X, Y, and Z spread of the particle to the same value.
+     * The spread is the maximum distance from the origin
+     * where particles are able to spawn.
      *
-     * @param spread The new spread
+     * @param spread the new spread on all axes
      */
     @Kapi
     public void setSpread(double spread) {
@@ -166,32 +215,71 @@ public class ParticleData {
         this.spreadZ = spread;
     }
     
+    /**
+     * The extra data is a value that can be used to modify the particle.
+     * Usually it indicates the speed of the particle, but it may differ
+     * depending on the particle.
+     *
+     * @return the extra data of the particle
+     */
     @Kapi
     public double getExtra() {
         return extra;
     }
     
+    /**
+     * The extra data is a value that can be used to modify the particle.
+     * Usually it indicates the speed of the particle, but it may differ
+     * depending on the particle.
+     *
+     * @param extra the extra data of the particle
+     */
     @Kapi
     public void setExtra(double extra) {
         this.extra = extra;
     }
     
+    /**
+     * The data is extra attributes of the particle.
+     * For example, the dust options of a redstone particle.
+     *
+     * @return the data of the particle
+     */
     @Kapi
     public @Nullable Object getData() {
         return data;
     }
     
+    /**
+     * The data is extra attributes of the particle.
+     * For example, the dust options of a redstone particle.
+     *
+     * @param data the data of the particle
+     */
     @Kapi
     public void setData(Object data) {
         this.data = data;
     }
     
     /**
-     * Sets the data of the particle to a dust color and size.
+     * @param dustOptions the dust options of the redstone particle
+     * @throws IllegalStateException if the particle is not REDSTONE
+     */
+    @Kapi
+    public void setRedstoneData(DustOptions dustOptions) {
+        if (particle != Particle.REDSTONE) {
+            throw new IllegalStateException(PARTICLE_IS_NOT_REDSTONE);
+        }
+        this.data = dustOptions;
+    }
+    
+    /**
+     * Does not clone the color.
+     * Any changes to the given color will also affect this particle.
      *
-     * @param color The color of the particle
-     * @param size  The size of the particle
-     * @throws IllegalStateException If the particle is not REDSTONE
+     * @param color the color of the redstone particle
+     * @param size  the size of the redstone particle
+     * @throws IllegalStateException if the particle is not REDSTONE
      */
     @Kapi
     public void setRedstoneData(Color color, float size) {
@@ -202,58 +290,53 @@ public class ParticleData {
     }
     
     /**
-     * Gets the data of the particle as a DustOptions object.
-     *
-     * @return The DustOptions object of this particle
-     * @throws IllegalStateException If the particle is not REDSTONE
+     * @return the dust options of the redstone particle
+     * @throws IllegalStateException if the particle is not REDSTONE
      */
     @Kapi
     public @Nullable DustOptions getRedstoneData() {
-        if (particle != Particle.REDSTONE) {
-            throw new IllegalStateException(PARTICLE_IS_NOT_REDSTONE);
-        }
-        return (DustOptions) data;
+        if (particle == Particle.REDSTONE) return (DustOptions) data;
+        throw new IllegalStateException(PARTICLE_IS_NOT_REDSTONE);
     }
     
     /**
-     * Sets the color of the redstone particle.
+     * If data is null, a new dust options will be created with size 1.
+     * <p>
+     * Does not clone the color.
+     * Any changes to the given color will also affect this particle.
      *
-     * @param color The color of the particle
-     * @throws IllegalStateException If the particle is not REDSTONE
-     * @throws NullPointerException  If data (dust options) is null
+     * @param color the color of the redstone particle
+     * @throws IllegalStateException if the particle is not REDSTONE
      */
     @Kapi
     public void setRedstoneColor(Color color) {
         if (particle != Particle.REDSTONE) {
             throw new IllegalStateException(PARTICLE_IS_NOT_REDSTONE);
         }
-        DustOptions data = (DustOptions) this.data;
-        if (data == null) {
-            throw new NullPointerException("setRedstoneColor called on an object with null data");
-        }
-        this.data = new DustOptions(color, data.getSize());
+        float size = data == null ? 1 : ((DustOptions) data).getSize();
+        this.data = new DustOptions(color, size);
     }
     
     /**
-     * Sets the size of the redstone particle.
+     * If data is null, a new dust options will be created with color {@link Color#RED}.
      *
      * @param size The size of the particle
-     * @throws IllegalStateException If the particle is not REDSTONE
+     * @throws IllegalStateException if the particle is not REDSTONE
      */
     @Kapi
     public void setRedstoneSize(float size) {
         if (particle != Particle.REDSTONE) {
             throw new IllegalStateException(PARTICLE_IS_NOT_REDSTONE);
         }
-        DustOptions data = (DustOptions) this.data;
-        if (data == null) {
-            throw new NullPointerException("setRedstoneSize called on an object with null data");
-        }
-        this.data = new DustOptions(data.getColor(), size);
+        Color color = data == null ? Color.RED : ((DustOptions) data).getColor();
+        this.data = new DustOptions(color, size);
     }
     
     /**
-     * @return Whether the particle should be forced to be displayed
+     * When force is true, the particle(s) will be sent to all players.
+     * When force is false, the particle(s) will be sent to players within 32.0 blocks (exclusive).
+     *
+     * @return the force of the particle
      */
     @Kapi
     public boolean isForce() {
@@ -261,10 +344,10 @@ public class ParticleData {
     }
     
     /**
-     * Sets whether the particle should be forced to be displayed<br>
-     * When false, the particle(s) will be sent to players within 32.0 blocks (exclusive).
+     * When force is true, the particle(s) will be sent to all players.
+     * When force is false, the particle(s) will be sent to players within 32.0 blocks (exclusive).
      *
-     * @param force Whether the particle should be forced to be displayed
+     * @param force the particle force
      */
     @Kapi
     public void setForce(boolean force) {
@@ -272,75 +355,42 @@ public class ParticleData {
     }
     
     /**
-     * Spawns the particle at the given location.
-     *
-     * @param location The location to spawn the particle at
+     * @param location the location to spawn the particle at
+     * @throws IllegalStateException if the location's world is null
      */
     @Kapi
     public void spawn(Location location) {
-        World world = location.getWorld();
-        if (world == null) {
+        if (location.getWorld() == null) {
             throw new IllegalStateException("The location's world cannot be null");
         }
-        
-        world.spawnParticle(
-                particle,
-                location,
-                count,
-                spreadX,
-                spreadY,
-                spreadZ,
-                extra,
-                data,
-                force
+        location.getWorld().spawnParticle(
+            particle, location, count,
+            spreadX, spreadY, spreadZ,
+            extra, data, force
         );
     }
     
     /**
-     * Spawns the particle at the given location.
-     *
-     * @param world  The world to spawn the particle in
-     * @param vector The X, Y, and Z coordinates to spawn the particle at
+     * @param world  the world to spawn the particle in
+     * @param vector the X, Y, and Z coordinates to spawn the particle at
      */
     @Kapi
     public void spawn(World world, Vector vector) {
         world.spawnParticle(
-                particle,
-                vector.getX(),
-                vector.getY(),
-                vector.getZ(),
-                count,
-                spreadX,
-                spreadY,
-                spreadZ,
-                extra,
-                data,
-                force
+            particle, vector.getX(), vector.getY(), vector.getZ(), count,
+            spreadX, spreadY, spreadZ,
+            extra, data, force
         );
     }
     
     /**
-     * Spawns the particle at the given location.
-     *
-     * @param world The world to spawn the particle in
-     * @param x     The X coordinate to spawn the particle at
-     * @param y     The Y coordinate to spawn the particle at
-     * @param z     The Z coordinate to spawn the particle at
+     * @param world the world to spawn the particle in
+     * @param x     the X coordinate to spawn the particle at
+     * @param y     the Y coordinate to spawn the particle at
+     * @param z     the Z coordinate to spawn the particle at
      */
     @Kapi
     public void spawn(World world, double x, double y, double z) {
-        world.spawnParticle(
-                particle,
-                x,
-                y,
-                z,
-                count,
-                spreadX,
-                spreadY,
-                spreadZ,
-                extra,
-                data,
-                force
-        );
+        world.spawnParticle(particle, x, y, z, count, spreadX, spreadY, spreadZ, extra, data, force);
     }
 }
