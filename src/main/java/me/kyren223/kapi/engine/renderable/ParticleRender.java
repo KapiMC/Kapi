@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2024 Kyren223
- * Licensed under the AGPLv3. See LICENSE or https://www.gnu.org/licenses/agpl-3.0 for details.
+ * Licensed under the AGPLv3 license. See LICENSE or https://www.gnu.org/licenses/agpl-3.0 for details.
  */
 
 package me.kyren223.kapi.engine.renderable;
@@ -26,13 +26,13 @@ public class ParticleRender implements Renderable {
     @Override
     public void render(World world, Vector point) {
         world.spawnParticle(
-                particle.getParticle(),
-                point.getX(), point.getY(), point.getZ(),
-                particle.getCount(),
-                particle.getSpreadX(), particle.getSpreadY(), particle.getSpreadZ(),
-                particle.getExtra(),
-                particle.getData(),
-                particle.isForce()
+            particle.getParticle(),
+            point.getX(), point.getY(), point.getZ(),
+            particle.getCount(),
+            particle.getSpreadX(), particle.getSpreadY(), particle.getSpreadZ(),
+            particle.getExtra(),
+            particle.getData(),
+            particle.isForce()
         );
     }
     

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2024 Kyren223
- * Licensed under the AGPLv3. See LICENSE or https://www.gnu.org/licenses/agpl-3.0 for details.
+ * Licensed under the AGPLv3 license. See LICENSE or https://www.gnu.org/licenses/agpl-3.0 for details.
  */
 
 package me.kyren223.kapi.engine.ecs;
@@ -124,7 +124,7 @@ public class System {
      */
     @Kapi
     public static void entityCollision(
-            Object3D instance, Consumer<EntityCollisionEvent> callback, Vector centerOffset
+        Object3D instance, Consumer<EntityCollisionEvent> callback, Vector centerOffset
     ) {
         if (!instance.has(Component.COLLISION_SHAPE)) return;
         Object collisionShape = instance.get(Component.COLLISION_SHAPE);
@@ -142,7 +142,7 @@ public class System {
             entities = world.getNearbyEntities(location, radius.x(), radius.y(), radius.z());
         } else if (collisionShape instanceof Vector radius) {
             entities =
-                    world.getNearbyEntities(location, radius.getX(), radius.getY(), radius.getZ());
+                world.getNearbyEntities(location, radius.getX(), radius.getY(), radius.getZ());
         } else return;
         
         EntityCollisionEvent event = new EntityCollisionEvent(instance, entities);

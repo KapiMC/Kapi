@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2024 Kyren223
- * Licensed under the AGPLv3. See LICENSE or https://www.gnu.org/licenses/agpl-3.0 for details.
+ * Licensed under the AGPLv3 license. See LICENSE or https://www.gnu.org/licenses/agpl-3.0 for details.
  */
 
 package me.kyren223.kapi.engine;
@@ -379,16 +379,16 @@ public class Object3D implements EcsEntity {
             Consumer<Object3D> system = task.getSecond();
             assert !trigger.isEvent();
             TaskBuilder.create(() -> system.accept(this))
-                       .delay(trigger.getDelay())
-                       .interval(trigger.getPeriod())
-                       .whileCondition(this::shouldContinue)
-                       .schedule();
+                .delay(trigger.getDelay())
+                .interval(trigger.getPeriod())
+                .whileCondition(this::shouldContinue)
+                .schedule();
         }
         TaskBuilder.create(this::render)
-                   .delay(1)
-                   .interval(1)
-                   .whileCondition(this::shouldContinue)
-                   .schedule();
+            .delay(1)
+            .interval(1)
+            .whileCondition(this::shouldContinue)
+            .schedule();
     }
     
     /**

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2024 Kyren223
- * Licensed under the AGPLv3. See LICENSE or https://www.gnu.org/licenses/agpl-3.0 for details.
+ * Licensed under the AGPLv3 license. See LICENSE or https://www.gnu.org/licenses/agpl-3.0 for details.
  */
 
 package me.kyren223.kapi.engine.ecs.events;
@@ -29,7 +29,7 @@ public class EntityCollisionEvent {
     private final List<Player> collidedPlayers;
     
     public EntityCollisionEvent(
-            final Object3D collider, final Collection<Entity> collidedEntities
+        final Object3D collider, final Collection<Entity> collidedEntities
     ) {
         this.collider = collider;
         this.collidedEntities = new ArrayList<>();

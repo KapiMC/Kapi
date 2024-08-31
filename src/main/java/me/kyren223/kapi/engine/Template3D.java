@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2024 Kyren223
- * Licensed under the AGPLv3. See LICENSE or https://www.gnu.org/licenses/agpl-3.0 for details.
+ * Licensed under the AGPLv3 license. See LICENSE or https://www.gnu.org/licenses/agpl-3.0 for details.
  */
 
 package me.kyren223.kapi.engine;
@@ -126,7 +126,7 @@ public class Template3D {
      */
     @Kapi
     public void addChild(
-            String name, Template3D child, Matrix4f transform
+        String name, Template3D child, Matrix4f transform
     ) {
         children.put(name, Pair.of(transform, child));
     }
@@ -149,7 +149,7 @@ public class Template3D {
      */
     @Kapi
     public void removeChildIf(
-            Predicate<Map.Entry<String,Pair<Matrix4f,Template3D>>> predicate
+        Predicate<Map.Entry<String,Pair<Matrix4f,Template3D>>> predicate
     ) {
         children.entrySet().removeIf(predicate);
     }
@@ -197,7 +197,7 @@ public class Template3D {
      */
     @Kapi
     public Template3D addSystem(
-            SystemTrigger trigger, Consumer<Object3D> system
+        SystemTrigger trigger, Consumer<Object3D> system
     ) {
         if (trigger.isEvent()) {
             events.computeIfAbsent(trigger.getEvent(), k -> new ArrayList<>()).add(system);
@@ -211,7 +211,7 @@ public class Template3D {
     HashMap<String,List<Consumer<Object3D>>> getEvents() {
         Consumer<Object3D> setDefaultsSystem = instance -> components.forEach(instance::set);
         events.computeIfAbsent(SystemTrigger.SPAWN_EVENT, k -> new ArrayList<>())
-              .add(setDefaultsSystem);
+            .add(setDefaultsSystem);
         return events;
     }
     
@@ -231,7 +231,7 @@ public class Template3D {
      */
     @Kapi
     public Object3D newInstance(
-            World world, Matrix4f transform, Object3D parent
+        World world, Matrix4f transform, Object3D parent
     ) {
         return new Object3D(this, world, transform, parent);
     }
@@ -269,10 +269,10 @@ public class Template3D {
             throw new IllegalArgumentException("Location world cannot be null");
         }
         return new Object3D(
-                this,
-                world,
-                new Matrix4f().translate(location.toVector().toVector3f()),
-                parent
+            this,
+            world,
+            new Matrix4f().translate(location.toVector().toVector3f()),
+            parent
         );
     }
     
@@ -292,10 +292,10 @@ public class Template3D {
             throw new IllegalArgumentException("Location world cannot be null");
         }
         return new Object3D(
-                this,
-                world,
-                new Matrix4f().translate(location.toVector().toVector3f()),
-                null
+            this,
+            world,
+            new Matrix4f().translate(location.toVector().toVector3f()),
+            null
         );
     }
 }
