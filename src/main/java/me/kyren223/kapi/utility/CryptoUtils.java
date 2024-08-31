@@ -34,12 +34,27 @@ public class CryptoUtils {
         throw new AssertionError("CryptoUtils should not be instantiated");
     }
     
+    /**
+     * Constant for RSA.
+     */
     @Kapi
     public static final String RSA = "RSA";
+    
+    /**
+     * Constant for AES.
+     */
     @Kapi
     public static final String AES = "AES";
+    
+    /**
+     * Constant for AES/CBC/PKCS5Padding algorithm.
+     */
     @Kapi
     public static final String AES_CBC_PKCS5PADDING = "AES/CBC/PKCS5Padding";
+    
+    /**
+     * Constant for SHA-256.
+     */
     @Kapi
     public static final String SHA_256 = "SHA-256";
     

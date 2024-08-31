@@ -50,9 +50,7 @@ public class TaskBuilder {
      * Note that you would need to use {@link #schedule(Consumer)} or {@link #schedule(Runnable)}
      * otherwise if there is no task, scheduling will throw an exception.
      *
-     * @return A new task
-     * @see #create(Consumer)
-     * @see #create(Runnable)
+     * @return a new task
      */
     @Kapi
     public static TaskBuilder create() {
@@ -63,8 +61,8 @@ public class TaskBuilder {
      * Creates a new task with the given task.
      * Unless specified otherwise, the task will run once on the next server tick.
      *
-     * @see #create()
-     * @see #create(Runnable)
+     * @param task the task to run
+     * @return a new task
      */
     @Kapi
     public static TaskBuilder create(Consumer<KapiTask> task) {
@@ -75,8 +73,8 @@ public class TaskBuilder {
      * Creates a new task with the given task.
      * Unless specified otherwise, the task will run once on the next server tick.
      *
-     * @see #create()
-     * @see #create(Consumer)
+     * @param task the task to run
+     * @return a new task
      */
     @Kapi
     public static TaskBuilder create(Runnable task) {

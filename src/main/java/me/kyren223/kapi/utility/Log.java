@@ -23,13 +23,32 @@ public class Log {
      */
     @Kapi
     public enum Level {
+        /**
+         * Lowest log level, logs debug, info, warnings and errors.
+         */
+        @Kapi
         DEBUG,
+        
+        /**
+         * Default log level, logs info, warnings and errors.
+         */
+        @Kapi
         INFO,
+        
+        /**
+         * Medium log level, logs warnings and errors.
+         */
+        @Kapi
         WARN,
+        
+        /**
+         * Highest log level, logs errors.
+         */
+        @Kapi
         ERROR,
         ;
         
-        public java.util.logging.Level getJavaLevel() {
+        private java.util.logging.Level getJavaLevel() {
             return switch (this) {
                 case DEBUG -> java.util.logging.Level.FINE;
                 case INFO -> java.util.logging.Level.INFO;
@@ -38,7 +57,7 @@ public class Log {
             };
         }
         
-        public ChatColor getColor() {
+        private ChatColor getColor() {
             return switch (this) {
                 case DEBUG -> ChatColor.DARK_GREEN;
                 case INFO -> ChatColor.BLUE;
@@ -92,7 +111,7 @@ public class Log {
      * <p>
      * Supports color codes such as &amp;c for red.
      * <p>
-     * This method uses the server's <code>broadcastMessage</code> API.
+     * This method uses the server's {@code broadcastMessage} API.
      *
      * @param level   The log level to broadcast the message with
      * @param message The message to broadcast

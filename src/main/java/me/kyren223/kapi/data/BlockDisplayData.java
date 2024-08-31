@@ -62,7 +62,7 @@ public class BlockDisplayData extends DisplayData {
         this.block = block;
     }
     
-    protected BlockDisplayData(BlockDisplayData data) {
+    private BlockDisplayData(BlockDisplayData data) {
         super(data);
         this.block = data.getBlock().clone();
     }
