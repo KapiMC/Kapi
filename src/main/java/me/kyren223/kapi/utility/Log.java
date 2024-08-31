@@ -7,7 +7,7 @@ package me.kyren223.kapi.utility;
 
 
 import me.kyren223.kapi.annotations.Kapi;
-import me.kyren223.kapi.core.Kplugin;
+import me.kyren223.kapi.core.KapiPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -83,7 +83,7 @@ public class Log {
     @Kapi
     public static void log(Level level, String message) {
         if (currentLevel.ordinal() > level.ordinal()) return;
-        Kplugin.get().getLogger().log(level.getJavaLevel(), message);
+        KapiPlugin.get().getLogger().log(level.getJavaLevel(), message);
     }
     
     /**
@@ -99,7 +99,7 @@ public class Log {
      */
     @Kapi
     public static void broadcast(Level level, String message) {
-        Kplugin.get().getServer().broadcastMessage(level.getColor() + Utils.col(message));
+        KapiPlugin.get().getServer().broadcastMessage(level.getColor() + Utils.col(message));
     }
     
     /**

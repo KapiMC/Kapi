@@ -7,7 +7,7 @@
 package me.kyren223.kapi.commands;
 
 import me.kyren223.kapi.annotations.Kapi;
-import me.kyren223.kapi.core.Kplugin;
+import me.kyren223.kapi.core.KapiPlugin;
 import me.kyren223.kapi.data.Option;
 import me.kyren223.kapi.data.Pair;
 import me.kyren223.kapi.data.Result;
@@ -57,7 +57,7 @@ public class CommandBuilder {
      */
     @Kapi
     public void register() {
-        Kplugin.get().registerCommand(name, this::onCommand, this::onTabComplete);
+        KapiPlugin.get().registerCommand(name, this::onCommand, this::onTabComplete);
     }
     
     /**

@@ -24,9 +24,9 @@ import org.jspecify.annotations.Nullable;
  * and your unloading code in {@link #onPluginUnload()}.
  */
 @Kapi
-public abstract class Kplugin extends JavaPlugin {
+public abstract class KapiPlugin extends JavaPlugin {
     
-    private static @Nullable Kplugin plugin;
+    private static @Nullable KapiPlugin plugin;
     
     @Override
     public final void onEnable() {
@@ -93,7 +93,7 @@ public abstract class Kplugin extends JavaPlugin {
      * @throws IllegalStateException If the plugin has not been enabled yet
      */
     @Kapi
-    public static Kplugin get() {
+    public static KapiPlugin get() {
         if (plugin == null) {
             throw new IllegalStateException("Kapi has not been enabled yet!");
         }

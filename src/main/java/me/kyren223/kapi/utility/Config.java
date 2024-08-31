@@ -6,7 +6,7 @@
 package me.kyren223.kapi.utility;
 
 import me.kyren223.kapi.annotations.Kapi;
-import me.kyren223.kapi.core.Kplugin;
+import me.kyren223.kapi.core.KapiPlugin;
 import me.kyren223.kapi.data.Result;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -27,11 +27,11 @@ public class Config {
     /**
      * @param path the path to the config file (relative to the data folder)
      * @return the config file
-     * @see Kplugin#getDataFolder()
+     * @see KapiPlugin#getDataFolder()
      */
     @Kapi
     public static File getPath(String path) {
-        return new File(Kplugin.get().getDataFolder(), path);
+        return new File(KapiPlugin.get().getDataFolder(), path);
     }
     
     /**

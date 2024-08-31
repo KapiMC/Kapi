@@ -3,6 +3,9 @@
  * Licensed under the AGPLv3. See LICENSE or https://www.gnu.org/licenses/agpl-3.0 for details.
  */
 
+/**
+ * This package contains the core classes of Kapi.
+ */
 @NullMarked
 package me.kyren223.kapi.core;
 

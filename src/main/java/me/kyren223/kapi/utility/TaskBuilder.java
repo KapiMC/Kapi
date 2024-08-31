@@ -6,7 +6,7 @@
 package me.kyren223.kapi.utility;
 
 import me.kyren223.kapi.annotations.Kapi;
-import me.kyren223.kapi.core.Kplugin;
+import me.kyren223.kapi.core.KapiPlugin;
 import me.kyren223.kapi.data.Option;
 import me.kyren223.kapi.data.TimeUnit;
 import org.bukkit.plugin.Plugin;
@@ -98,7 +98,7 @@ public class TaskBuilder {
             throw new IllegalStateException("No task was provided");
         }
         
-        BukkitScheduler scheduler = Kplugin.get().getServer().getScheduler();
+        BukkitScheduler scheduler = KapiPlugin.get().getServer().getScheduler();
         KapiTaskImpl kapiTask = new KapiTaskImpl(onFinish, delayInTicks, intervalInTicks);
         
         Consumer<BukkitTask> taskProcessor = bukkitTask -> {
@@ -122,14 +122,14 @@ public class TaskBuilder {
         
         boolean isSync = !isAsync;
         if (isSync && intervalInTicks.isNone()) {
-            scheduler.runTaskLater(Kplugin.get(), taskProcessor, delayInTicks);
+            scheduler.runTaskLater(KapiPlugin.get(), taskProcessor, delayInTicks);
         } else if (isSync && intervalInTicks.isSome()) {
-            scheduler.runTaskTimer(Kplugin.get(), taskProcessor, delayInTicks, intervalInTicks.unwrap());
+            scheduler.runTaskTimer(KapiPlugin.get(), taskProcessor, delayInTicks, intervalInTicks.unwrap());
         } else if (isAsync && intervalInTicks.isNone()) {
-            scheduler.runTaskLaterAsynchronously(Kplugin.get(), taskProcessor, delayInTicks);
+            scheduler.runTaskLaterAsynchronously(KapiPlugin.get(), taskProcessor, delayInTicks);
         } else if (isAsync && intervalInTicks.isSome()) {
             scheduler.runTaskTimerAsynchronously(
-                Kplugin.get(), taskProcessor, delayInTicks, intervalInTicks.unwrap());
+                KapiPlugin.get(), taskProcessor, delayInTicks, intervalInTicks.unwrap());
         } else {
             throw new AssertionError("Unreachable");
         }
