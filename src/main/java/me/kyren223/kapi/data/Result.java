@@ -143,13 +143,13 @@ public class Result<T, E> {
      * or call {@link #unwrapOr(Object)}, {@link #unwrapOrElse(Supplier)} or {@link #getOk()}.
      *
      * @return the Ok value
-     * @throws NullSafetyException if the Result is an Err
+     * @throws UnsafeUnwrapException if the Result is an Err
      */
     @Kapi
     @SuppressWarnings("DataFlowIssue")
     public T unwrap() {
         if (this.err == null) return this.ok;
-        throw new NullSafetyException("Called unwrap() on an Err result");
+        throw new UnsafeUnwrapException("Called unwrap() on an Err result");
     }
     
     /**
@@ -178,12 +178,12 @@ public class Result<T, E> {
      * or call {@link #getErr()}.
      *
      * @return the Err value if this result is an Err
-     * @throws NullSafetyException if this result is an Ok
+     * @throws UnsafeUnwrapException if this result is an Ok
      */
     @Kapi
     public E unwrapErr() {
         if (this.err != null) return this.err;
-        throw new NullSafetyException("Called unwrapErr() on an Ok result");
+        throw new UnsafeUnwrapException("Called unwrapErr() on an Ok result");
     }
     
     /**
@@ -193,13 +193,13 @@ public class Result<T, E> {
      *
      * @param message the message the exception will have if this result is an Err
      * @return the contained Ok value
-     * @throws NullSafetyException if this result is an Err
+     * @throws UnsafeUnwrapException if this result is an Err
      */
     @Kapi
     @SuppressWarnings("DataFlowIssue")
     public T expect(String message) {
         if (this.err == null) return this.ok;
-        throw new NullSafetyException(message);
+        throw new UnsafeUnwrapException(message);
     }
     
     /**
@@ -209,12 +209,12 @@ public class Result<T, E> {
      *
      * @param message the message the exception will have if this result is an Ok value
      * @return the contained Err value
-     * @throws NullSafetyException if this result is an Ok
+     * @throws UnsafeUnwrapException if this result is an Ok
      */
     @Kapi
     public E expectErr(String message) {
         if (this.err != null) return this.err;
-        throw new NullSafetyException(message);
+        throw new UnsafeUnwrapException(message);
     }
     
     /**

@@ -132,12 +132,12 @@ public class Option<T> {
      * or call {@link #unwrapOr(Object)}, {@link #unwrapOrElse(Supplier)} or {@link #get()}.
      *
      * @return the contained Some value
-     * @throws NullSafetyException if this option is None
+     * @throws UnsafeUnwrapException if this option is None
      */
     @Kapi
     public T unwrap() {
         if (value != null) return value;
-        throw new NullSafetyException("Called unwrap() on a None option");
+        throw new UnsafeUnwrapException("Called unwrap() on a None option");
     }
     
     /**
@@ -165,12 +165,12 @@ public class Option<T> {
      *
      * @param message the message the exception will have if this option is None
      * @return the contained Some value
-     * @throws NullSafetyException if this option is None
+     * @throws UnsafeUnwrapException if this option is None
      */
     @Kapi
     public T expect(String message) {
         if (value != null) return value;
-        throw new NullSafetyException(message);
+        throw new UnsafeUnwrapException(message);
     }
     
     /**
