@@ -10,9 +10,9 @@ plugins {
     id("io.github.goooler.shadow") version "8.1.8"
 }
 
-group = "me.kyren223"
+group = "io.github.kapimc"
 version = "0.1.0"
-description = "Kapi"
+description = "Kapi is a Minecraft plugins framework that wraps Spigot"
 
 repositories {
     mavenCentral()
@@ -48,7 +48,7 @@ tasks.withType<Javadoc> {
 }
 
 tasks.shadowJar {
-    relocate("dev.triumphteam.gui", "me.kyren223.kapi.gui")
+    relocate("dev.triumphteam.gui", "io.github.kapimc.kapi.gui")
 }
 
 publishing.publications.create<MavenPublication>("maven") {
