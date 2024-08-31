@@ -1,0 +1,6 @@
+<component name="CopyrightManager">
+  <copyright>
+    <option name="notice" value="Copyright (c) &amp;#36;originalComment.match(&quot;Copyright \(c\) (\d+)&quot;, 1, &quot;-&quot;, &quot;&amp;#36;today.year&quot;)&amp;#36;today.year Kyren223&#10;Licensed under the CC BY-NC-SA 4.0 license. See https://creativecommons.org/licenses/by-nc-sa/4.0/ for details." />
+    <option name="myName" value="Kyren CC BY-NC-SA 4.0" />
+  </copyright>
+</component>

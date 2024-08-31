@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Kapi" pattern="file[Kapi.main]:*/||file[Kapi]:settings.gradle.kts||file[Kapi]:build.gradle.kts" />
+</component>

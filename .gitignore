@@ -6,5 +6,12 @@ build/
 
 # IntelliJ
 .idea/*
+!.idea/codeStyles/
+!.idea/copyright/
+!.idea/fileTemplates/
+!.idea/inspectionProfiles/
+!.idea/scopes/
+!.idea/file.template.settings.xml
+!.idea/misc.xml
 *.iml
 
