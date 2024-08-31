@@ -8,6 +8,8 @@ package me.kyren223.kapi.data;
 import me.kyren223.kapi.annotations.Kapi;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * A simple pair of two objects.
  *
@@ -16,9 +18,8 @@ import org.jspecify.annotations.Nullable;
  */
 @Kapi
 public class Pair<T extends @Nullable Object, U extends @Nullable Object> {
-    @Kapi
+    
     private T first;
-    @Kapi
     private U second;
     
     private Pair(T first, U second) {
@@ -26,31 +27,62 @@ public class Pair<T extends @Nullable Object, U extends @Nullable Object> {
         this.second = second;
     }
     
+    /**
+     * @param first  the first value
+     * @param second the second value
+     * @param <T>    the type of the first value
+     * @param <U>    the type of the second value
+     * @return a new pair with the given values
+     */
+    @Kapi
+    public static <T extends @Nullable Object, U extends @Nullable Object> Pair<T,U> of(T first, U second) {
+        return new Pair<>(first, second);
+    }
+    
+    /**
+     * @param <T> the type of the first value
+     * @param <U> the type of the second value
+     * @return a new pair with no values (first = null, second = null)
+     */
+    @Kapi
+    public static <T extends @Nullable Object, U extends @Nullable Object> Pair<@Nullable T,@Nullable U> of() {
+        return new Pair<>(null, null);
+    }
+    
+    /**
+     * @return the first value
+     */
     @Kapi
     public T getFirst() {
         return first;
     }
     
+    /**
+     * @param first the first value
+     */
     @Kapi
     public void setFirst(T first) {
         this.first = first;
     }
     
+    /**
+     * @return the second value
+     */
     @Kapi
     public U getSecond() {
         return second;
     }
     
+    /**
+     * @param second the second value
+     */
     @Kapi
     public void setSecond(U second) {
         this.second = second;
     }
     
     /**
-     * Creates a new pair with the same values as this pair.<br>
-     * Note: This is a shallow copy and does not copy the values themselves.
-     *
-     * @return A new pair with the same values as this pair
+     * @return a new pair with the same values as this pair (shallow copy)
      */
     @Kapi
     public Pair<T,U> copy() {
@@ -58,10 +90,9 @@ public class Pair<T extends @Nullable Object, U extends @Nullable Object> {
     }
     
     /**
-     * Returns a string representation of this pair.<br>
      * The string will be in the format "Pair(first, second)".
      *
-     * @return A string representation of this pair
+     * @return a string representation of this pair
      */
     @Kapi
     @Override
@@ -70,29 +101,24 @@ public class Pair<T extends @Nullable Object, U extends @Nullable Object> {
     }
     
     /**
-     * Creates a new pair with the given values.
-     *
-     * @param first  The first value
-     * @param second The second value
-     * @param <T>    The type of the first value
-     * @param <U>    The type of the second value
-     * @return A new pair with the given values
+     * @param o the object to compare this pair to
+     * @return true if the object is a Pair and the contained values are equal, false otherwise
      */
     @Kapi
-    public static <T, U> Pair<T,U> of(T first, U second) {
-        return new Pair<>(first, second);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pair<?,?> pair = (Pair<?,?>) o;
+        return Objects.equals(first, pair.first) && Objects.equals(second, pair.second);
     }
     
     /**
-     * Creates a new pair with no values.
-     *
-     * @param <T> The type of the first value
-     * @param <U> The type of the second value
-     * @return A new pair with no values (first = null, second = null)
+     * @return the hash code of the pair
      */
     @Kapi
-    public static <T, U> Pair<@Nullable T,@Nullable U> of() {
-        return new Pair<>(null, null);
+    @Override
+    public int hashCode() {
+        return Objects.hash(first, second);
     }
-    
 }
