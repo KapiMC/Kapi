@@ -25,8 +25,8 @@ public class ItemDisplayBuilder extends DisplayBuilder<ItemDisplayBuilder> {
     }
     
     /**
-     * Creates a new builder (with item being null).<br>
-     * <br>
+     * Creates a new item display builder (with item being null).
+     * <p>
      * All values will be set to their default values, which are:
      * <ul>
      *     <li>item = null;
@@ -40,8 +40,9 @@ public class ItemDisplayBuilder extends DisplayBuilder<ItemDisplayBuilder> {
      *     <li>displayWidth = 1;
      *     <li>displayHeight = 1;
      *     <li>interpolationDelay = 0;
-     *     <li>billboard = display.billboard.fiXED;
-     *     <li>glowColorOverride = color.white;
+     *     <li>billboard = Display.Billboard.FIXED;
+     *     <li>glowColorOverride = Color.WHITE;
+     *     <li>brightness = new Display.Brightness(14, 14); // Max brightness
      * </ul>
      *
      * @return a new builder
@@ -52,9 +53,8 @@ public class ItemDisplayBuilder extends DisplayBuilder<ItemDisplayBuilder> {
     }
     
     /**
-     * Creates a new builder for the given item.<br>
-     * ItemDisplayTransform will set to NONE by default,
-     * for other values, see {@link #create()}.
+     * Creates a new builder with the given item.
+     * See {@link #create()} for more information like default values.
      *
      * @param item the item to display
      * @return a new builder
@@ -65,10 +65,8 @@ public class ItemDisplayBuilder extends DisplayBuilder<ItemDisplayBuilder> {
     }
     
     /**
-     * Sets the item to display.
-     *
      * @param item the item to display
-     * @return this builder
+     * @return this, for chaining
      */
     @Kapi
     public ItemDisplayBuilder item(final ItemStack item) {
@@ -77,40 +75,37 @@ public class ItemDisplayBuilder extends DisplayBuilder<ItemDisplayBuilder> {
     }
     
     /**
-     * Sets the item display transform.
+     * The way to display the item, some items can be displayed differently
+     * depending on if they are equipped as an armor, held in the hand or displayed in a GUI.
      *
      * @param itemDisplayTransform the item display transform
-     * @return this builder
+     * @return this, for chaining
      */
     @Kapi
-    public ItemDisplayBuilder itemDisplayTransform(
-            ItemDisplay.ItemDisplayTransform itemDisplayTransform
-    ) {
+    public ItemDisplayBuilder itemDisplayTransform(ItemDisplay.ItemDisplayTransform itemDisplayTransform) {
         this.itemDisplayTransform = itemDisplayTransform;
         return this;
     }
     
     /**
-     * Builds the {@link ItemDisplayData}.
-     *
-     * @return A new {@link ItemDisplayData} with the current settings
+     * @return a new {@link ItemDisplayData} with the current settings
      */
     @Kapi
     public ItemDisplayData build() {
         return new ItemDisplayData(
-                transformation,
-                interpolationDuration,
-                viewRange,
-                shadowRadius,
-                shadowStrength,
-                displayWidth,
-                displayHeight,
-                interpolationDelay,
-                billboard,
-                glowColorOverride,
-                brightness,
-                item,
-                itemDisplayTransform
+            transformation,
+            interpolationDuration,
+            viewRange,
+            shadowRadius,
+            shadowStrength,
+            displayWidth,
+            displayHeight,
+            interpolationDelay,
+            billboard,
+            glowColorOverride,
+            brightness,
+            item,
+            itemDisplayTransform
         );
     }
 }

@@ -17,8 +17,8 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * Holds the data for an item display.
- * See {@link ItemDisplayRender} for rendering particles.
  * See {@link ItemDisplayBuilder} for creating new instances.
+ * See {@link ItemDisplayRender} for rendering particles.
  */
 @Kapi
 public class ItemDisplayData extends DisplayData {
@@ -26,47 +26,56 @@ public class ItemDisplayData extends DisplayData {
     private @Nullable ItemStack itemStack;
     private ItemDisplay.ItemDisplayTransform itemDisplayTransform;
     
+    /**
+     * Creates a new ItemDisplayData instance.
+     * It's recommended to use {@link ItemDisplayBuilder} to easily create this class.
+     *
+     * @param transformation        the transformation of the display entity
+     * @param interpolationDuration the interpolation duration in ticks
+     * @param viewRange             how far away players can see the display entity in blocks
+     * @param shadowRadius          the shadow radius of the display entity
+     * @param shadowStrength        the shadow strength of the display entity
+     * @param displayWidth          the width of the display entity in blocks
+     * @param displayHeight         the height of the display entity in blocks
+     * @param interpolationDelay    the number of ticks before client-side interpolation will begin
+     * @param billboard             the billboard of the display entity
+     * @param glowColorOverride     the scoreboard team overridden glow color of the display entity
+     * @param brightness            the brightness of the display entity (same as Minecraft's light levels)
+     * @param itemStack             the displayed entity item stack
+     * @param itemDisplayTransform  the item display transform for this display entity
+     */
     @Kapi
     public ItemDisplayData(
-            Transformation transformation,
-            int interpolationDuration,
-            float viewRange,
-            float shadowRadius,
-            float shadowStrength,
-            float displayWidth,
-            float displayHeight,
-            int interpolationDelay,
-            Display.Billboard billboard,
-            Color glowColorOverride,
-            Display.Brightness brightness,
-            @Nullable ItemStack itemStack,
-            ItemDisplay.ItemDisplayTransform itemDisplayTransform
+        Transformation transformation,
+        int interpolationDuration,
+        float viewRange,
+        float shadowRadius,
+        float shadowStrength,
+        float displayWidth,
+        float displayHeight,
+        int interpolationDelay,
+        Display.Billboard billboard,
+        Color glowColorOverride,
+        Display.Brightness brightness,
+        @Nullable ItemStack itemStack,
+        ItemDisplay.ItemDisplayTransform itemDisplayTransform
     ) {
         super(
-                transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength, displayWidth,
-                displayHeight, interpolationDelay, billboard, glowColorOverride, brightness
+            transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength, displayWidth,
+            displayHeight, interpolationDelay, billboard, glowColorOverride, brightness
         );
         this.itemStack = itemStack;
         this.itemDisplayTransform = itemDisplayTransform;
     }
     
-    /**
-     * Copy constructor.<br>
-     * Note: Does not clone the item stack.
-     *
-     * @param data The data to copy
-     */
-    @Kapi
-    public ItemDisplayData(ItemDisplayData data) {
+    private ItemDisplayData(ItemDisplayData data) {
         super(data);
-        this.itemStack = data.getItemStack();
+        this.itemStack = data.getItemStack() != null ? data.getItemStack().clone() : null;
         this.itemDisplayTransform = data.getItemDisplayTransform();
     }
     
     /**
-     * Gets the displayed item stack.
-     *
-     * @return the displayed item stack
+     * @return the displayed entity item stack
      */
     @Kapi
     @Nullable
@@ -75,9 +84,7 @@ public class ItemDisplayData extends DisplayData {
     }
     
     /**
-     * Sets the displayed item stack.
-     *
-     * @param item the new item stack
+     * @param item the new displayed entity item stack
      */
     @Kapi
     public void setItemStack(@Nullable ItemStack item) {
@@ -85,10 +92,10 @@ public class ItemDisplayData extends DisplayData {
     }
     
     /**
-     * Gets the item display transform for this entity.<br>
-     * Defaults to {@link ItemDisplay.ItemDisplayTransform#FIXED}.
+     * The way to display the item, some items can be displayed differently
+     * depending on if they are equipped as an armor, held in the hand or displayed in a GUI.
      *
-     * @return item display transform
+     * @return the item display transform for this entity
      */
     @Kapi
     public ItemDisplay.ItemDisplayTransform getItemDisplayTransform() {
@@ -96,13 +103,22 @@ public class ItemDisplayData extends DisplayData {
     }
     
     /**
-     * Sets the item display transform for this entity.<br>
-     * Defaults to {@link ItemDisplay.ItemDisplayTransform#FIXED}.
+     * The way to display the item, some items can be displayed differently
+     * depending on if they are equipped as an armor, held in the hand or displayed in a GUI.
      *
-     * @param display new display
+     * @param display the new item display transform for this entity
      */
     @Kapi
     public void setItemDisplayTransform(ItemDisplay.ItemDisplayTransform display) {
         this.itemDisplayTransform = display;
+    }
+    
+    /**
+     * @return a deep copy of this ItemDisplayData
+     */
+    @Kapi
+    @Override
+    public ItemDisplayData clone() {
+        return new ItemDisplayData(this);
     }
 }

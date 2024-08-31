@@ -23,8 +23,8 @@ public class BlockDisplayBuilder extends DisplayBuilder<BlockDisplayBuilder> {
     }
     
     /**
-     * Creates a new builder for the given block.<br>
-     * <br>
+     * Creates a new builder for the given block.
+     * <p>
      * All other values will be set to their default values, which are:
      * <ul>
      *     <li>transformation = new Transformation(
@@ -36,8 +36,9 @@ public class BlockDisplayBuilder extends DisplayBuilder<BlockDisplayBuilder> {
      *     <li>displayWidth = 1;
      *     <li>displayHeight = 1;
      *     <li>interpolationDelay = 0;
-     *     <li>billboard = display.billboard.fiXED;
-     *     <li>glowColorOverride = color.white;
+     *     <li>billboard = Display.Billboard.FIXED;
+     *     <li>glowColorOverride = Color.WHITE;
+     *     <li>brightness = new Display.Brightness(14, 14); // Max brightness
      * </ul>
      *
      * @param block the block to display
@@ -49,25 +50,23 @@ public class BlockDisplayBuilder extends DisplayBuilder<BlockDisplayBuilder> {
     }
     
     /**
-     * Builds the {@link BlockDisplayData}.
-     *
-     * @return A new {@link BlockDisplayData} with the current settings
+     * @return a new {@link BlockDisplayData} with the current settings
      */
     @Kapi
     public BlockDisplayData build() {
         return new BlockDisplayData(
-                transformation,
-                interpolationDuration,
-                viewRange,
-                shadowRadius,
-                shadowStrength,
-                displayWidth,
-                displayHeight,
-                interpolationDelay,
-                billboard,
-                glowColorOverride,
-                brightness,
-                block
+            transformation,
+            interpolationDuration,
+            viewRange,
+            shadowRadius,
+            shadowStrength,
+            displayWidth,
+            displayHeight,
+            interpolationDelay,
+            billboard,
+            glowColorOverride,
+            brightness,
+            block
         );
     }
 }

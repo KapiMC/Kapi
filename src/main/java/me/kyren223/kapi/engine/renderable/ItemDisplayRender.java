@@ -24,39 +24,25 @@ public class ItemDisplayRender extends ItemDisplayData implements Renderable {
     
     private @Nullable ItemDisplay entity;
     
+    /**
+     * @param data the item display data to use for rendering
+     */
     @Kapi
-    public ItemDisplayRender(
-            Transformation transformation,
-            int interpolationDuration,
-            float viewRange,
-            float shadowRadius,
-            float shadowStrength,
-            float displayWidth,
-            float displayHeight,
-            int interpolationDelay,
-            Display.Billboard billboard,
-            Color glowColorOverride,
-            Display.Brightness brightness,
-            ItemStack itemStack,
-            ItemDisplay.ItemDisplayTransform itemDisplayTransform
-    ) {
+    public ItemDisplayRender(ItemDisplayData data) {
         super(
-                transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength,
-                displayWidth, displayHeight, interpolationDelay, billboard, glowColorOverride,
-                brightness, itemStack, itemDisplayTransform
+            data.getTransformation(), data.getInterpolationDuration(), data.getViewRange(),
+            data.getShadowRadius(), data.getShadowStrength(), data.getDisplayWidth(),
+            data.getDisplayHeight(), data.getInterpolationDelay(), data.getBillboard(),
+            data.getGlowColorOverride(), data.getBrightness(), data.getItemStack(),
+            data.getItemDisplayTransform()
         );
     }
     
     @Kapi
-    public ItemDisplayRender(ItemDisplayData data) {
-        super(data);
-    }
-    
     @Override
     public void spawn(World world, Vector point) {
         if (entity != null) {
-            throw new IllegalStateException(
-                    "Cannot spawn an item display that has already been spawned");
+            throw new IllegalStateException("Cannot spawn an item display that has already been spawned");
         }
         entity = world.spawn(point.toLocation(world), ItemDisplay.class);
         entity.setTransformation(getTransformation());
@@ -74,16 +60,17 @@ public class ItemDisplayRender extends ItemDisplayData implements Renderable {
         entity.setItemDisplayTransform(getItemDisplayTransform());
     }
     
+    @Kapi
     @Override
     public void render(World world, Vector point) {
         // No need to render, the entity will automatically render itself
     }
     
+    @Kapi
     @Override
     public void despawn(World world, Vector point) {
         if (entity == null) {
-            throw new IllegalStateException(
-                    "Cannot despawn an item display that has not been spawned");
+            throw new IllegalStateException("Cannot despawn an item display that has not been spawned");
         }
         entity.remove();
     }
@@ -187,8 +174,8 @@ public class ItemDisplayRender extends ItemDisplayData implements Renderable {
     
     @Kapi
     @Override
-    public Renderable clone() {
-        return new ItemDisplayRender(new ItemDisplayData(this));
+    public ItemDisplayRender clone() {
+        return new ItemDisplayRender(super.clone());
     }
     
 }

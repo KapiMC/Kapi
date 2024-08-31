@@ -24,43 +24,26 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
     
     private @Nullable BlockDisplay entity;
     
-    @Kapi
-    public BlockDisplayRender(
-            Transformation transformation,
-            int interpolationDuration,
-            float viewRange,
-            float shadowRadius,
-            float shadowStrength,
-            float displayWidth,
-            float displayHeight,
-            int interpolationDelay,
-            Display.Billboard billboard,
-            Color glowColorOverride,
-            Display.Brightness brightness,
-            BlockData block
-    ) {
-        super(
-                transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength,
-                displayWidth, displayHeight, interpolationDelay, billboard, glowColorOverride,
-                brightness, block
-        );
-    }
-    
     /**
-     * Copy constructor
+     * Creates a new block display render.
      *
-     * @param data The data to copy
+     * @param data the block display data to use for rendering
      */
     @Kapi
     public BlockDisplayRender(BlockDisplayData data) {
-        super(data);
+        super(
+            data.getTransformation(), data.getInterpolationDuration(), data.getViewRange(),
+            data.getShadowRadius(), data.getShadowStrength(), data.getDisplayWidth(),
+            data.getDisplayHeight(), data.getInterpolationDelay(), data.getBillboard(),
+            data.getGlowColorOverride(), data.getBrightness(), data.getBlock()
+        );
     }
     
+    @Kapi
     @Override
     public void spawn(World world, Vector point) {
         if (entity != null) {
-            throw new IllegalStateException(
-                    "Cannot spawn a block display that has already been spawned");
+            throw new IllegalStateException("Cannot spawn a block display that has already been spawned");
         }
         entity = world.spawn(point.toLocation(world), BlockDisplay.class);
         entity.setTransformation(getTransformation());
@@ -77,16 +60,17 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
         entity.setBlock(getBlock());
     }
     
+    @Kapi
     @Override
     public void render(World world, Vector point) {
         // No need to render, the entity will automatically render itself
     }
     
+    @Kapi
     @Override
     public void despawn(World world, Vector point) {
         if (entity == null) {
-            throw new IllegalStateException(
-                    "Cannot despawn a block display that has not been spawned");
+            throw new IllegalStateException("Cannot despawn a block display that has not been spawned");
         }
         entity.remove();
     }
@@ -105,7 +89,6 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
     }
     
     @Kapi
-    
     @Override
     public void setTransformation(Transformation transformation) {
         super.setTransformation(transformation);
@@ -184,7 +167,7 @@ public class BlockDisplayRender extends BlockDisplayData implements Renderable {
     
     @Kapi
     @Override
-    public Renderable clone() {
-        return new BlockDisplayRender(this);
+    public BlockDisplayRender clone() {
+        return new BlockDisplayRender(super.clone());
     }
 }

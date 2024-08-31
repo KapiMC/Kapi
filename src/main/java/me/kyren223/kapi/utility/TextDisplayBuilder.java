@@ -9,7 +9,6 @@ import me.kyren223.kapi.annotations.Kapi;
 import me.kyren223.kapi.data.TextDisplayData;
 import org.bukkit.Color;
 import org.bukkit.entity.TextDisplay;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 
@@ -35,12 +34,12 @@ public class TextDisplayBuilder extends DisplayBuilder<TextDisplayBuilder> {
         textOpacity = 0;
         shadowed = false;
         seeThrough = false;
-        defaultBackground = false;
+        defaultBackground = true;
         alignment = TextDisplay.TextAlignment.LEFT;
     }
     
     /**
-     * Sets the text to display.<br>
+     * Creates a new text display builder.
      * <br>
      * All values will be set to their default values, which are:
      * <ul>
@@ -50,7 +49,7 @@ public class TextDisplayBuilder extends DisplayBuilder<TextDisplayBuilder> {
      *     <li>textOpacity = 0;
      *     <li>shadowed = false;
      *     <li>seeThrough = false;
-     *     <li>defaultBackground = false;
+     *     <li>defaultBackground = true;
      *     <li>alignment = TextDisplay.TextAlignment.LEFT;
      *     <li>transformation = new Transformation(
      *          new Vector3f(),new Quaternionf(),new Vector3f(1, 1, 1),new Quaternionf());
@@ -61,8 +60,9 @@ public class TextDisplayBuilder extends DisplayBuilder<TextDisplayBuilder> {
      *     <li>displayWidth = 1;
      *     <li>displayHeight = 1;
      *     <li>interpolationDelay = 0;
-     *     <li>billboard = display.billboard.fiXED;
-     *     <li>glowColorOverride = color.white;
+     *     <li>billboard = Display.Billboard.FIXED;
+     *     <li>glowColorOverride = Color.WHITE;
+     *     <li>brightness = new Display.Brightness(14, 14); // Max brightness
      * </ul>
      *
      * @return a new builder
@@ -73,10 +73,10 @@ public class TextDisplayBuilder extends DisplayBuilder<TextDisplayBuilder> {
     }
     
     /**
-     * Creates a new builder for the given text.
-     * For other values, see {@link #create()}.
+     * Creates a new builder with the given text.
+     * See {@link #create()} for more information like default values.
      *
-     * @param text The text to display
+     * @param text the text to be displayed
      * @return a new builder
      */
     @Kapi
@@ -85,10 +85,8 @@ public class TextDisplayBuilder extends DisplayBuilder<TextDisplayBuilder> {
     }
     
     /**
-     * Sets the text to display.
-     *
-     * @param text The text to display
-     * @return this builder
+     * @param text the text to be displayed
+     * @return this, for chaining
      */
     @Kapi
     public TextDisplayBuilder text(String text) {
@@ -97,21 +95,20 @@ public class TextDisplayBuilder extends DisplayBuilder<TextDisplayBuilder> {
     }
     
     /**
-     * Sets the line width.
+     * TODO: if you know what this does please open a PR and document it
      *
-     * @param lineWidth The line width
-     * @return this builder
+     * @param lineWidth The line width of the text
+     * @return this, for chaining
      */
+    @Kapi
     public TextDisplayBuilder lineWidth(int lineWidth) {
         this.lineWidth = lineWidth;
         return this;
     }
     
     /**
-     * Sets the background color.
-     *
-     * @param backgroundColor The background color
-     * @return this builder
+     * @param backgroundColor the background color of the text
+     * @return this, for chaining
      */
     @Kapi
     public TextDisplayBuilder backgroundColor(final @Nullable Color backgroundColor) {
@@ -120,10 +117,8 @@ public class TextDisplayBuilder extends DisplayBuilder<TextDisplayBuilder> {
     }
     
     /**
-     * Sets the text opacity.
-     *
-     * @param textOpacity The text opacity
-     * @return this builder
+     * @param textOpacity the text opacity, or -1 to not set
+     * @return this, for chaining
      */
     @Kapi
     public TextDisplayBuilder textOpacity(byte textOpacity) {
@@ -132,10 +127,8 @@ public class TextDisplayBuilder extends DisplayBuilder<TextDisplayBuilder> {
     }
     
     /**
-     * Sets whether the text should be shadowed.
-     *
-     * @param shadowed Whether the text should be shadowed
-     * @return this builder
+     * @param shadowed whether to render the text with a shadow
+     * @return this, for chaining
      */
     @Kapi
     public TextDisplayBuilder shadowed(boolean shadowed) {
@@ -144,10 +137,10 @@ public class TextDisplayBuilder extends DisplayBuilder<TextDisplayBuilder> {
     }
     
     /**
-     * Sets whether the text should be see-through.
+     * TODO: if you know what this does please open a PR and document it
      *
-     * @param seeThrough Whether the text should be see-through
-     * @return this builder
+     * @param seeThrough whether to render the text with a see-through effect
+     * @return this, for chaining
      */
     @Kapi
     public TextDisplayBuilder seeThrough(boolean seeThrough) {
@@ -156,10 +149,10 @@ public class TextDisplayBuilder extends DisplayBuilder<TextDisplayBuilder> {
     }
     
     /**
-     * Sets the default background.
+     * TODO: if you know what this does please open a PR and document it
      *
-     * @param defaultBackground Whether the default background should be used
-     * @return this builder
+     * @param defaultBackground whether to use the default background
+     * @return this, for chaining
      */
     @Kapi
     public TextDisplayBuilder defaultBackground(boolean defaultBackground) {
@@ -168,10 +161,8 @@ public class TextDisplayBuilder extends DisplayBuilder<TextDisplayBuilder> {
     }
     
     /**
-     * Sets the alignment of the text.
-     *
-     * @param alignment The alignment of the text
-     * @return this builder
+     * @param alignment the alignment of the text (LEFT, CENTER, RIGHT)
+     * @return this, for chaining
      */
     @Kapi
     public TextDisplayBuilder alignment(final TextDisplay.TextAlignment alignment) {
@@ -180,32 +171,30 @@ public class TextDisplayBuilder extends DisplayBuilder<TextDisplayBuilder> {
     }
     
     /**
-     * Builds the {@link TextDisplayData}.
-     *
-     * @return A new {@link TextDisplayData} with the current settings
+     * @return a new {@link TextDisplayData} with the current settings
      */
     @Kapi
     public TextDisplayData build() {
         return new TextDisplayData(
-                transformation,
-                interpolationDuration,
-                viewRange,
-                shadowRadius,
-                shadowStrength,
-                displayWidth,
-                displayHeight,
-                interpolationDelay,
-                billboard,
-                glowColorOverride,
-                brightness,
-                text,
-                lineWidth,
-                backgroundColor,
-                textOpacity,
-                shadowed,
-                seeThrough,
-                defaultBackground,
-                alignment
+            transformation,
+            interpolationDuration,
+            viewRange,
+            shadowRadius,
+            shadowStrength,
+            displayWidth,
+            displayHeight,
+            interpolationDelay,
+            billboard,
+            glowColorOverride,
+            brightness,
+            text,
+            lineWidth,
+            backgroundColor,
+            textOpacity,
+            shadowed,
+            seeThrough,
+            defaultBackground,
+            alignment
         );
     }
 }

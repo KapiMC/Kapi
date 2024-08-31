@@ -16,17 +16,6 @@ import org.joml.Vector3f;
 
 public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
-    /*
-    Note, a lot of methods have @SuppressWarnings("unchecked")
-    This is because the generic T indicates the type of the builder
-    which can be either BlockDisplayBuilder, ItemDisplayBuilder, or TextDisplayBuilder.
-    This makes sure the subclass is returned
-    Casting to T generates a warning that we can suppress
-    as it's always safe to cast to the subclass, as long as it's not an instance of
-    this class, and the only space we use this class' constructor is as super() in the subclass
-    constructors
-     */
-    
     protected Transformation transformation;
     protected int interpolationDuration;
     protected float viewRange;
@@ -41,10 +30,10 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     
     protected DisplayBuilder() {
         this.transformation = new Transformation(
-                new Vector3f(),
-                new Quaternionf(),
-                new Vector3f(1, 1, 1),
-                new Quaternionf()
+            new Vector3f(),
+            new Quaternionf(),
+            new Vector3f(1, 1, 1),
+            new Quaternionf()
         );
         this.interpolationDuration = 0;
         this.viewRange = 32; // Same as particles
@@ -59,396 +48,335 @@ public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
     }
     
     /**
-     * Sets the view range of the display.<br>
-     * Default value if not set is 32.
+     * This pattern uses generics to return the subclass of this builder.
+     * This is useful for sharing code between builders.
+     * While still returning the subclass, instead of the parent class.
+     *
+     * @return the subclass of this builder
+     */
+    
+    @SuppressWarnings("unchecked")
+    private T self() {
+        return (T) this;
+    }
+    
+    /**
+     * Indicates from how far away players can see the display.
      *
      * @param viewRange the view range of the display
-     * @return the builder
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T viewRange(float viewRange) {
         this.viewRange = viewRange;
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the shadow radius of the display.<br>
-     * Default value is 0.
+     * TODO: if you know what this does please open a PR and document it
      *
      * @param shadowRadius the shadow radius of the display
-     * @return the builder
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T shadowRadius(float shadowRadius) {
         this.shadowRadius = shadowRadius;
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the shadow strength of the display.<br>
-     * Default value is 0.
+     * TODO: if you know what this does please open a PR and document it
      *
      * @param shadowStrength the shadow strength of the display
-     * @return the builder
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T shadowStrength(float shadowStrength) {
         this.shadowStrength = shadowStrength;
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the display width of the display.<br>
-     * Default value is 1.
-     *
-     * @param displayWidth the display width of the display
-     * @return the builder
+     * @param displayWidth the display width in blocks
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T displayWidth(float displayWidth) {
         this.displayWidth = displayWidth;
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the display height of the display.<br>
-     * Default value is 1.
-     *
-     * @param displayHeight the display height of the display
-     * @return the builder
+     * @param displayHeight the display height in blocks
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T displayHeight(float displayHeight) {
         this.displayHeight = displayHeight;
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the interpolation delay of the display.<br>
-     * Default value is 0.
+     * TODO: if you know what this does please open a PR and document it
      *
-     * @param interpolationDelay the interpolation delay of the display
-     * @return the builder
+     * @param interpolationDelay the interpolation delay in ticks
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T interpolationDelay(int interpolationDelay) {
         this.interpolationDelay = interpolationDelay;
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the billboard of the display.<br>
-     * Default value is FIXED.
+     * TODO: if you know what this does please open a PR and document it
      *
      * @param billboard the billboard of the display
-     * @return the builder
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T billboard(Display.Billboard billboard) {
         this.billboard = billboard;
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the glow color override of the display.<br>
-     * Default value is {@link Color#WHITE}.
+     * This is the glowing outline color of the entity when it glows.
      *
      * @param glowColorOverride the glow color override of the display
-     * @return the builder
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T glowColorOverride(Color glowColorOverride) {
         this.glowColorOverride = glowColorOverride;
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the brightness of the display.<br>
-     * Default value is max brightness.
+     * The brightness of the display entity.
+     * The values are the same as Minecraft's light levels.
      *
      * @param brightness the brightness of the display
-     * @return the builder
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T brightness(Display.Brightness brightness) {
         this.brightness = brightness;
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the transformation of the display.<br>
-     * Default value is a new transformation
-     * with zero-ed translation, rotation, and (1, 1, 1) scale.
-     *
      * @param transformation the transformation of the display
-     * @return the builder
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T transformation(Transformation transformation) {
         this.transformation = transformation;
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the interpolation duration of the display.<br>
-     * Default value is 0.
-     *
-     * @param interpolationDuration the interpolation duration of the display
-     * @return the builder
+     * @param interpolationDuration the interpolation duration in ticks
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T interpolationDuration(int interpolationDuration) {
         this.interpolationDuration = interpolationDuration;
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the translation of the display.<br>
-     * Default value is (0, 0, 0).
+     * The translation is the position in the world where the display entity is located.
      *
      * @param x the x component of the translation
      * @param y the y component of the translation
      * @param z the z component of the translation
-     * @return the builder
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T translation(float x, float y, float z) {
         this.transformation.getTranslation().set(x, y, z);
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the translation of the display.<br>
-     * Default value is (0, 0, 0).
-     *
-     * @param translation the translation
-     * @return the builder
+     * @param translation the position in the world where the display entity is located
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T translation(Vector3f translation) {
         this.transformation.getTranslation().set(translation);
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the translation of the display.<br>
-     * Default value is (0, 0, 0).
-     *
-     * @param translation the translation
-     * @return the builder
+     * @param translation the position in the world where the display entity is located
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T translation(Vector translation) {
         this.transformation.getTranslation().set(translation.toVector3f());
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the left rotation of the display.<br>
-     * Default value is the quaternion (x0, y0, z0, w1).
-     *
-     * @param q The quaternion representing the rotation
-     * @return the builder
+     * @param q the left quaternion, which represents the rotation of the display entity
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T rotation(Quaternionf q) {
         this.transformation.getLeftRotation().set(q);
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the left rotation of the display.<br>
-     * Default value is the quaternion (x0, y0, z0, w1).
+     * Sets the rotation of the display entity based on the given axis and angle.
      *
      * @param axis  the axis of rotation
      * @param angle the angle of rotation
-     * @return the builder
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T rotation(Vector3f axis, float angle) {
         this.transformation.getLeftRotation().set(new AxisAngle4f(angle, axis));
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the left rotation of the display.<br>
-     * Default value is the quaternion (x0, y0, z0, w1).
+     * Sets the rotation of the display entity based on the given axis and angle.
      *
      * @param axis  the axis of rotation
      * @param angle the angle of rotation
-     * @return the builder
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T rotation(Vector axis, float angle) {
         this.transformation.getLeftRotation().set(new AxisAngle4f(angle, axis.toVector3f()));
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the left rotation of the display.<br>
-     * Default value is the quaternion (x0, y0, z0, w1).
+     * Sets the rotation of the display entity based on the given axis angle.
      *
-     * @param axisAngle the axis angle of rotation
-     * @return the builder
+     * @param axisAngle the axis and angle of the rotation
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T rotation(AxisAngle4f axisAngle) {
         this.transformation.getLeftRotation().set(axisAngle);
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the left rotation of the display.<br>
-     * Default value is the quaternion (x0, y0, z0, w1).
+     * The quaternion represents the rotation of the display entity
      *
      * @param x the x component of the quaternion
      * @param y the y component of the quaternion
      * @param z the z component of the quaternion
      * @param w the w component of the quaternion
-     * @return the builder
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T rotation(float x, float y, float z, float w) {
         this.transformation.getLeftRotation().set(x, y, z, w);
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the right rotation of the display.<br>
-     * Default value is the quaternion (x0, y0, z0, w1).
+     * Sets the right rotation of the display entity.
      *
-     * @param q The quaternion representing the rotation
-     * @return the builder
+     * @param q the quaternion representing the rotation
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T rightRotation(Quaternionf q) {
         this.transformation.getRightRotation().set(q);
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the right rotation of the display.<br>
-     * Default value is the quaternion (x0, y0, z0, w1).
+     * Sets the right rotation of the display entity based on the given axis and angle.
      *
      * @param axis  the axis of rotation
      * @param angle the angle of rotation
-     * @return the builder
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T rightRotation(Vector3f axis, float angle) {
         this.transformation.getRightRotation().set(new AxisAngle4f(angle, axis));
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the right rotation of the display.<br>
-     * Default value is the quaternion (x0, y0, z0, w1).
+     * Sets the right rotation of the display entity based on the given axis and angle.
      *
      * @param axis  the axis of rotation
      * @param angle the angle of rotation
-     * @return the builder
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T rightRotation(Vector axis, float angle) {
         this.transformation.getRightRotation().set(new AxisAngle4f(angle, axis.toVector3f()));
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the right rotation of the display.<br>
-     * Default value is the quaternion (x0, y0, z0, w1).
+     * Sets the right rotation of the display entity based on the given axis angle.
      *
      * @param axisAngle the axis angle of rotation
-     * @return the builder
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T rightRotation(AxisAngle4f axisAngle) {
         this.transformation.getRightRotation().set(axisAngle);
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the right rotation of the display.<br>
-     * Default value is the quaternion (x0, y0, z0, w1).
+     * Sets the right rotation of the display entity based on the given quaternion.
      *
      * @param x the x component of the quaternion
      * @param y the y component of the quaternion
      * @param z the z component of the quaternion
      * @param w the w component of the quaternion
-     * @return the builder
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T rightRotation(float x, float y, float z, float w) {
         this.transformation.getRightRotation().set(x, y, z, w);
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the scale of the display.<br>
-     * Default value is (1, 1, 1).
-     *
-     * @param x the x component of the scale
-     * @param y the y component of the scale
-     * @param z the z component of the scale
-     * @return the builder
+     * @param x the x component of the scale in blocks
+     * @param y the y component of the scale in blocks
+     * @param z the z component of the scale in blocks
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T scale(float x, float y, float z) {
         this.transformation.getScale().set(x, y, z);
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the scale of the display.<br>
-     * Default value is (1, 1, 1).
-     *
-     * @param scale the scale of the display
-     * @return the builder
+     * @param scale the scale of the display entity in blocks
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T scale(Vector3f scale) {
         this.transformation.getScale().set(scale);
-        return (T) this;
+        return self();
     }
     
     /**
-     * Sets the scale of the display.<br>
-     * Default value is (1, 1, 1).
-     *
-     * @param scale the scale of the display
-     * @return the builder
+     * @param scale the scale of the display entity in blocks
+     * @return this, for chaining
      */
-    @SuppressWarnings("unchecked")
     @Kapi
     public T scale(Vector scale) {
         this.transformation.getScale().set(scale.toVector3f());
-        return (T) this;
+        return self();
     }
     
 }

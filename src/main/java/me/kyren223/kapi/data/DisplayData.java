@@ -12,14 +12,6 @@ import org.bukkit.util.Transformation;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-/**
- * Holds the common data for all displays.<br>
- * Do not use this class directly, and do not extend this class.<br>
- * <br>
- * Subclasses of this class are
- * {@link ItemDisplayData}, {@link BlockDisplayData} and {@link TextDisplayData}.
- */
-@Kapi
 public abstract class DisplayData {
     
     private Transformation transformation;
@@ -35,17 +27,17 @@ public abstract class DisplayData {
     private Display.Brightness brightness;
     
     protected DisplayData(
-            Transformation transformation,
-            int interpolationDuration,
-            float viewRange,
-            float shadowRadius,
-            float shadowStrength,
-            float displayWidth,
-            float displayHeight,
-            int interpolationDelay,
-            Display.Billboard billboard,
-            Color glowColorOverride,
-            Display.Brightness brightness
+        Transformation transformation,
+        int interpolationDuration,
+        float viewRange,
+        float shadowRadius,
+        float shadowStrength,
+        float displayWidth,
+        float displayHeight,
+        int interpolationDelay,
+        Display.Billboard billboard,
+        Color glowColorOverride,
+        Display.Brightness brightness
     ) {
         this.transformation = transformation;
         this.interpolationDuration = interpolationDuration;
@@ -61,10 +53,9 @@ public abstract class DisplayData {
     }
     
     /**
-     * Copy constructor.<br>
-     * Note: This deep copies the transformation, and the glow color override.
+     * Copy constructor (deep copy).
      *
-     * @param data The data to copy
+     * @param data the data to copy
      */
     protected DisplayData(DisplayData data) {
         Vector3f translation = new Vector3f();
@@ -88,15 +79,13 @@ public abstract class DisplayData {
         this.billboard = data.getBillboard();
         this.glowColorOverride = Color.fromARGB(data.getGlowColorOverride().asARGB());
         this.brightness = new Display.Brightness(
-                data.getBrightness().getBlockLight(),
-                data.getBrightness().getSkyLight()
+            data.getBrightness().getBlockLight(),
+            data.getBrightness().getSkyLight()
         );
     }
     
     /**
-     * Gets the transformation applied to this display.
-     *
-     * @return the transformation
+     * @return the transformation of this display entity
      */
     @Kapi
     public Transformation getTransformation() {
@@ -104,9 +93,7 @@ public abstract class DisplayData {
     }
     
     /**
-     * Sets the transformation applied to this display.
-     *
-     * @param transformation the new transformation
+     * @param transformation the new transformation of this display entity
      */
     @Kapi
     public void setTransformation(Transformation transformation) {
@@ -114,9 +101,9 @@ public abstract class DisplayData {
     }
     
     /**
-     * Gets the interpolation duration of this display.
+     * TODO: if you know what this does please open a PR and document it
      *
-     * @return interpolation duration
+     * @return the interpolation duration in ticks
      */
     @Kapi
     public int getInterpolationDuration() {
@@ -124,9 +111,7 @@ public abstract class DisplayData {
     }
     
     /**
-     * Sets the interpolation duration of this display.
-     *
-     * @param duration new duration
+     * @param duration the new interpolation duration in ticks
      */
     @Kapi
     public void setInterpolationDuration(int duration) {
@@ -134,9 +119,7 @@ public abstract class DisplayData {
     }
     
     /**
-     * Gets the view distance/range of this display.
-     *
-     * @return view range
+     * @return how far away players can see the display entity in blocks
      */
     @Kapi
     public float getViewRange() {
@@ -144,9 +127,9 @@ public abstract class DisplayData {
     }
     
     /**
-     * Sets the view distance/range of this display.
+     * View range indicates how far away players can see the display entity in blocks.
      *
-     * @param range new range
+     * @param range new range in blocks
      */
     @Kapi
     public void setViewRange(float range) {
@@ -154,9 +137,9 @@ public abstract class DisplayData {
     }
     
     /**
-     * Gets the shadow radius of this display.
+     * TODO: if you know what this does please open a PR and document it
      *
-     * @return radius
+     * @return the shadow radius of this display entity
      */
     @Kapi
     public float getShadowRadius() {
@@ -164,9 +147,9 @@ public abstract class DisplayData {
     }
     
     /**
-     * Sets the shadow radius of this display.
+     * TODO: if you know what this does please open a PR and document it
      *
-     * @param radius new radius
+     * @param radius the new shadow radius of this display entity
      */
     @Kapi
     public void setShadowRadius(float radius) {
@@ -174,9 +157,9 @@ public abstract class DisplayData {
     }
     
     /**
-     * Gets the shadow strength of this display.
+     * TODO: if you know what this does please open a PR and document it
      *
-     * @return shadow strength
+     * @return the shadow strength of this display entity
      */
     @Kapi
     public float getShadowStrength() {
@@ -184,9 +167,9 @@ public abstract class DisplayData {
     }
     
     /**
-     * Sets the shadow strength of this display.
+     * TODO: if you know what this does please open a PR and document it
      *
-     * @param strength new strength
+     * @param strength the new shadow strength of this display entity
      */
     @Kapi
     public void setShadowStrength(float strength) {
@@ -194,9 +177,7 @@ public abstract class DisplayData {
     }
     
     /**
-     * Gets the width of this display.
-     *
-     * @return width
+     * @return the width of this display entity in blocks
      */
     @Kapi
     public float getDisplayWidth() {
@@ -204,9 +185,7 @@ public abstract class DisplayData {
     }
     
     /**
-     * Sets the width of this display.
-     *
-     * @param width new width
+     * @param width the new width of this display entity in blocks
      */
     @Kapi
     public void setDisplayWidth(float width) {
@@ -214,9 +193,7 @@ public abstract class DisplayData {
     }
     
     /**
-     * Gets the height of this display.
-     *
-     * @return height
+     * @return the height of this display entity in blocks
      */
     @Kapi
     public float getDisplayHeight() {
@@ -224,9 +201,7 @@ public abstract class DisplayData {
     }
     
     /**
-     * Sets the height of this display.
-     *
-     * @param height new height
+     * @param height the new height of this display entity in blocks
      */
     @Kapi
     public void setDisplayHeight(float height) {
@@ -234,9 +209,7 @@ public abstract class DisplayData {
     }
     
     /**
-     * Gets the number of ticks before client-side interpolation will begin.
-     *
-     * @return interpolation delay ticks
+     * @return the number of ticks before client-side interpolation will begin
      */
     @Kapi
     public int getInterpolationDelay() {
@@ -244,9 +217,7 @@ public abstract class DisplayData {
     }
     
     /**
-     * Sets the number of ticks before client-side interpolation will begin.
-     *
-     * @param ticks interpolation delay ticks
+     * @param ticks the new number of ticks before client-side interpolation will begin
      */
     @Kapi
     public void setInterpolationDelay(int ticks) {
@@ -254,9 +225,9 @@ public abstract class DisplayData {
     }
     
     /**
-     * Gets the view distance/range of this display.
+     * The billboard controls the automatic rotation of the entity to face the player.
      *
-     * @return view range
+     * @return the billboard of this display entity
      */
     @Kapi
     public Display.Billboard getBillboard() {
@@ -264,11 +235,9 @@ public abstract class DisplayData {
     }
     
     /**
-     * Sets the billboard setting of this entity.<br>
-     * The billboard setting controls the automatic rotation of the entity to
-     * face the player.
+     * The billboard controls the automatic rotation of the entity to face the player.
      *
-     * @param billboard new setting
+     * @param billboard the new billboard of this display entity
      */
     @Kapi
     public void setBillboard(Display.Billboard billboard) {
@@ -276,9 +245,9 @@ public abstract class DisplayData {
     }
     
     /**
-     * Gets the scoreboard team overridden glow color of this display.
+     * This is the glowing outline color of the entity when it glows.
      *
-     * @return glow color
+     * @return the scoreboard team overridden glow color of this display entity
      */
     @Kapi
     public Color getGlowColorOverride() {
@@ -286,9 +255,9 @@ public abstract class DisplayData {
     }
     
     /**
-     * Sets the scoreboard team overridden glow color of this display.
+     * This is the glowing outline color of the entity when it glows.
      *
-     * @param color new color
+     * @param color the new scoreboard team overridden glow color of this
      */
     @Kapi
     public void setGlowColorOverride(Color color) {
@@ -296,9 +265,9 @@ public abstract class DisplayData {
     }
     
     /**
-     * Gets the brightness override of the entity.
+     * The brightness values are the same as Minecraft's light levels.
      *
-     * @return brightness override, if set
+     * @return the brightness of this display entity
      */
     @Kapi
     public Display.Brightness getBrightness() {
@@ -306,9 +275,9 @@ public abstract class DisplayData {
     }
     
     /**
-     * Sets the brightness override of the entity.
+     * The brightness values are the same as Minecraft's light levels.
      *
-     * @param brightness new brightness override
+     * @param brightness the new brightness of this display entity
      */
     @Kapi
     public void setBrightness(Display.Brightness brightness) {

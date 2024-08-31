@@ -23,42 +23,30 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
     
     private @Nullable TextDisplay entity;
     
+    /**
+     * Creates a new text display render.
+     *
+     * @param data the text display data to use for rendering
+     */
     @Kapi
-    public TextDisplayRender(
-            Transformation transformation,
-            int interpolationDuration,
-            float viewRange,
-            float shadowRadius,
-            float shadowStrength,
-            float displayWidth,
-            float displayHeight,
-            int interpolationDelay,
-            Display.Billboard billboard,
-            Color glowColorOverride,
-            Display.Brightness brightness,
-            @Nullable String text,
-            int lineWidth,
-            @Nullable Color backgroundColor,
-            byte textOpacity,
-            boolean shadowed,
-            boolean seeThrough,
-            boolean defaultBackground,
-            TextDisplay.TextAlignment alignment
-    ) {
+    public TextDisplayRender(TextDisplayData data) {
         super(
-                transformation, interpolationDuration, viewRange, shadowRadius, shadowStrength,
-                displayWidth, displayHeight, interpolationDelay, billboard, glowColorOverride,
-                brightness, text, lineWidth, backgroundColor, textOpacity, shadowed, seeThrough,
-                defaultBackground, alignment
+            data.getTransformation(), data.getInterpolationDuration(), data.getViewRange(),
+            data.getShadowRadius(), data.getShadowStrength(), data.getDisplayWidth(),
+            data.getDisplayHeight(), data.getInterpolationDelay(), data.getBillboard(),
+            data.getGlowColorOverride(), data.getBrightness(), data.getText(),
+            data.getLineWidth(), data.getBackgroundColor(), data.getTextOpacity(),
+            data.isShadowed(), data.isSeeThrough(), data.isDefaultBackground(),
+            data.getAlignment()
         );
     }
     
+    @Kapi
     @SuppressWarnings("deprecation")
     @Override
     public void spawn(World world, Vector point) {
         if (entity != null) {
-            throw new IllegalStateException(
-                    "Cannot spawn a text display that has already been spawned");
+            throw new IllegalStateException("Cannot spawn a text display that has already been spawned");
         }
         entity = world.spawn(point.toLocation(world), TextDisplay.class);
         entity.setTransformation(getTransformation());
@@ -82,20 +70,17 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
         entity.setAlignment(getAlignment());
     }
     
-    public TextDisplayRender(TextDisplayData data) {
-        super(data);
-    }
-    
+    @Kapi
     @Override
     public void render(World world, Vector point) {
         // No need to render, the entity will automatically render itself
     }
     
+    @Kapi
     @Override
     public void despawn(World world, Vector point) {
         if (entity == null) {
-            throw new IllegalStateException(
-                    "Cannot despawn a text display that has not been spawned");
+            throw new IllegalStateException("Cannot despawn a text display that has not been spawned");
         }
         entity.remove();
     }
@@ -197,23 +182,16 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
         if (entity != null) entity.setLineWidth(width);
     }
     
-    /**
-     * Sets the text background color.
-     *
-     * @param color new background color
-     * @deprecated API subject to change
-     */
-    @SuppressWarnings("deprecation")
-    @Deprecated
     @Kapi
     @Override
+    @SuppressWarnings("deprecation")
     public void setBackgroundColor(@Nullable Color color) {
         super.setBackgroundColor(color);
         if (entity != null) entity.setBackgroundColor(color);
     }
     
-    @Override
     @Kapi
+    @Override
     public void setTextOpacity(byte opacity) {
         super.setTextOpacity(opacity);
         if (entity != null) entity.setTextOpacity(opacity);
@@ -247,10 +225,13 @@ public class TextDisplayRender extends TextDisplayData implements Renderable {
         if (entity != null) entity.setAlignment(alignment);
     }
     
+    /**
+     * @return a deep copy of this TextDisplayRender
+     */
     @Kapi
     @Override
     public TextDisplayRender clone() {
-        return new TextDisplayRender(new TextDisplayData(this));
+        return new TextDisplayRender(super.clone());
     }
     
 }
