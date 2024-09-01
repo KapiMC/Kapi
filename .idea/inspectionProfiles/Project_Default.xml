@@ -28,15 +28,21 @@
       <option name="ignoredModules">
         <list>
           <option value="Kapi" />
+          <option value="kapi" />
+          <option value="kapi" />
         </list>
       </option>
       <option name="ignoredPackages">
         <list>
           <option value="com.google.guava:guava:31.1-jre" />
+          <option value="com.google.guava:guava:31.1-jre" />
+          <option value="com.google.code.gson:gson:2.8.0" />
         </list>
       </option>
       <option name="ignoredReasons">
         <list>
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
           <option value="Not exploitable" />
         </list>
       </option>

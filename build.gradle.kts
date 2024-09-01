@@ -1,5 +1,3 @@
-import java.util.*
-
 /*
  * Copyright (c) 2024 Kyren223
  * Licensed under the AGPLv3 license. See LICENSE or https://www.gnu.org/licenses/agpl-3.0 for details.
@@ -94,11 +92,11 @@ publishing.repositories {
 
 tasks {
     signing {
-        val signingKey = System.getenv("GPG_KEY")
-        val signingSecretKey: String =
-            Base64.getEncoder().encodeToString(file("kapi_publishing_keyring.gpg").readBytes())
-        val signingPassword = System.getenv("GPG_PASSPHRASE")
-        useInMemoryPgpKeys(signingKey, signingSecretKey, signingPassword)
+//        useInMemoryPgpKeys(
+//            System.getenv("GPG_KEY"),
+//            Base64.getEncoder().encodeToString(file("kapi_publishing_keyring.gpg").readBytes()),
+//            System.getenv("GPG_PASSPHRASE")
+//        )
         sign(publishing.publications["maven"])
     }
 }
