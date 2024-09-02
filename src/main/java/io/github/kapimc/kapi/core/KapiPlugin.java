@@ -71,7 +71,8 @@ public abstract class KapiPlugin extends JavaPlugin {
      * @since 0.1.0
      */
     @Kapi
-    public abstract void onPluginPreload();
+    public void onPluginPreload() {
+    }
     
     /**
      * Called one server tick after Kapi loads and {@link #onPluginPreload()} finishes.
