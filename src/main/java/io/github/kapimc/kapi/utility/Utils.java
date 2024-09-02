@@ -7,11 +7,11 @@ package io.github.kapimc.kapi.utility;
 
 import io.github.kapimc.kapi.annotations.Kapi;
 import io.github.kapimc.kapi.data.Option;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.jetbrains.annotations.Contract;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 /**
  * A utility class that includes a bunch of useful methods.
@@ -19,91 +19,74 @@ import java.util.regex.PatternSyntaxException;
 @Kapi
 public class Utils {
     
+    private static final Pattern HEX_COLOR_CODE_PATTERN = Pattern.compile("#[0-9A-Fa-f]{6}");
+    
     private Utils() {
         throw new AssertionError("Utils should not be instantiated");
     }
     
     /**
-     * Formats the string to have colors.<br>
-     * Supports the following color codes:
-     * <ul>
-     *     <li>&amp; - converts to {@link ChatColor#COLOR_CHAR} which is '§' </li>
-     *     <li>#[a-fA-F0-9]{6} - converts to hex color codes</li>
-     *     <li>&amp;# - Converts to '#', used to escape hex</li>
-     * </ul>
+     * Formats a string with support for Minecraft color codes.
+     * Uses '&' as the color code prefix.
+     * <p>
+     * For 24-bit color codes, use {@link #col24(String)}.
      *
-     * @param s The string to color
-     * @return The colored string
+     * @param s the string to color
+     * @return the colored string
      */
     @Kapi
     @Contract(pure = true)
     public static String col(String s) {
-        int skip = 0;
+        return ChatColor.translateAlternateColorCodes('&', s);
+    }
+    
+    /**
+     * Formats a string with support for 24-bit color codes.
+     * <p>
+     * Replaces instances of '#DDDDDD' with the corresponding color code.
+     * Where 'D' is a hex digit (0-9, a-f, A-F).
+     *
+     * @param s the string to color
+     * @return the colored string
+     */
+    @Kapi
+    @Contract(pure = true)
+    public static String col24(String s) {
         StringBuilder sb = new StringBuilder();
-        outer:
-        for (int i = 0; i < s.length(); i++) {
-            if (skip > 0) {
-                skip--;
-                continue;
-            }
+        Matcher matcher = HEX_COLOR_CODE_PATTERN.matcher(s);
+        int last = 0;
+        
+        while (matcher.find()) {
+            // Append the string before the color code
+            sb.append(s, last, matcher.start());
             
-            char c = s.charAt(i);
-            Option<Character> nextC = i + 1 < s.length() ? Option.some(s.charAt(i + 1)) : Option.none();
+            String hex = s.substring(matcher.start(), matcher.end());
+            String color = String.valueOf(ChatColor.of(hex));
+            sb.append(color);
             
-            if (nextC.isSomeAnd(next -> next == '#' && c == '&')) {
-                // Escape # after & into just #
-                sb.append('#');
-                skip = 1; // Skip the next character which is the #
-                continue;
-            }
-            
-            if (c == '&') {
-                sb.append(ChatColor.COLOR_CHAR);
-                continue;
-            }
-            
-            if (c == '#') {
-                // Try parsing the hex color
-                char[] hex = new char[6];
-                for (int j = 0; j < 6; j++) {
-                    if (i + j + 1 >= s.length()) {
-                        sb.append(c);
-                        continue outer;
-                    }
-                    char next = s.charAt(i + j + 1);
-                    boolean isDigit = Character.isDigit(next);
-                    boolean isHex = 'a' <= next && next <= 'f' || 'A' <= next && next <= 'F';
-                    if (!isDigit && !isHex) {
-                        sb.append(c);
-                        continue outer;
-                    }
-                    hex[j] = s.charAt(i + j + 1);
-                }
-                String color = net.md_5.bungee.api.ChatColor.of("#" + new String(hex)) + "";
-                sb.append(color);
-            }
-            
-            sb.append(c);
+            last = matcher.end();
         }
+        
+        // Append the remaining string
+        sb.append(s, last, s.length());
+        
         return sb.toString();
     }
     
     /**
-     * Checks if a regex is valid.<br>
-     * Note: may impact performance if used frequently on invalid regexes
-     * due to using exceptions for validation.
+     * Parses a string into an integer.
      *
-     * @param regex The regex to check
-     * @return True if the regex is valid, false otherwise
+     * @param s the string to parse
+     * @return the parsed integer or None if the string is not a valid integer
      */
     @Kapi
     @Contract(pure = true)
-    public static boolean isValidRegex(String regex) {
+    public static Option<Integer> parseInt(String s) {
         try {
-            Pattern.compile(regex);
-            return true;
-        } catch (PatternSyntaxException e) {
-            return false;
+            return Option.some(Integer.parseInt(s));
+        } catch (NumberFormatException e) {
+            return Option.none();
         }
     }
+    
 }
