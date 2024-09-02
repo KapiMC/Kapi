@@ -6,8 +6,8 @@
 package io.github.kapimc.kapi.utility;
 
 import io.github.kapimc.kapi.annotations.Kapi;
-import io.github.kapimc.kapi.data.Option;
 import io.github.kapimc.kapi.core.KapiPlugin;
+import io.github.kapimc.kapi.data.Option;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
@@ -320,6 +320,26 @@ public class TaskBuilder {
     }
     
     /**
+     * Stops the task after the given duration has passed.
+     * Does not count the initial delay, only the intervals.
+     * <p>
+     * The interval will be set to one server tick if it's not already set.
+     * <p>
+     * This is a cancellation point. When used with other cancellation points,
+     * the first one to be reached will stop the task and no further runs will be made.
+     * <p>
+     * Note, internally uses timesRan * intervalInTicks to calculate the total duration.
+     *
+     * @param duration the duration in the given time unit
+     * @param timeUnit the time unit of the duration
+     * @return this, for chaining
+     */
+    @Kapi
+    public TaskBuilder duration(long duration, TimeUnit timeUnit) {
+        return duration(timeUnit.toTicks(duration));
+    }
+    
+    /**
      * Sets the condition to check before each run of the task.
      * <p>
      * The interval will be set to one server tick if it's not already set.
@@ -407,6 +427,9 @@ public class TaskBuilder {
             if (onFinish != null) {
                 onFinish.accept(this);
             }
+            TaskBuilder.create(task -> {
+            
+            }).interval(20, TimeUnit.SECONDS).schedule();
         }
         
         @Override

@@ -44,7 +44,7 @@ public interface KapiTask {
     
     /**
      * Cancels this task. No further tasks will be run.
-     * Calls <code>onFinish()</code> if it exists.
+     * Calls {@code onFinish()} if it exists.
      * <p>
      * Calling this on an already cancelled task has no effect.
      */
