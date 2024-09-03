@@ -67,11 +67,11 @@ public abstract class KapiPlugin extends JavaPlugin {
      * For initializations, it's recommended to use {@link #onPluginLoad()} instead of this method,
      * this is due to how Bukkit/Spigot works, some methods like {@link Bukkit#broadcastMessage(String)}
      * will not work if called in the onEnable method.
-     *
-     * @since 0.1.0
      */
     @Kapi
     public void onPluginPreload() {
+        // Default implementation does nothing
+        // If users need this, they can override this method
     }
     
     /**
@@ -90,8 +90,8 @@ public abstract class KapiPlugin extends JavaPlugin {
     public abstract void onPluginUnload();
     
     /**
-     * @return The instance of the plugin
-     * @throws IllegalStateException If the plugin has not been enabled yet
+     * @return the instance of the plugin
+     * @throws IllegalStateException if the plugin has not been enabled yet
      */
     @Kapi
     public static KapiPlugin get() {
@@ -102,9 +102,9 @@ public abstract class KapiPlugin extends JavaPlugin {
     }
     
     /**
-     * Registers the given listener.
+     * Registers the given event listener.
      *
-     * @param listener An instance of a class that implements Listener
+     * @param listener an instance of a class that implements {@link Listener}
      */
     @Kapi
     public void registerEvent(Listener listener) {
@@ -112,11 +112,11 @@ public abstract class KapiPlugin extends JavaPlugin {
     }
     
     /**
-     * Registers a command.
+     * Registers a Minecraft command.
      *
-     * @param name      The name of the command
-     * @param executor  The executor for the command
-     * @param completer The tab completer for the command or null for no tab completer
+     * @param name      the name of the command
+     * @param executor  the executor for the command
+     * @param completer the tab completer for the command or null
      */
     @Kapi
     public void registerCommand(String name, CommandExecutor executor, @Nullable TabCompleter completer) {

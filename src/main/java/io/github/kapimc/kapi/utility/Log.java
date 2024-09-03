@@ -74,7 +74,7 @@ public final class Log {
     }
     
     /**
-     * @return The current log level
+     * @return the current log level
      */
     @Kapi
     public static Level getLevel() {
@@ -85,7 +85,7 @@ public final class Log {
      * The minimum log level to log messages.
      * Messages with a lower log level will not be logged.
      *
-     * @param level The log level to set
+     * @param level the log level to set
      */
     @Kapi
     public static void setLevel(Level level) {
@@ -96,8 +96,8 @@ public final class Log {
      * Logs the message to the console with the given level
      * if the level is higher or equal to the current log level.
      *
-     * @param level   The log level to log the message with
-     * @param message The message to log
+     * @param level   the log level to log the message with
+     * @param message the message to log
      */
     @Kapi
     public static void log(Level level, String message) {
@@ -113,8 +113,8 @@ public final class Log {
      * <p>
      * This method uses the server's {@code broadcastMessage} API.
      *
-     * @param level   The log level to broadcast the message with
-     * @param message The message to broadcast
+     * @param level   the log level to broadcast the message with
+     * @param message the message to broadcast
      */
     @Kapi
     public static void broadcast(Level level, String message) {
@@ -127,9 +127,9 @@ public final class Log {
      * <p>
      * Supports color codes such as &amp;c for red.
      *
-     * @param level   The log level to broadcast the message with
-     * @param message The message to broadcast
-     * @param senders The senders to broadcast the message to
+     * @param level   the log level to broadcast the message with
+     * @param message the message to broadcast
+     * @param senders the senders to broadcast the message to
      */
     @Kapi
     public static void message(Level level, String message, CommandSender... senders) {
