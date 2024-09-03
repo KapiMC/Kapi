@@ -26,7 +26,7 @@ import java.util.function.Supplier;
  * @param <E> the type of the Err value
  */
 @Kapi
-public class Result<T, E> {
+public final class Result<T, E> {
     
     // Assumptions:
     // if err == null -> Ok variant

@@ -21,7 +21,7 @@ import io.github.kapimc.kapi.annotations.Kapi;
  * } </pre>
  */
 @Kapi
-public class UnsafeUnwrapException extends RuntimeException {
+public final class UnsafeUnwrapException extends RuntimeException {
     
     /**
      * Creates a new UnsafeUnwrapException with the given message.

@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  * A utility class that includes a bunch of useful methods.
  */
 @Kapi
-public class Utils {
+public final class Utils {
     
     private static final Pattern HEX_COLOR_CODE_PATTERN = Pattern.compile("#[0-9A-Fa-f]{6}");
     

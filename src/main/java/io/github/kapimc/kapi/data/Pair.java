@@ -17,7 +17,7 @@ import java.util.Objects;
  * @param <U> The second object
  */
 @Kapi
-public class Pair<T extends @Nullable Object, U extends @Nullable Object> {
+public final class Pair<T extends @Nullable Object, U extends @Nullable Object> {
     
     private T first;
     private U second;

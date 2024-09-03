@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * Utility class for cryptographic operations.
  */
 @Kapi
-public class CryptoUtils {
+public final class CryptoUtils {
     
     private CryptoUtils() {
         throw new AssertionError("CryptoUtils should not be instantiated");

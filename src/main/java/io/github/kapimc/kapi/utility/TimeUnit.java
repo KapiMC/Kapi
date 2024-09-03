@@ -18,6 +18,7 @@ import io.github.kapimc.kapi.annotations.Kapi;
  */
 @Kapi
 public enum TimeUnit {
+    
     /**
      * The smallest unit of time in Minecraft, equivalent to 0.05 {@link #SECONDS}.
      * Everything else is based on this unit.

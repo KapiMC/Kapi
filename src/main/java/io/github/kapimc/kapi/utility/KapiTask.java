@@ -16,7 +16,7 @@ import org.bukkit.scheduler.BukkitTask;
  * To create tasks, use {@link TaskBuilder}.
  */
 @Kapi
-public interface KapiTask {
+public sealed interface KapiTask permits TaskBuilder.KapiTaskImpl {
     
     /**
      * @return a unique task id, as returned by {@link BukkitTask#getTaskId()},

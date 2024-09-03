@@ -12,7 +12,7 @@ import org.bukkit.util.Transformation;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-public abstract class DisplayData {
+public sealed abstract class DisplayData permits BlockDisplayData, ItemDisplayData, TextDisplayData {
     
     private Transformation transformation;
     private int interpolationDuration;

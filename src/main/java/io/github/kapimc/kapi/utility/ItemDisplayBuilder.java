@@ -15,7 +15,7 @@ import org.jspecify.annotations.Nullable;
  * A builder for {@link ItemDisplayData}.
  */
 @Kapi
-public class ItemDisplayBuilder extends DisplayBuilder<ItemDisplayBuilder> {
+public final class ItemDisplayBuilder extends DisplayBuilder<ItemDisplayBuilder> {
     
     private @Nullable ItemStack item;
     private ItemDisplay.ItemDisplayTransform itemDisplayTransform;

@@ -15,7 +15,7 @@ import org.bukkit.command.CommandSender;
  * A utility class that includes a bunch of useful methods for logging messages.
  */
 @Kapi
-public class Log {
+public final class Log {
     
     /**
      * Represents the different log levels.

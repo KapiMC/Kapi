@@ -5,9 +5,9 @@
 
 package io.github.kapimc.kapi.data;
 
-import io.github.kapimc.kapi.utility.TextDisplayBuilder;
 import io.github.kapimc.kapi.annotations.Kapi;
 import io.github.kapimc.kapi.engine.renderable.TextDisplayRender;
+import io.github.kapimc.kapi.utility.TextDisplayBuilder;
 import org.bukkit.Color;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.TextDisplay;
@@ -20,7 +20,7 @@ import org.jspecify.annotations.Nullable;
  * See {@link TextDisplayRender} for rendering text displays.
  */
 @Kapi
-public class TextDisplayData extends DisplayData {
+public non-sealed class TextDisplayData extends DisplayData {
     
     private @Nullable String text;
     private int lineWidth;

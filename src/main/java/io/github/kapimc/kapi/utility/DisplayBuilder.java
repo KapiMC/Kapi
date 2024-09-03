@@ -14,7 +14,8 @@ import org.joml.AxisAngle4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-public abstract class DisplayBuilder<T extends DisplayBuilder<T>> {
+public sealed abstract class DisplayBuilder<T extends DisplayBuilder<T>>
+    permits BlockDisplayBuilder, ItemDisplayBuilder, TextDisplayBuilder {
     
     protected Transformation transformation;
     protected int interpolationDuration;

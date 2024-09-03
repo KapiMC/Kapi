@@ -17,7 +17,7 @@ import org.joml.Math;
  * Make sure to check JOML's {@link Math} library and Java's {@link java.lang.Math} library.
  */
 @Kapi
-public class Mathf {
+public final class Mathf {
     
     private Mathf() {
         throw new AssertionError("Mathf should not be instantiated");

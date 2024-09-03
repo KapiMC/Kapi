@@ -5,8 +5,8 @@
 
 package io.github.kapimc.kapi.data;
 
-import io.github.kapimc.kapi.utility.ParticleBuilder;
 import io.github.kapimc.kapi.annotations.Kapi;
+import io.github.kapimc.kapi.utility.ParticleBuilder;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -20,7 +20,7 @@ import org.jspecify.annotations.Nullable;
  * Use {@link ParticleBuilder} to easily create this class.
  */
 @Kapi
-public class ParticleData {
+public final class ParticleData {
     
     private static final String PARTICLE_IS_NOT_REDSTONE = "Particle is not REDSTONE";
     private Particle particle;

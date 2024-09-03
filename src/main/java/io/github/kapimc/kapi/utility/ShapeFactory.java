@@ -18,7 +18,7 @@ import java.util.List;
  * A factory for creating various shapes as a list of Vector points.
  */
 @Kapi
-public class ShapeFactory {
+public final class ShapeFactory {
     
     private ShapeFactory() {
         throw new AssertionError("ShapeFactory should not be instantiated");

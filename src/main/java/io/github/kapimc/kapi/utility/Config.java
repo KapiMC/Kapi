@@ -18,7 +18,7 @@ import java.util.function.Consumer;
  * A utility class for working with config (YAML) files.
  */
 @Kapi
-public class Config {
+public final class Config {
     
     private Config() {
         throw new AssertionError("Documents should not be instantiated");

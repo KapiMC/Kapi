@@ -21,7 +21,7 @@ import java.util.function.Predicate;
  * A builder for easy creation and scheduling of bukkit tasks.
  */
 @Kapi
-public class TaskBuilder {
+public final class TaskBuilder {
     
     private @Nullable Consumer<KapiTask> task;
     private boolean isAsync;
@@ -379,7 +379,7 @@ public class TaskBuilder {
     
     // --- Private ---
     
-    private static class KapiTaskImpl implements KapiTask {
+    static final class KapiTaskImpl implements KapiTask {
         private final @Nullable Consumer<KapiTask> onFinish;
         private final long delay;
         private final Option<Long> interval;

@@ -13,7 +13,7 @@ import org.bukkit.block.data.BlockData;
  * A builder for {@link BlockDisplayData}.
  */
 @Kapi
-public class BlockDisplayBuilder extends DisplayBuilder<BlockDisplayBuilder> {
+public final class BlockDisplayBuilder extends DisplayBuilder<BlockDisplayBuilder> {
     
     private final BlockData block;
     

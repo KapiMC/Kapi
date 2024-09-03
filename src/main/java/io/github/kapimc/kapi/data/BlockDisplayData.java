@@ -6,8 +6,8 @@
 package io.github.kapimc.kapi.data;
 
 import io.github.kapimc.kapi.annotations.Kapi;
-import io.github.kapimc.kapi.utility.BlockDisplayBuilder;
 import io.github.kapimc.kapi.engine.renderable.BlockDisplayRender;
+import io.github.kapimc.kapi.utility.BlockDisplayBuilder;
 import org.bukkit.Color;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Display;
@@ -19,7 +19,7 @@ import org.bukkit.util.Transformation;
  * See {@link BlockDisplayRender} for rendering block displays.
  */
 @Kapi
-public class BlockDisplayData extends DisplayData {
+public final class BlockDisplayData extends DisplayData {
     
     private BlockData block;
     
