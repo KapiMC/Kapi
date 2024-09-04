@@ -6,7 +6,7 @@ Thank you so much for showing interest in contributing to Kapi!
 Here are a set of instructions and guidelines for contributing code or documentation to the project.
 This document will change over time, so make sure that your contributions still line up with the requirements here before submitting a pull request.
 
-> [!IMPORTANT] License Notice
+> [!IMPORTANT]
 > By contributing to Kapi, you agree that your contributions will be licensed under
 > the [GNU Affero General Public License v3.0 (AGPLv3)](https://opensource.org/licenses/agpl-v3).
 > This ensures that all contributions remain free and open-source.
