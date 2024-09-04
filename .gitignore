@@ -1,8 +1,6 @@
 # Gradle
-gradle/
 .gradle/
 build/
-!gradle/wrapper/gradle-wrapper.properties
 
 # IntelliJ
 .idea/*
