@@ -6,6 +6,11 @@ Thank you so much for showing interest in contributing to Kapi!
 Here are a set of instructions and guidelines for contributing code or documentation to the project.
 This document will change over time, so make sure that your contributions still line up with the requirements here before submitting a pull request.
 
+> [!IMPORTANT] License Notice
+> By contributing to Kapi, you agree that your contributions will be licensed under
+> the [GNU Affero General Public License v3.0 (AGPLv3)](https://opensource.org/licenses/agpl-v3).
+> This ensures that all contributions remain free and open-source.
+
 ## Getting Started
 
 - Check the [Planned Features](https://kapimc.github.io/docs/planned-features) page,
@@ -13,7 +18,7 @@ This document will change over time, so make sure that your contributions still 
 - If you'd like to add a feature that isn't on the roadmap or doesn't have an open issue,
   **PLEASE create a feature request issue** discussing your intentions,
   so any feedback or important information can be given by the team first.  
-  We don't want you wasting time developing a feature or making a change that can't/won't be added.
+  We don't want you to waste time developing a feature or making a change that can't/won't be added.
 
 ### Contribution Checklist
 
@@ -35,13 +40,13 @@ This document will change over time, so make sure that your contributions still 
 
 ### Clone the repo
 
-#### using **IntelliJ**
+#### Using IntelliJ
 
-Go to file -> new -> Project from Version Control and click it.
+Go to file -> new -> Project from Version Control and click it.  
 Make sure "git" is selected and set the URL field to: https://github.com/KapiMC/kapi
 Click "Clone".
 
-#### using **Git**
+#### Using Git
 
 Clone the repo by running:
 
