@@ -22,7 +22,7 @@ import java.util.function.Consumer;
  * See {@link System#entityCollision(Object3D, Consumer)} for more information.
  */
 @Kapi
-public class EntityCollisionEvent {
+public final class EntityCollisionEvent {
     private final Object3D collider;
     private final List<Entity> collidedEntities;
     private final List<LivingEntity> collidedLivingEntities;

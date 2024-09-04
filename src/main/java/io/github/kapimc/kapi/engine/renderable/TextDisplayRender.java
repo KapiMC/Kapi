@@ -5,8 +5,8 @@
 
 package io.github.kapimc.kapi.engine.renderable;
 
-import io.github.kapimc.kapi.data.TextDisplayData;
 import io.github.kapimc.kapi.annotations.Kapi;
+import io.github.kapimc.kapi.data.TextDisplayData;
 import org.bukkit.Color;
 import org.bukkit.World;
 import org.bukkit.entity.Display;
@@ -19,7 +19,7 @@ import org.jspecify.annotations.Nullable;
  * Used to render text displays.
  */
 @Kapi
-public class TextDisplayRender extends TextDisplayData implements Renderable {
+public final class TextDisplayRender extends TextDisplayData implements Renderable {
     
     private @Nullable TextDisplay entity;
     

@@ -19,7 +19,7 @@ import java.util.function.Consumer;
  * and reduces the chance of typos from using strings directly.
  */
 @Kapi
-public class Component {
+public final class Component {
     
     private Component() {
         throw new AssertionError("Component should not be instantiated");

@@ -28,7 +28,7 @@ import java.util.stream.Stream;
  * Represents a 3D object.
  */
 @Kapi
-public class Object3D implements EcsEntity {
+public final class Object3D implements EcsEntity {
     private final World world;
     private final Matrix4f transform;
     private @Nullable Matrix4fc cachedWorldTransform;

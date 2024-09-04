@@ -5,8 +5,8 @@
 
 package io.github.kapimc.kapi.engine.renderable;
 
-import io.github.kapimc.kapi.data.ParticleData;
 import io.github.kapimc.kapi.annotations.Kapi;
+import io.github.kapimc.kapi.data.ParticleData;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
@@ -14,7 +14,7 @@ import org.bukkit.util.Vector;
  * Used for rendering particles.
  */
 @Kapi
-public class ParticleRender implements Renderable {
+public final class ParticleRender implements Renderable {
     
     private ParticleData particle;
     

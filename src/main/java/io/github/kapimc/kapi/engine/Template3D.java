@@ -5,9 +5,9 @@
 
 package io.github.kapimc.kapi.engine;
 
-import io.github.kapimc.kapi.data.Pair;
 import io.github.kapimc.kapi.annotations.Kapi;
 import io.github.kapimc.kapi.data.Option;
+import io.github.kapimc.kapi.data.Pair;
 import io.github.kapimc.kapi.engine.ecs.SystemTrigger;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -23,7 +23,7 @@ import java.util.stream.Stream;
  * Represents a 3D object template.
  */
 @Kapi
-public class Template3D {
+public final class Template3D {
     private final List<Point> points;
     private final HashMap<String,Pair<Matrix4f,Template3D>> children;
     private final HashMap<String,@Nullable Object> components;

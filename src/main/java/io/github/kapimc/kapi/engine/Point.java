@@ -13,7 +13,7 @@ import org.bukkit.util.Vector;
  * Represents a point in 3D space and a renderable object.
  */
 @Kapi
-public class Point {
+public final class Point {
     private double x;
     private double y;
     private double z;

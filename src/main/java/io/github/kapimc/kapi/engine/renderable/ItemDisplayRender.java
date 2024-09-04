@@ -5,8 +5,8 @@
 
 package io.github.kapimc.kapi.engine.renderable;
 
-import io.github.kapimc.kapi.data.ItemDisplayData;
 import io.github.kapimc.kapi.annotations.Kapi;
+import io.github.kapimc.kapi.data.ItemDisplayData;
 import org.bukkit.Color;
 import org.bukkit.World;
 import org.bukkit.entity.Display;
@@ -20,7 +20,7 @@ import org.jspecify.annotations.Nullable;
  * Used to render item displays.
  */
 @Kapi
-public class ItemDisplayRender extends ItemDisplayData implements Renderable {
+public final class ItemDisplayRender extends ItemDisplayData implements Renderable {
     
     private @Nullable ItemDisplay entity;
     

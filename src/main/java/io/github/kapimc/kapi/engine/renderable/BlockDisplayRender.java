@@ -20,7 +20,7 @@ import org.jspecify.annotations.Nullable;
  * Used to render block displays.
  */
 @Kapi
-public class BlockDisplayRender extends BlockDisplayData implements Renderable {
+public final class BlockDisplayRender extends BlockDisplayData implements Renderable {
     
     private @Nullable BlockDisplay entity;
     

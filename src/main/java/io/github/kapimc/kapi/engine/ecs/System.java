@@ -5,10 +5,10 @@
 
 package io.github.kapimc.kapi.engine.ecs;
 
-import io.github.kapimc.kapi.engine.ecs.events.EntityCollisionEvent;
 import io.github.kapimc.kapi.annotations.Kapi;
 import io.github.kapimc.kapi.engine.Object3D;
 import io.github.kapimc.kapi.engine.Template3D;
+import io.github.kapimc.kapi.engine.ecs.events.EntityCollisionEvent;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -42,7 +42,7 @@ import java.util.function.Consumer;
  * see {@link #entityCollision(Object3D, Consumer)} for an example.<br>
  */
 @Kapi
-public class System {
+public final class System {
     
     private System() {
         throw new AssertionError("System should not be instantiated");

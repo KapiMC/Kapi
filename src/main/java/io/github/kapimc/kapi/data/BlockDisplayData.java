@@ -19,7 +19,7 @@ import org.bukkit.util.Transformation;
  * See {@link BlockDisplayRender} for rendering block displays.
  */
 @Kapi
-public final class BlockDisplayData extends DisplayData {
+public non-sealed class BlockDisplayData extends DisplayData {
     
     private BlockData block;
     
