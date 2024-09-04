@@ -1,0 +1,44 @@
+name: Feature Request
+description: Suggest a new feature.
+title: "[Feat]: "
+labels: ["enhancement"]
+assignees:
+  - Kyren223
+body:
+  - type: markdown
+    attributes:
+      value: |
+        *Please add an appropriate title for this feature request.*
+
+        Before suggesting, read the [documentation](https://kapimc.github.io/docs), [planned features](https://kapimc.github.io/docs/planned-features) and search existing [issues](https://github.com/TagStudioDev/TagStudio/issues).
+        Validate that you are using an up-to-date version[^1], your feature might already be implemented!
+        Questions, guidance, and usage goes in [Discord](https://discord.gg/3vcQNZA8zC).
+
+        [^1]: This can mean latest release, pre-release, or git commit.
+  - type: checkboxes
+    attributes:
+      label: Checklist
+      description: Make sure you've checked (and actually did) all of the below.
+      options:
+        - label: I am using an up-to-date version.
+          required: true
+        - label: I have read the [documentation](https://kapimc.github.io/docs).
+          required: true
+        - label: I have read the [planned features](https://kapimc.github.io/docs/planned-features).
+          required: true
+        - label: I have searched existing [issues](https://github.com/TagStudioDev/TagStudio/issues).
+          required: true
+  - type: textarea
+    attributes:
+      label: Description
+      description: Clear and concise description of the problem or missing capability. Attach screenshots if needed, and explain your own use case.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Solution
+      description: Clear and concise description of what you think should happen.
+  - type: textarea
+    attributes:
+      label: Alternatives
+      description: Any considered alternative solutions or workarounds. If undesirable, why?
