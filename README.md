@@ -15,6 +15,9 @@
 
 ---
 
+> [!CAUTION]
+> Kapi is still in early development, **expect to encounter bugs and breaking changes!**
+
 <h3>Demos and Examples can be seen <a href="http://kapimc.github.io/docs/category/demos">Here</a></h3>
 
 # 💡 Why Kapi?
@@ -39,7 +42,7 @@ I built Kapi to solve this problem by offering a "batteries included" framework 
 # Contributing
 
 Contributions are welcome! Please see
-[CONTRIBUTING.md](https://github.com/Kyren223/Kapi/blob/master/CONTRIBUTING.md).  
+[CONTRIBUTING.md](https://github.com/Kyren223/Kapi/blob/master/CONTRIBUTING.md).
 
 You can join the [Discord](https://discord.gg/3vcQNZA8zC) community to discuss the project and ask questions.
 
@@ -53,8 +56,7 @@ Copyright (C) 2024 Kyren223
 
 # Funding
 
-If you would like to contribute financially, consider sponsoring me (Kyren223) 
+If you would like to contribute financially, consider sponsoring me (Kyren223)
 on [Patreon](https://www.patreon.com/Kyren223).
 
 I would love to continue working on Kapi and your support would help me dedicate more time to do so. Thanks!
-
