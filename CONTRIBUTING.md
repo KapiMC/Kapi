@@ -2,20 +2,26 @@
 
 _Last Updated: September 4th, 2024_
 
-Thank you so much for showing interest in contributing to Kapi! Here are a set of instructions and guidelines for contributing code or documentation to the project. This document will change over time, so make sure that your contributions still line up with the requirements here before submitting a pull request.
+Thank you so much for showing interest in contributing to Kapi!
+Here are a set of instructions and guidelines for contributing code or documentation to the project.
+This document will change over time, so make sure that your contributions still line up with the requirements here before submitting a pull request.
 
 ## Getting Started
 
-- Check the [Planned Features](https://kapimc.github.io/docs/planned-features) page, as well as the open [Issues](https://github.com/KapiMC/Kapi/issues) and [Pull Requests](https://github.com/KapiMC/Kapi/pulls).
-- If you'd like to add a feature that isn't on the roadmap or doesn't have an open issue, **PLEASE create a feature request** issue for it discussing your intentions so any feedback or important information can be given by the team first.
-  - We don't want you wasting time developing a feature or making a change that can't/won't be added for any reason ranging from pre-existing refactors to design philosophy differences.
+- Check the [Planned Features](https://kapimc.github.io/docs/planned-features) page,
+  as well as the open [Issues](https://github.com/KapiMC/Kapi/issues) and [Pull Requests](https://github.com/KapiMC/Kapi/pulls).
+- If you'd like to add a feature that isn't on the roadmap or doesn't have an open issue,
+  **PLEASE create a feature request issue** discussing your intentions,
+  so any feedback or important information can be given by the team first.  
+  We don't want you wasting time developing a feature or making a change that can't/won't be added.
 
 ### Contribution Checklist
 
 - I've read the [Planned Features](https://kapimc.github.io/docs/planned-features) page.
 - I've checked the open [Issues](https://github.com/KapiMC/Kapi/issues) and [Pull Requests](https://github.com/KapiMC/Kapi/pulls).
-- **I've created a new issue for my feature _before_ starting to work on it**, or have at least notified others in the relevant existing issue(s) of my intention to work on it.
-- I've set up my development environment.
+- **I've created a new issue for my feature _before_ starting to work on it**,
+  or have at least notified others in the relevant existing issue(s) of my intention to work on it.
+- I've set up my development environment (for code contributions).
 - I've read the [Code Guidelines](#code-guidelines) and/or [Documentation Guidelines](#documentation-guidelines)
 
 ## Creating a Development Environment
@@ -25,19 +31,20 @@ Thank you so much for showing interest in contributing to Kapi! Here are a set o
 - [Java](https://www.java.com/en/download/manual.jsp)
 - [JDK 17](https://adoptium.net/temurin/releases/?version=17) (can be downloaded automatically if using IntelliJ)
 - [Gradle](https://gradle.org/install/) (can be downloaded automatically if using IntelliJ)
-- [IntelliJ](https://www.jetbrains.com/idea/download) (highly recommended but any text editor will work)
+- [IntelliJ](https://www.jetbrains.com/idea/download) (optional, highly recommended)
 
 ### Clone the repo
 
-- **IntelliJ**
+#### using **IntelliJ**
 
 Go to file -> new -> Project from Version Control and click it.
 Make sure "git" is selected and set the URL field to: https://github.com/KapiMC/kapi
 Click "Clone".
 
-- **Manual**
+#### using **Git**
 
 Clone the repo by running:
+
 ```sh
 $ git clone https://github.com/KapiMC/docs.git
 ```
@@ -65,18 +72,21 @@ If gradle successfully compiled the project, the `jar` should be available at `K
 
 ### Style
 
-Most of the style guidelines can be checked, fixed, and enforced via IntelliJ's Code Style Checker.
-Go to Settings -> Editor -> Code Style, make sure "Scheme" is set to "Project"
-Go to Settings -> Editor -> Inspections, make sure "Profile" is set to "Project Default"
+Most of the style guidelines can be checked, fixed, and enforced via IntelliJ's Code Style Checker.  
+Go to Settings -> Editor -> Code Style, make sure "Scheme" is set to "Project".  
+Go to Settings -> Editor -> Inspections, make sure "Profile" is set to "Project Default".
 
 - Do your best to write clear, concise, and modular code.
 - Try to keep a maximum column width of no more than **100** characters, max is 120.
 - Code comments should be used to help describe sections of code that don't speak for themselves.
 - Add the `@Kapi` annotation for anything that is intended to be apart of the public API.
 - Use [Javadoc](https://www.oracle.com/technical-resources/articles/java/javadoc-tool.html) to document any classes, methods, and enums you add.
-- If you're modifying an existing method that does _not_ have a javadoc, you don't _have_ to add a javadoc to it... but it would be pretty cool if you did ;)
+- Javadoc `@param`, `@return` and `@throws` should start with a lowercase letter,
+  Javadoc descriptions should be English sentences starting with a capital letter.
+- If you're modifying an existing method that does _not_ have a javadoc,
+  you don't _have_ to add a javadoc to it... but it would be pretty cool if you did ;)
 - Names (identifiers) should not contain multiple uppercase letters in a row (except for constants which should be SCREAMING_SNAKE_CASE), for example, `Uuid` not `UUID`, `encryptRsaKey` not `encrpyRSAKey`.
-- If it wasn't mentioned above and not enforced by IntelliJ, then stick to Java best practices and common conventions.
+- If something wasn't mentioned above and not enforced by IntelliJ, stick to Java's conventions and best practices.
 
 ### Code Quality
 
@@ -101,4 +111,3 @@ Documentation contributions are contributions to [Kapi's Docs Website](https://k
 - Follow the existing directory structure
 - Provide alt text for all embedded media
 - Use [Title Case](https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case) for markdown headers
-
