@@ -26,12 +26,19 @@ import org.jspecify.annotations.Nullable;
 @Kapi
 public abstract class KapiPlugin extends JavaPlugin {
     
+    /**
+     * The current version of Kapi.
+     * Follows semantic versioning.
+     */
+    @Kapi
+    public static final String VERSION = "0.1.0";
+    
     private static @Nullable KapiPlugin plugin;
     
     @Override
     public final void onEnable() {
         plugin = this;
-        Log.info("Kapi has fully loaded!");
+        Log.info("Enabling Kapi v" + VERSION);
         try {
             onPluginPreload();
         } catch (RuntimeException e) {
@@ -57,7 +64,7 @@ public abstract class KapiPlugin extends JavaPlugin {
             e.printStackTrace();
             Log.warn("Attempting to unload Kapi anyway...");
         }
-        Log.info("Kapi has been unloaded!");
+        Log.info("Disabling Kapi v" + VERSION);
         plugin = null;
     }
     
