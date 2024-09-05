@@ -174,7 +174,7 @@ public final class Option<T> {
     }
     
     /**
-     * Maps an <code>Option&lt;T&gt;</code> to an <code>Option&lt;U&gt;</code>
+     * Maps an {@code Option<T>} to an {@code Option<U>}
      * by applying a function to the contained value (if Some) or returns None (if None).
      *
      * @param mapper the mapper to apply to the Some value
@@ -187,7 +187,7 @@ public final class Option<T> {
     }
     
     /**
-     * Arguments passed to <code>mapOr</code> are eagerly evaluated.
+     * Arguments passed to {@code mapOr} are eagerly evaluated.
      * If you are passing the result of a function call,
      * it's recommended to use {@link #mapOrElse(Supplier, Function)} which is lazily evaluated.
      *
@@ -214,7 +214,7 @@ public final class Option<T> {
     }
     
     /**
-     * Arguments passed to <code>and</code> are eagerly evaluated.
+     * Arguments passed to {@code and} are eagerly evaluated.
      * If you are passing the result of a function call,
      * it's recommended to use {@link #andThen(Function)} which is lazily evaluated.
      *
@@ -233,7 +233,7 @@ public final class Option<T> {
      * @param f   the function to apply to the value contained in this option
      * @param <U> the type of the returned value
      * @return None if the option is None,
-     *     otherwise calls <code>f</code> with the wrapped value and returns the result
+     *     otherwise calls {@code f} with the wrapped value and returns the result
      */
     @Kapi
     public <U> Option<U> andThen(Function<T,Option<U>> f) {
@@ -268,9 +268,9 @@ public final class Option<T> {
     }
     
     /**
-     * Converts the <code>Option&lt;T&gt;</code> to a <code>Result&lt;T, E&gt;</code>,
+     * Converts the {@code Option<T>} to a {@code Result<T, E>},
      * mapping {@link #some(Object)} to {@link Result#ok(Object)} and {@link #none()} to {@link Result#err(Object)}.
-     * Arguments passed to <code>okOr</code> are eagerly evaluated.
+     * Arguments passed to {@code okOr} are eagerly evaluated.
      * If you are passing the result of a function call,
      * it's recommended to use {@link #okOrElse(Supplier)} which is lazily evaluated.
      *
@@ -284,7 +284,7 @@ public final class Option<T> {
     }
     
     /**
-     * Converts the <code>Option&lt;T&gt;</code> to a <code>Result&lt;T, E&gt;</code>,
+     * Converts the {@code Option<T>} to a {@code Result<T, E>},
      * mapping {@link #some(Object)} to {@link Result#ok(Object)} and {@link #none()} to {@link Result#err(Object)}.
      *
      * @param err the function to get the error from if this option is None
@@ -297,7 +297,7 @@ public final class Option<T> {
     }
     
     /**
-     * Arguments passed to <code>or</code> are eagerly evaluated.
+     * Arguments passed to {@code or} are eagerly evaluated.
      * If you are passing the result of a function call,
      * it's recommended to use {@link #orElse(Supplier)} which is lazily evaluated.
      *

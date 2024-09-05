@@ -30,10 +30,10 @@ import java.util.function.Consumer;
  * {@link Template3D#addSystem(SystemTrigger, Consumer)}<br>
  * {@link Object3D#addSystem(SystemTrigger, Consumer)}<br>
  * Example:
- * <pre><code>
+ * <pre>{@code
  *     Template3D template = ...
  *     template.addSystem(SystemTrigger.TICK, System::velocity);
- * </code></pre>
+ * }</pre>
  * Most of the time it's recommended to use {@link SystemTrigger#TICK} as the trigger,
  * as it will be called every tick, but you can also use any other trigger
  * like an interval or event, see {@link SystemTrigger} for more information.<br>

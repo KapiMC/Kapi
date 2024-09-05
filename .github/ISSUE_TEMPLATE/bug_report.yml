@@ -1,7 +1,7 @@
 name: Bug Report
 description: File a bug or issue report.
 title: "[Bug]: "
-labels: ["bug"]
+labels: [ "bug" ]
 assignees:
   - Kyren223
 body:
@@ -51,7 +51,7 @@ body:
   - type: textarea
     attributes:
       label: Steps to Reproduce
-      description: Minimal steps neded for the problem to occur.
+      description: Minimal steps needed for the problem to occur.
       placeholder: |
         1.
         2.

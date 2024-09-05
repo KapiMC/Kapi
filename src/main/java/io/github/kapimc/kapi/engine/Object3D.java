@@ -274,9 +274,8 @@ public final class Object3D implements EcsEntity {
      * @param child     The child's template
      * @param transform The transform of the child relative to this template
      */
-    public void addChild(
-        String name, Template3D child, Matrix4f transform
-    ) {
+    @Kapi
+    public void addChild(String name, Template3D child, Matrix4f transform) {
         Object3D object = child.newInstance(world, transform, this);
         children.put(name, object);
     }

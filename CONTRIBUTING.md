@@ -4,7 +4,8 @@ _Last Updated: September 4th, 2024_
 
 Thank you so much for showing interest in contributing to Kapi!
 Here are a set of instructions and guidelines for contributing code or documentation to the project.
-This document will change over time, so make sure that your contributions still line up with the requirements here before submitting a pull request.
+This document will change over time, so make sure that your contributions still line up with the requirements here
+before submitting a pull request.
 
 > [!IMPORTANT]
 > By contributing to Kapi, you agree that your contributions will be licensed under
@@ -14,7 +15,8 @@ This document will change over time, so make sure that your contributions still 
 ## Getting Started
 
 - Check the [Planned Features](https://kapimc.github.io/docs/planned-features) page,
-  as well as the open [Issues](https://github.com/KapiMC/Kapi/issues) and [Pull Requests](https://github.com/KapiMC/Kapi/pulls).
+  as well as the open [Issues](https://github.com/KapiMC/Kapi/issues)
+  and [Pull Requests](https://github.com/KapiMC/Kapi/pulls).
 - If you'd like to add a feature that isn't on the roadmap or doesn't have an open issue,
   **PLEASE create a feature request issue** discussing your intentions,
   so any feedback or important information can be given by the team first.  
@@ -23,7 +25,8 @@ This document will change over time, so make sure that your contributions still 
 ### Contribution Checklist
 
 - I've read the [Planned Features](https://kapimc.github.io/docs/planned-features) page.
-- I've checked the open [Issues](https://github.com/KapiMC/Kapi/issues) and [Pull Requests](https://github.com/KapiMC/Kapi/pulls).
+- I've checked the open [Issues](https://github.com/KapiMC/Kapi/issues)
+  and [Pull Requests](https://github.com/KapiMC/Kapi/pulls).
 - **I've created a new issue for my feature _before_ starting to work on it**,
   or have at least notified others in the relevant existing issue(s) of my intention to work on it.
 - I've set up my development environment (for code contributions).
@@ -56,22 +59,22 @@ $ git clone https://github.com/KapiMC/docs.git
 
 ### Compiling using IntelliJ
 
-- Make sure IntelliJ has detected the gradle project.
+- Make sure IntelliJ has detected the Gradle project.
 - Run the "Gradle Build" task, it's recommended to set this as your run configuration.
 
-If gradle successfully compiled the project, the `jar` should be available at `Kapi/build/libs/`.
+If Gradle successfully compiled the project, the `jar` should be available at `Kapi/build/libs/`.
 
-### Manually Compiling (Outside of an IDE)
+### Manually Compiling (Outside an IDE)
 
 - **Windows**
 
-  - Run `gradlew.bat build` in command prompt or powershell.
+    - Run `gradlew.bat build` in command prompt or PowerShell.
 
 - **Linux/macOS**
 
-  - Run `gradlew build` in your shell.
+    - Run `gradlew build` in your shell.
 
-If gradle successfully compiled the project, the `jar` should be available at `Kapi/build/libs/`.
+If Gradle successfully compiled the project, the `jar` should be available at `Kapi/build/libs/`.
 
 ## Code Guidelines
 
@@ -84,13 +87,15 @@ Go to Settings -> Editor -> Inspections, make sure "Profile" is set to "Project 
 - Do your best to write clear, concise, and modular code.
 - Try to keep a maximum column width of no more than **100** characters, max is 120.
 - Code comments should be used to help describe sections of code that don't speak for themselves.
-- Add the `@Kapi` annotation for anything that is intended to be apart of the public API.
-- Use [Javadoc](https://www.oracle.com/technical-resources/articles/java/javadoc-tool.html) to document any classes, methods, and enums you add.
+- Add the `@Kapi` annotation for anything that is intended to be a part of the public API.
+- Use [Javadoc](https://www.oracle.com/technical-resources/articles/java/javadoc-tool.html) to document any classes,
+  methods, and enums you add.
 - Javadoc `@param`, `@return` and `@throws` should start with a lowercase letter,
   Javadoc descriptions should be English sentences starting with a capital letter.
-- If you're modifying an existing method that does _not_ have a javadoc,
-  you don't _have_ to add a javadoc to it... but it would be pretty cool if you did ;)
-- Names (identifiers) should not contain multiple uppercase letters in a row (except for constants which should be SCREAMING_SNAKE_CASE), for example, `Uuid` not `UUID`, `encryptRsaKey` not `encrpyRSAKey`.
+- If you're modifying an existing method that does _not_ have a Javadoc,
+  you don't _have_ to add a Javadoc to it... but it would be pretty cool if you did ;)
+- Names (identifiers) should not contain multiple uppercase letters in a row (except for constants which should be
+  SCREAMING_SNAKE_CASE), for example, `Uuid` not `UUID`, `encryptRsaKey` not `encrpyRSAKey`.
 - If something wasn't mentioned above and not enforced by IntelliJ, stick to Java's conventions and best practices.
 
 ### Code Quality
@@ -98,15 +103,17 @@ Go to Settings -> Editor -> Inspections, make sure "Profile" is set to "Project 
 - Avoid nested if statements as much as possible.
 - Use `Log` instead of `System.out.println()` statements.
 - Prefer using `Option` and `Result` over `null` and exceptions.
-- Limit visibility of classe, methods, fields, and variables to the minimum necessary.
+- Limit visibility of classes, methods, fields, and variables to the minimum necessary.
 - Prefer composition over inheritance, only use inheritance when needed, and prefer interfaces over abstract classes.
 - Use design patterns appropriately, don't overuse or misuse them.
 
 #### Git/GitHub Specifics
 
-- Use clear and concise commit messages. If your commit does too much, either consider breaking it up into smaller commits or providing extra detail in the commit description.
+- Use clear and concise commit messages. If your commit does too much, either consider breaking it up into smaller
+  commits or providing extra detail in the commit description.
 - Follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/), use past tense where it makes sense.
-- Pull Requests should have an adequate title and description which clearly outline your intentions and changes/additions. Feel free to provide screenshots, GIFs, or videos, especially for visual changes.
+- Pull Requests should have an adequate title and description which clearly outline your intentions and
+  changes/additions. Feel free to provide screenshots, GIFs, or videos, especially for visual changes.
 
 ## Documentation Guidelines
 
@@ -115,4 +122,4 @@ Documentation contributions are contributions to [Kapi's Docs Website](https://k
 - Use [kebab-case](https://developer.mozilla.org/en-US/docs/Glossary/Kebab_case) for file names
 - Follow the existing directory structure
 - Provide alt text for all embedded media
-- Use [Title Case](https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case) for markdown headers
+- Use [Title Case](https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case) for Markdown headers

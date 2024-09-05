@@ -15,14 +15,20 @@ public enum Visibility {
     /**
      * The object is always visible.
      */
+    @Kapi
     VISIBLE,
+    
     /**
      * The object is always hidden.
      */
+    @Kapi
     HIDDEN,
+    
     /**
-     * The object is visible if its parent is visible and hidden if its parent is hidden.<br>
+     * The object is visible if its parent is visible and hidden if its parent is hidden.
+     * <p>
      * If the object has no parent, it is always visible.
      */
+    @Kapi
     INHERIT,
 }

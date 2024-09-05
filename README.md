@@ -1,3 +1,4 @@
+<!--suppress HtmlDeprecatedAttribute, HtmlDeprecatedAttribute -->mlDeprecatedAttribute -->
 <p align="center">
     <img src="assets/logo.svg" alt="Logo" height="200" align="center">
 </p>
@@ -22,9 +23,12 @@
 
 # 💡 Why Kapi?
 
-As a longtime user of the Spigot API, I became frustrated with how minimal it is. Even basic tasks required too much boilerplate, and every time I started a new project, I found myself copy pasting the same utility functions over and over again.
+As a longtime user of the Spigot API, I became frustrated with how minimal it is. Even basic tasks required too much
+boilerplate, and every time I started a new project, I found myself copy pasting the same utility functions over and
+over again.
 
-I built Kapi to solve this problem by offering a "batteries included" framework that simplifies plugin development, allowing you to build both simple and complex plugins with ease.
+I built Kapi to solve this problem by offering a "batteries included" framework that simplifies plugin development,
+allowing you to build both simple and complex plugins with ease.
 
 # ✨ Features
 
