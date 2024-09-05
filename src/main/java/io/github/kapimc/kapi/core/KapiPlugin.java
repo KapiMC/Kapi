@@ -57,8 +57,8 @@ public abstract class KapiPlugin extends JavaPlugin {
             e.printStackTrace();
             Log.warn("Attempting to unload Kapi anyway...");
         }
-        plugin = null;
         Log.info("Kapi has been unloaded!");
+        plugin = null;
     }
     
     /**
