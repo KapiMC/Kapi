@@ -67,6 +67,10 @@ public final class Object3D implements EcsEntity {
         this.visibility = parent == null ? Visibility.VISIBLE : Visibility.INHERIT;
         template.getChildren().forEach(entry -> {
             Pair<Matrix4f,Template3D> value = entry.getValue();
+            // IntelliJ still doesn't handle Jspecify with generics well
+            // Pair doesn't annotate either of its generics with @Nullable
+            assert value.getFirst() != null;
+            assert value.getSecond() != null;
             Object3D child = value.getSecond().newInstance(world, value.getFirst(), this);
             this.children.put(entry.getKey(), child);
         });
@@ -374,6 +378,10 @@ public final class Object3D implements EcsEntity {
         triggerEvent(SystemTrigger.SPAWN_EVENT);
         triggerEvent(SystemTrigger.SCALE_CHANGED_EVENT);
         for (Pair<SystemTrigger,Consumer<Object3D>> task : tasks) {
+            // IntelliJ still doesn't handle Jspecify with generics well
+            // Pair doesn't annotate either of its generics with @Nullable
+            assert task.getFirst() != null;
+            assert task.getSecond() != null;
             SystemTrigger trigger = task.getFirst();
             Consumer<Object3D> system = task.getSecond();
             assert !trigger.isEvent();

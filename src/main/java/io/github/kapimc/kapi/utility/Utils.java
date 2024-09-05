@@ -27,7 +27,7 @@ public final class Utils {
     
     /**
      * Formats a string with support for Minecraft color codes.
-     * Uses '&' as the color code prefix.
+     * Uses '&amp;' as the color code prefix.
      * <p>
      * For 24-bit color codes, use {@link #col24(String)}.
      *

@@ -230,9 +230,7 @@ public final class Template3D {
      * @return A new Object3D instance
      */
     @Kapi
-    public Object3D newInstance(
-        World world, Matrix4f transform, Object3D parent
-    ) {
+    public Object3D newInstance(World world, Matrix4f transform, Object3D parent) {
         return new Object3D(this, world, transform, parent);
     }
     
