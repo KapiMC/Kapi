@@ -30,6 +30,7 @@ public abstract class KapiPlugin extends JavaPlugin {
     
     @Override
     public final void onEnable() {
+        plugin = this;
         Log.info("Kapi has fully loaded!");
         try {
             onPluginPreload();
