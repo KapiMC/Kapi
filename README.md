@@ -1,4 +1,3 @@
-<!--suppress HtmlDeprecatedAttribute, HtmlDeprecatedAttribute -->mlDeprecatedAttribute -->
 <p align="center">
     <img src="assets/logo.svg" alt="Logo" height="200" align="center">
 </p>
