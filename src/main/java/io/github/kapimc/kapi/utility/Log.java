@@ -48,19 +48,10 @@ public final class Log {
         ERROR,
         ;
         
-        private java.util.logging.Level getJavaLevel() {
-            return switch (this) {
-                case DEBUG -> java.util.logging.Level.FINE;
-                case INFO -> java.util.logging.Level.INFO;
-                case WARN -> java.util.logging.Level.WARNING;
-                case ERROR -> java.util.logging.Level.SEVERE;
-            };
-        }
-        
         private ChatColor getColor() {
             return switch (this) {
                 case DEBUG -> ChatColor.DARK_GREEN;
-                case INFO -> ChatColor.BLUE;
+                case INFO -> ChatColor.WHITE;
                 case WARN -> ChatColor.YELLOW;
                 case ERROR -> ChatColor.RED;
             };
@@ -101,8 +92,30 @@ public final class Log {
      */
     @Kapi
     public static void log(Level level, String message) {
-        if (currentLevel.ordinal() > level.ordinal()) return;
-        KapiPlugin.get().getLogger().log(level.getJavaLevel(), message);
+        if (level.ordinal() < currentLevel.ordinal()) return;
+        String prefix = "[" + KapiPlugin.get().getDescription().getName() + "] ";
+        KapiPlugin.get()
+            .getServer()
+            .getConsoleSender()
+            .sendMessage(prefix + level.getColor() + Utils.col(message));
+    }
+    
+    /**
+     * Broadcasts the message to all players on the server with the given level
+     * if the level is higher or equal to the current log level.
+     * <p>
+     * Supports color codes such as &amp;c for red.
+     *
+     * @param level   the log level to broadcast the message with
+     * @param message the message to broadcast
+     * @param senders the senders to broadcast the message to
+     */
+    @Kapi
+    public static void log(Level level, String message, CommandSender... senders) {
+        if (level.ordinal() < currentLevel.ordinal()) return;
+        for (CommandSender sender : senders) {
+            sender.sendMessage(level.getColor() + Utils.col(message));
+        }
     }
     
     /**
@@ -118,24 +131,8 @@ public final class Log {
      */
     @Kapi
     public static void broadcast(Level level, String message) {
+        if (level.ordinal() < currentLevel.ordinal()) return;
         KapiPlugin.get().getServer().broadcastMessage(level.getColor() + Utils.col(message));
-    }
-    
-    /**
-     * Broadcasts the message to all players on the server with the given level
-     * if the level is higher or equal to the current log level.
-     * <p>
-     * Supports color codes such as &amp;c for red.
-     *
-     * @param level   the log level to broadcast the message with
-     * @param message the message to broadcast
-     * @param senders the senders to broadcast the message to
-     */
-    @Kapi
-    public static void message(Level level, String message, CommandSender... senders) {
-        for (CommandSender sender : senders) {
-            sender.sendMessage(level.getColor() + Utils.col(message));
-        }
     }
     
     /**
@@ -228,49 +225,49 @@ public final class Log {
     
     /**
      * Logs the message to the console with {@link Level#DEBUG},
-     * see {@link Log#message(Level, String, CommandSender...)} for more information.
+     * see {@link Log#log(Level, String, CommandSender...)} for more information.
      *
      * @param message the message to log
      * @param senders the senders to log the message to
      */
     @Kapi
     public static void debug(String message, CommandSender... senders) {
-        message(Level.DEBUG, message, senders);
+        log(Level.DEBUG, message, senders);
     }
     
     /**
      * Logs the message to the console with {@link Level#INFO},
-     * see {@link Log#message(Level, String, CommandSender...)} for more information.
+     * see {@link Log#log(Level, String, CommandSender...)} for more information.
      *
      * @param message the message to log
      * @param senders the senders to log the message to
      */
     @Kapi
     public static void info(String message, CommandSender... senders) {
-        message(Level.INFO, message, senders);
+        log(Level.INFO, message, senders);
     }
     
     /**
      * Logs the message to the console with {@link Level#WARN},
-     * see {@link Log#message(Level, String, CommandSender...)} for more information.
+     * see {@link Log#log(Level, String, CommandSender...)} for more information.
      *
      * @param message the message to log
      * @param senders the senders to log the message to
      */
     @Kapi
     public static void warn(String message, CommandSender... senders) {
-        message(Level.WARN, message, senders);
+        log(Level.WARN, message, senders);
     }
     
     /**
      * Logs the message to the console with {@link Level#ERROR},
-     * see {@link Log#message(Level, String, CommandSender...)} for more information.
+     * see {@link Log#log(Level, String, CommandSender...)} for more information.
      *
      * @param message the message to log
      * @param senders the senders to log the message to
      */
     @Kapi
     public static void error(String message, CommandSender... senders) {
-        message(Level.ERROR, message, senders);
+        log(Level.ERROR, message, senders);
     }
 }
