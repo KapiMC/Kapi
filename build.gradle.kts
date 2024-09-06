@@ -29,6 +29,8 @@ dependencies {
     api("org.jspecify:jspecify:1.0.0")
     api("org.jetbrains:annotations:24.1.0")
     compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.3")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
 }
 
 java.sourceCompatibility = JavaVersion.VERSION_17
@@ -50,6 +52,10 @@ tasks.withType<Javadoc> {
 tasks.shadowJar {
     relocate("dev.triumphteam.gui", "io.github.kapimc.kapi.gui")
     archiveClassifier.set("") // Remove the "-all" suffix jars
+}
+
+tasks.test {
+    useJUnitPlatform() // This tells Gradle to use JUnit 5.
 }
 
 publishing.publications.create<MavenPublication>("maven") {
