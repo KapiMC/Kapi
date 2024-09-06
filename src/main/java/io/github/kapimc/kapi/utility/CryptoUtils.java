@@ -12,6 +12,7 @@ import io.github.kapimc.kapi.data.Result;
 import org.jetbrains.annotations.Contract;
 
 import javax.crypto.*;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
@@ -35,25 +36,44 @@ public final class CryptoUtils {
     }
     
     /**
-     * Constant for RSA.
+     * Constant for RSA, used to generate RSA keys, and encrypt/decrypt/sign/verify.
      */
     @Kapi
     public static final String RSA = "RSA";
     
     /**
-     * Constant for AES.
+     * Constant for AES, used to generate AES keys but not used for encryption/decryption.
+     * <p>
+     * {@link #AES_ENCRYPTION} is used for encryption/decryption.
      */
     @Kapi
     public static final String AES = "AES";
     
     /**
-     * Constant for AES/CBC/PKCS5Padding algorithm.
+     * Constant for AES encryption/decryption.
      */
     @Kapi
-    public static final String AES_CBC_PKCS5PADDING = "AES/CBC/PKCS5Padding";
+    public static final String AES_ENCRYPTION = "AES/GCM/NoPadding";
     
     /**
-     * Constant for SHA-256.
+     * Constant for AES/GCM/NoPadding tag length in bits.
+     */
+    @Kapi
+    public static final int TAG_LENGTH_BITS = 128;
+    
+    /**
+     * <b>This algorithm is apparently deemed insecure and should not be used.</b>
+     * <p>
+     * Constant for AES/CBC/PKCS5Padding algorithm, used for encryption/decryption.
+     *
+     * @deprecated use {@link #AES_ENCRYPTION} instead
+     */
+    @Kapi
+    @Deprecated
+    public static final String AES_ENCRYPTION_OLD = "AES/CBC/PKCS5Padding";
+    
+    /**
+     * Constant for SHA-256, used for string hashing.
      */
     @Kapi
     public static final String SHA_256 = "SHA-256";
@@ -92,16 +112,9 @@ public final class CryptoUtils {
     public static Result<Pair<String,IvParameterSpec>,Exception> encrypt(
         String algorithm, String input, SecretKey key
     ) {
-        try {
-            IvParameterSpec iv = generateIv();
-            Cipher cipher = Cipher.getInstance(algorithm);
-            cipher.init(Cipher.ENCRYPT_MODE, key, iv);
-            byte[] cipherText = cipher.doFinal(input.getBytes());
-            return Result.ok(Pair.of(Base64.getEncoder().encodeToString(cipherText), iv));
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException |
-                 InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
-            return Result.err(e);
-        }
+        IvParameterSpec iv = generateIv();
+        Result<String,Exception> result = encrypt(algorithm, input, key, iv);
+        return result.map(cipherText -> Pair.of(cipherText, iv));
     }
     
     /**
@@ -252,7 +265,7 @@ public final class CryptoUtils {
      * Encrypts a string using the AES algorithm and a secret key.
      * For decryption, use {@link #decryptAes(String, SecretKey, IvParameterSpec)}.
      * <p>
-     * Uses {@link #AES_CBC_PKCS5PADDING} as the algorithm for encryption.
+     * Uses {@link #AES_ENCRYPTION} as the algorithm for encryption.
      *
      * @param input the input string to encrypt
      * @param key   the key to use for encryption
@@ -260,15 +273,16 @@ public final class CryptoUtils {
      */
     @Kapi
     @Contract(pure = true)
-    public static Result<Pair<String,IvParameterSpec>,Exception> encryptAes(String input, SecretKey key) {
-        return encrypt(AES_CBC_PKCS5PADDING, input, key);
+    public static Pair<String,IvParameterSpec> encryptAes(String input, SecretKey key) {
+        IvParameterSpec iv = generateIv();
+        return Pair.of(encryptAes(input, key, iv), iv);
     }
     
     /**
      * Encrypts a string using the AES algorithm and a secret key.
      * For decryption, use {@link #decryptAes(String, SecretKey, IvParameterSpec)}.
      * <p>
-     * Uses {@link #AES_CBC_PKCS5PADDING} as the algorithm for encryption.
+     * Uses {@link #AES_ENCRYPTION} as the algorithm for encryption.
      *
      * @param input the input string to encrypt
      * @param key   the key to use for encryption
@@ -277,15 +291,24 @@ public final class CryptoUtils {
      */
     @Kapi
     @Contract(pure = true)
-    public static Result<String,Exception> encryptAes(String input, SecretKey key, IvParameterSpec iv) {
-        return encrypt(AES_CBC_PKCS5PADDING, input, key, iv);
+    public static String encryptAes(String input, SecretKey key, IvParameterSpec iv) {
+        try {
+            Cipher cipher = Cipher.getInstance(AES_ENCRYPTION);
+            GCMParameterSpec gcmSpec = new GCMParameterSpec(TAG_LENGTH_BITS, iv.getIV());
+            cipher.init(Cipher.ENCRYPT_MODE, key, gcmSpec);
+            byte[] cipherText = cipher.doFinal(input.getBytes(StandardCharsets.UTF_8));
+            return Base64.getEncoder().encodeToString(cipherText);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException |
+                 InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+            throw new AssertionError(e.getMessage());
+        }
     }
     
     /**
      * Decrypts a string using the AES algorithm and a secret key.
      * For encryption, use {@link #encryptAes(String, SecretKey)}.
      * <p>
-     * Uses {@link #AES_CBC_PKCS5PADDING} as the algorithm for decryption.
+     * Uses {@link #AES_ENCRYPTION} as the algorithm for decryption.
      *
      * @param cipherText the cipher text to decrypt
      * @param key        the key to use for decryption
@@ -294,8 +317,18 @@ public final class CryptoUtils {
      */
     @Kapi
     @Contract(pure = true)
-    public static Result<String,Exception> decryptAes(String cipherText, SecretKey key, IvParameterSpec iv) {
-        return decrypt(AES_CBC_PKCS5PADDING, cipherText, key, iv);
+    public static String decryptAes(String cipherText, SecretKey key, IvParameterSpec iv) {
+        try {
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(TAG_LENGTH_BITS, iv.getIV());
+            cipher.init(Cipher.DECRYPT_MODE, key, gcmParameterSpec);
+            byte[] encryptedBytes = Base64.getDecoder().decode(cipherText);
+            byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
+            return new String(decryptedBytes, StandardCharsets.UTF_8);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
+                 InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
+            throw new AssertionError(e.getMessage());
+        }
     }
     
     /**
@@ -410,7 +443,7 @@ public final class CryptoUtils {
         final List<Integer> allowedSizes = List.of(128, 192, 256);
         if (!allowedSizes.contains(size)) {
             String sizes = allowedSizes.stream()
-                .map(java.lang.String::valueOf)
+                .map(String::valueOf)
                 .collect(Collectors.joining(", "));
             throw new IllegalArgumentException("Invalid key size, must be one of " + sizes);
         }
