@@ -57,22 +57,25 @@ Clone the repo by running:
 $ git clone https://github.com/KapiMC/docs.git
 ```
 
-### Compiling using IntelliJ
+### Compiling and Testing using IntelliJ
 
 - Make sure IntelliJ has detected the Gradle project.
-- Run the "Gradle Build" task, it's recommended to set this as your run configuration.
+- To compile, run the `gradle build` task, it's recommended to set this as your run configuration.
+- To test, run the `gradle test` task, it's recommended to set this as your run configuration.
 
 If Gradle successfully compiled the project, the `jar` should be available at `Kapi/build/libs/`.
 
-### Manually Compiling (Outside an IDE)
+### Manually Compiling and Testing (Outside an IDE)
 
 - **Windows**
 
-    - Run `gradlew.bat build` in command prompt or PowerShell.
+    - To compile, run `gradlew.bat build` in command prompt or PowerShell.
+    - To test, run `gradlew.bat test` in command prompt or PowerShell.
 
 - **Linux/macOS**
 
-    - Run `gradlew build` in your shell.
+    - To compile, run `gradlew build` in your shell.
+    - To test, run `gradlew test` in your shell.
 
 If Gradle successfully compiled the project, the `jar` should be available at `Kapi/build/libs/`.
 
@@ -106,6 +109,7 @@ Go to Settings -> Editor -> Inspections, make sure "Profile" is set to "Project 
 - Limit visibility of classes, methods, fields, and variables to the minimum necessary.
 - Prefer composition over inheritance, only use inheritance when needed, and prefer interfaces over abstract classes.
 - Use design patterns appropriately, don't overuse or misuse them.
+- Write tests for your code, or alternatively a Minecraft plugin using the code, to verify it works in-game.
 
 #### Git/GitHub Specifics
 
