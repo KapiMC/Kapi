@@ -124,12 +124,11 @@ public abstract class KapiPlugin extends JavaPlugin {
     /**
      * Registers a Minecraft command.
      *
-     * @param name      the name of the command
-     * @param executor  the executor for the command
-     * @param completer the tab completer for the command or null
+     * @param name     the name of the command
+     * @param executor the executor for the command
      */
     @Kapi
-    public void registerCommand(String name, CommandExecutor executor, @Nullable TabCompleter completer) {
+    public void registerCommand(String name, CommandExecutor executor) {
         PluginCommand command = getCommand(name);
         if (command == null) {
             throw new IllegalArgumentException(
@@ -137,6 +136,24 @@ public abstract class KapiPlugin extends JavaPlugin {
         }
         
         command.setExecutor(executor);
-        if (completer != null) command.setTabCompleter(completer);
+    }
+    
+    /**
+     * Registers a Minecraft command.
+     *
+     * @param name      the name of the command
+     * @param executor  the executor for the command
+     * @param completer the tab completer for the command or null
+     */
+    @Kapi
+    public void registerCommand(String name, CommandExecutor executor, TabCompleter completer) {
+        PluginCommand command = getCommand(name);
+        if (command == null) {
+            throw new IllegalArgumentException(
+                "Command " + name + " does not exist! (did you add it to the plugin.yml file?)");
+        }
+        
+        command.setExecutor(executor);
+        command.setTabCompleter(completer);
     }
 }
