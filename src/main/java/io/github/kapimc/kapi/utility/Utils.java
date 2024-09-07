@@ -9,7 +9,8 @@ package io.github.kapimc.kapi.utility;
 
 import io.github.kapimc.kapi.annotations.Kapi;
 import io.github.kapimc.kapi.data.Option;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 
 import java.util.regex.Matcher;
@@ -31,7 +32,12 @@ public final class Utils {
      * Formats a string with support for Minecraft color codes.
      * Uses '&amp;' as the color code prefix.
      * <p>
-     * For 24-bit color codes, use {@link #col24(String)}.
+     * For 24-bit color support, use the format
+     * {@code &x&R&R&G&G&B&B}, where R, G, B are hex digits (0-9, a-f, A-F)
+     * <p>
+     * Tip: this <a href="https://www.birdflop.com/resources/rgb">website</a> can help you
+     * write the color codes.
+     * This website is not affiliated nor endorsed by Kapi, use it at your own risk.
      *
      * @param s the string to color
      * @return the colored string
@@ -50,9 +56,12 @@ public final class Utils {
      *
      * @param s the string to color
      * @return the colored string
+     * @deprecated use {@link #col(String)} instead, it supports 24-bit color codes
      */
     @Kapi
     @Contract(pure = true)
+    @Deprecated
+    @ApiStatus.ScheduledForRemoval(inVersion = "0.3.0")
     public static String col24(String s) {
         StringBuilder sb = new StringBuilder();
         Matcher matcher = HEX_COLOR_CODE_PATTERN.matcher(s);
