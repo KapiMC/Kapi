@@ -10,6 +10,7 @@ package io.github.kapimc.kapi.utility;
 import io.github.kapimc.kapi.annotations.Kapi;
 import io.github.kapimc.kapi.data.Option;
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 
@@ -46,6 +47,27 @@ public final class Utils {
     @Contract(pure = true)
     public static String col(String s) {
         return ChatColor.translateAlternateColorCodes('&', s);
+    }
+    
+    /**
+     * Converts a Color to a Minecraft-style color code string.
+     * <p>
+     * The format of the output string is {@code &x&R&R&G&G&B&B}, where R, G, B are hex digits (0-9, a-f, A-F).
+     * Can be used in {@link #col(String)} to color a string.
+     *
+     * @param color the color to convert to a string
+     * @return the color code string
+     */
+    @Kapi
+    @Contract(pure = true)
+    public static String colorToString(Color color) {
+        int r1 = color.getRed() / 16;
+        int r2 = color.getRed() % 16;
+        int g1 = color.getGreen() / 16;
+        int g2 = color.getGreen() % 16;
+        int b1 = color.getBlue() / 16;
+        int b2 = color.getBlue() % 16;
+        return String.format("&x&%x%x%x%x%x%x", r1, r2, g1, g2, b1, b2);
     }
     
     /**
@@ -89,12 +111,98 @@ public final class Utils {
      *
      * @param s the string to parse
      * @return the parsed integer or None if the string is not a valid integer
+     * @see Integer#parseInt(String)
      */
     @Kapi
     @Contract(pure = true)
     public static Option<Integer> parseInt(String s) {
         try {
             return Option.some(Integer.parseInt(s));
+        } catch (NumberFormatException e) {
+            return Option.none();
+        }
+    }
+    
+    /**
+     * Parses a string into an integer.
+     * <p>
+     * The radix indicates the base of the number, for example,
+     * 0-9 for base 10, 0/1 for base 2, 0-9/A-F for base 16, etc.
+     *
+     * @param s     the string to parse
+     * @param radix the radix (base) to use while parsing
+     * @return the parsed integer or None if the string is not a valid integer
+     * @see Integer#parseInt(String, int)
+     */
+    @Kapi
+    @Contract(pure = true)
+    public static Option<Integer> parseInt(String s, int radix) {
+        try {
+            return Option.some(Integer.parseInt(s, radix));
+        } catch (NumberFormatException e) {
+            return Option.none();
+        }
+    }
+    
+    /**
+     * Parses a string into a long.
+     *
+     * @param s the string to parse
+     * @return the parsed long or None if the string is not a valid long
+     */
+    @Kapi
+    public static Option<Long> parseLong(String s) {
+        try {
+            return Option.some(Long.parseLong(s));
+        } catch (NumberFormatException e) {
+            return Option.none();
+        }
+    }
+    
+    /**
+     * Parses a string into a long.
+     * <p>
+     * The radix indicates the base of the number, for example,
+     * 0-9 for base 10, 0/1 for base 2, 0-9/A-F for base 16, etc.
+     *
+     * @param s     the string to parse
+     * @param radix the radix (base) to use while parsing
+     * @return the parsed long or None if the string is not a valid long
+     */
+    @Kapi
+    public static Option<Long> parseLong(String s, int radix) {
+        try {
+            return Option.some(Long.parseLong(s, radix));
+        } catch (NumberFormatException e) {
+            return Option.none();
+        }
+    }
+    
+    /**
+     * Parses a string into a double.
+     *
+     * @param s the string to parse
+     * @return the parsed double or None if the string is not a valid double
+     */
+    @Kapi
+    public static Option<Double> parseDouble(String s) {
+        try {
+            return Option.some(Double.parseDouble(s));
+        } catch (NumberFormatException e) {
+            return Option.none();
+        }
+    }
+    
+    /**
+     * Parses a string into a float.
+     *
+     * @param s the string to parse
+     * @return the parsed float or None if the string is not a valid float
+     */
+    @Kapi
+    public static Option<Float> parseFloat(String s) {
+        try {
+            return Option.some(Float.parseFloat(s));
         } catch (NumberFormatException e) {
             return Option.none();
         }
