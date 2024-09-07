@@ -352,4 +352,21 @@ public final class Option<T> {
     public String toString() {
         return value != null ? "Some(" + value + ")" : "None";
     }
+    
+    /**
+     * Converts a runtime exception into an Option.
+     * If the supplier throws an exception, the Option will be None.
+     *
+     * @param supplier the supplier to call
+     * @param <T>      the type of the value returned by the supplier
+     * @return the value returned by the supplier if it doesn't throw an exception, or None if it does
+     */
+    @Kapi
+    public static <T> Option<T> tryCatch(Supplier<T> supplier) {
+        try {
+            return Option.some(supplier.get());
+        } catch (RuntimeException e) {
+            return Option.none();
+        }
+    }
 }

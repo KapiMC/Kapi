@@ -427,4 +427,22 @@ public final class Result<T, E> {
     public String toString() {
         return this.err == null ? "Ok(" + this.ok + ")" : "Err(" + this.err + ")";
     }
+    
+    /**
+     * Converts a runtime exception into a Result.
+     * If the supplier throws an exception, the Result will be Err.
+     *
+     * @param supplier the supplier to call
+     * @param <T>      the type of the value returned by the supplier
+     * @return the value returned by the supplier if it doesn't throw an exception, or Err if it does
+     */
+    @Kapi
+    public static <T> Result<T,RuntimeException> tryCatch(Supplier<T> supplier) {
+        try {
+            return Result.ok(supplier.get());
+        } catch (RuntimeException e) {
+            return Result.err(e);
+        }
+    }
+    
 }
