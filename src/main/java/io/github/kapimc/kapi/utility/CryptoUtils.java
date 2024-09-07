@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2024 Kyren223
- * Licensed under the AGPLv3 license. See LICENSE or https://www.gnu.org/licenses/agpl-3.0 for details.
+ * Licensed under the GPL-3.0 license.
+ * See https://www.gnu.org/licenses/gpl-3.0 for details.
+ * Created for Kapi: https://github.com/kapimc/kapi
  */
 
 package io.github.kapimc.kapi.utility;
@@ -23,7 +25,6 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 /**
  * Utility class for cryptographic operations.

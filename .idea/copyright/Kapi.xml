@@ -1,6 +1,6 @@
 <component name="CopyrightManager">
   <copyright>
-    <option name="notice" value="Copyright (c) &amp;#36;originalComment.match(&quot;Copyright \(c\) (\d+)&quot;, 1, &quot;-&quot;, &quot;&amp;#36;today.year&quot;)&amp;#36;today.year Kyren223&#10;Licensed under the AGPLv3 license. See LICENSE or https://www.gnu.org/licenses/agpl-3.0 for details." />
+    <option name="notice" value="Copyright (c) &amp;#36;originalComment.match(&quot;Copyright \(c\) (\d+)&quot;, 1, &quot;-&quot;, &quot;&amp;#36;today.year&quot;)&amp;#36;today.year Kyren223&#10;Licensed under the GPL-3.0 license.&#10;See https://www.gnu.org/licenses/gpl-3.0 for details.&#10;Created for Kapi: https://github.com/kapimc/kapi" />
     <option name="myName" value="Kapi" />
   </copyright>
 </component>

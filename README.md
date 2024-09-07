@@ -42,22 +42,24 @@ allowing you to build both simple and complex plugins with ease.
 
 **Check the [documentation website](https://kapimc.github.io/docs/) for more information**
 
-# Contributing
+# 🤝 Contributing
 
 Contributions are welcome! Please see
 [CONTRIBUTING.md](https://github.com/Kyren223/Kapi/blob/master/CONTRIBUTING.md).
 
 You can join the [Discord](https://discord.gg/3vcQNZA8zC) community to discuss the project and ask questions.
 
-# License
+# 📝 License
 
-Code is licensed under [AGPLv3](https://opensource.org/licenses/agpl-v3).
+Code (everything in the "src/" directory) is licensed 
+under [GPLv3](https://opensource.org/licenses/gpl-3.0).  
+Copyright (C) 2024 Kyren223
 
 Everything in the "assets/" directory (including the Kapi logo) is licensed
 under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).  
 Copyright (C) 2024 Kyren223
 
-# Funding
+# 🙏 Funding
 
 If you would like to contribute financially, consider sponsoring me (Kyren223)
 on [Patreon](https://www.patreon.com/Kyren223).

@@ -1,10 +1,5 @@
 import java.util.*
 
-/*
- * Copyright (c) 2024 Kyren223
- * Licensed under the AGPLv3 license. See LICENSE or https://www.gnu.org/licenses/agpl-3.0 for details.
- */
-
 plugins {
     id("java-library")
     id("java")
@@ -67,8 +62,8 @@ publishing.publications.create<MavenPublication>("maven") {
         
         licenses {
             license {
-                name.set("AGPLv3 License")
-                url.set("https://www.gnu.org/licenses/agpl-3.0.html")
+                name.set("GPLv3 License")
+                url.set("https://www.gnu.org/licenses/gpl-3.0")
             }
         }
         
