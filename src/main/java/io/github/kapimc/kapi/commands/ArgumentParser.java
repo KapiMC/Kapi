@@ -7,14 +7,13 @@
 
 package io.github.kapimc.kapi.commands;
 
-import io.github.kapimc.kapi.data.Option;
 import io.github.kapimc.kapi.data.Result;
+import io.github.kapimc.kapi.data.TriFunction;
 import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.Parameter;
 import java.util.Deque;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 public interface ArgumentParser<T> {
@@ -23,14 +22,14 @@ public interface ArgumentParser<T> {
     
     Result<T,String> parse(Deque<String> args, CommandSender sender, Parameter parameter);
     
-    List<String> suggest(Deque<String> args, CommandSender sender, Parameter parameter);
+    List<String> suggestions(Deque<String> args, CommandSender sender, Parameter parameter);
     
-    int getPriority();
+    int priority();
     
     static <T> ArgumentParser<T> of(
         Predicate<Deque<String>> canParse,
-        <Deque<String>,Result<T,String>> parse,
-        Function<Deque<String>,List<String>> suggest,
+        TriFunction<Deque<String>,CommandSender,Parameter,Result<T,String>> parse,
+        TriFunction<Deque<String>,CommandSender,Parameter,List<String>> suggest,
         int priority
     ) {
         return new ArgumentParser<>() {
@@ -45,12 +44,12 @@ public interface ArgumentParser<T> {
             }
             
             @Override
-            public List<String> suggest(Deque<String> args, CommandSender sender, Parameter parameter) {
+            public List<String> suggestions(Deque<String> args, CommandSender sender, Parameter parameter) {
                 return suggest.apply(args, sender, parameter);
             }
             
             @Override
-            public int getPriority() {
+            public int priority() {
                 return priority;
             }
         };
