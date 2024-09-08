@@ -7,6 +7,8 @@
 
 package io.github.kapimc.kapi.annotations;
 
+import java.lang.annotation.*;
+
 /**
  * This annotation is used to mark the public interface of Kapi.
  * Do not use this annotation in your own code.
@@ -14,6 +16,14 @@ package io.github.kapimc.kapi.annotations;
  * All code that does not have this annotation is
  * subject to change without notice and may be undocumented.
  */
+@Documented
+@Retention(RetentionPolicy.SOURCE)
+@Target(
+    {
+        ElementType.TYPE, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR,
+        ElementType.FIELD, ElementType.METHOD, ElementType.RECORD_COMPONENT
+    }
+)
 public @interface Kapi {
 
 }

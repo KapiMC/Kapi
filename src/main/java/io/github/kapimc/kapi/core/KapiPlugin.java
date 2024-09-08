@@ -7,11 +7,13 @@
 
 package io.github.kapimc.kapi.core;
 
+import io.github.kapimc.kapi.annotations.Command;
 import io.github.kapimc.kapi.annotations.Kapi;
+import io.github.kapimc.kapi.commands.CommandRecord;
+import io.github.kapimc.kapi.commands.CommandProcessor;
 import io.github.kapimc.kapi.utility.Log;
 import io.github.kapimc.kapi.utility.TaskBuilder;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.event.Listener;
@@ -41,12 +43,15 @@ public abstract class KapiPlugin extends JavaPlugin {
     public final void onEnable() {
         plugin = this;
         Log.info("Enabling Kapi v" + VERSION);
+        
         try {
             onPluginPreload();
         } catch (RuntimeException e) {
             Log.error("An error occurred while preloading the plugin!");
             throw e;
         }
+        
+        // Runs on the next server tick
         TaskBuilder.create(() -> {
             try {
                 onPluginLoad();
@@ -128,7 +133,7 @@ public abstract class KapiPlugin extends JavaPlugin {
      * @param executor the executor for the command
      */
     @Kapi
-    public void registerCommand(String name, CommandExecutor executor) {
+    public void registerCommand(String name, org.bukkit.command.CommandExecutor executor) {
         PluginCommand command = getCommand(name);
         if (command == null) {
             throw new IllegalArgumentException(
@@ -146,7 +151,7 @@ public abstract class KapiPlugin extends JavaPlugin {
      * @param completer the tab completer for the command or null
      */
     @Kapi
-    public void registerCommand(String name, CommandExecutor executor, TabCompleter completer) {
+    public void registerCommand(String name, org.bukkit.command.CommandExecutor executor, TabCompleter completer) {
         PluginCommand command = getCommand(name);
         if (command == null) {
             throw new IllegalArgumentException(
@@ -155,5 +160,16 @@ public abstract class KapiPlugin extends JavaPlugin {
         
         command.setExecutor(executor);
         command.setTabCompleter(completer);
+    }
+    
+    /**
+     * Registers a command.
+     *
+     * @param command an instance of a command class, which must be annotated with {@link Command}
+     */
+    @Kapi
+    public void registerCommand(Object command) {
+        CommandRecord record = CommandProcessor.process(command);
+        registerCommand(record.name(), record::execute, record::suggest);
     }
 }
