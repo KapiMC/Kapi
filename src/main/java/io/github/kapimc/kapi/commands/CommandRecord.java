@@ -23,10 +23,6 @@ public record CommandRecord(Command instance, List<Method> methods) {
     // So we suppress it, can be removed once IntelliJ supports Jspecify's generics
     @SuppressWarnings("DataFlowIssue")
     public void onCommand(CommandSender sender, String[] arguments) {
-        methods.forEach(method -> {
-            Log.debug("Recognized command " + method.getName());
-        });
-        
         Deque<String> args = new ArrayDeque<>(Arrays.asList(arguments));
         List<Pair<Method,List<Object>>> methods = new ArrayList<>();
         
@@ -35,7 +31,10 @@ public record CommandRecord(Command instance, List<Method> methods) {
             List<Object> parsedArgs = new ArrayList<>();
             Deque<String> argsCopy = new ArrayDeque<>(args);
             
-            // TODO: handle CommandSender
+            Class<?> senderClass = method.getParameters()[0].getType();
+            if (!senderClass.isInstance(sender)) {
+                continue;
+            }
             parsedArgs.add(sender);
             
             // Skipping the first parameter, which is the CommandSender
@@ -84,51 +83,10 @@ public record CommandRecord(Command instance, List<Method> methods) {
         }
     }
     
-    public List<String> onTabComplete(CommandSender sender, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, String[] arguments) {
+        Deque<String> args = new ArrayDeque<>(Arrays.asList(arguments));
+        
         return List.of();
-    }
-    
-    private Option<Method> getMethod(CommandSender sender, Deque<String> args) {
-        List<Pair<Method,List<Object>>> methods = new ArrayList<>();
-        
-        for (Method method : this.methods) {
-            final boolean[] canParseMethod = {true};
-            List<Object> parsedArgs = new ArrayList<>();
-            Deque<String> argsCopy = new ArrayDeque<>(args);
-            
-            // TODO: handle CommandSender
-            
-            // Skipping the first parameter, which is the CommandSender
-            for (int i = 1; i < method.getParameterCount(); i++) {
-                Parameter parameter = method.getParameters()[i];
-                ArgumentParser<?> parser = getParser(parameter)
-                    .expect("Failed to get parser for parameter " + parameter.getType().getName());
-                Option<?> option = parser.parse(argsCopy, sender, parameter);
-                option.match(parsedArgs::add, () -> {
-                    canParseMethod[0] = false;
-                });
-                if (!canParseMethod[0]) {
-                    break;
-                }
-            }
-            
-            if (canParseMethod[0]) {
-                methods.add(Pair.of(method, parsedArgs));
-            }
-        }
-        
-        if (methods.isEmpty()) {
-            return Option.none();
-        }
-        
-        methods.sort((a, b) -> compare(a.getFirst(), b.getFirst()));
-        Method method = methods.get(0).getFirst();
-        if (methods.size() > 1 && compare(method, methods.get(1).getFirst()) == 0) {
-            throw new IllegalStateException(
-                "Multiple methods with the same priority. input: " +
-                    String.join(" ", args));
-        }
-        return Option.of(method);
     }
     
     private static int compare(Method m1, Method m2) {
