@@ -7,10 +7,28 @@
 
 package io.github.kapimc.kapi.annotations;
 
+import io.github.kapimc.kapi.commands.ArgumentRegistry;
+import io.github.kapimc.kapi.commands.Command;
+import org.bukkit.command.CommandSender;
+
 import java.lang.annotation.*;
 
+/**
+ * Used to annotate methods within a {@link Command} class to define subcommands.
+ * <p>
+ * For a subcommand to be valid, it must have the following requirements:
+ * <ul>
+ *     <li>It must be annotated with this annotation
+ *     <li>It must be a public method
+ *     <li>It must return nothing (void)
+ *     <li>It must have at least one parameter
+ *     <li>It must have a {@link CommandSender} (or subclass of it) as the first parameter
+ *     <li>All parameters (except the first) must have a type that is registered with {@link ArgumentRegistry}
+ * </ul>
+ */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
+@Kapi
 public @interface SubCommand {
 }

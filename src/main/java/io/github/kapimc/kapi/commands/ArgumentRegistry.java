@@ -9,7 +9,6 @@ package io.github.kapimc.kapi.commands;
 
 import io.github.kapimc.kapi.annotations.Kapi;
 import io.github.kapimc.kapi.data.Option;
-import io.github.kapimc.kapi.data.Result;
 import io.github.kapimc.kapi.utility.Utils;
 import org.jspecify.annotations.Nullable;
 
@@ -88,4 +87,5 @@ public class ArgumentRegistry {
             p -> Option.some("integer"), 10
         ));
     }
+    
 }
