@@ -172,7 +172,10 @@ public abstract class KapiPlugin extends JavaPlugin {
         CommandRecord record = CommandProcessor.process(command);
         registerCommand(
             name,
-            (sender, _cmd, _label, args) -> record.onCommand(sender, args),
+            (sender, _cmd, _label, args) -> {
+                record.onCommand(sender, args);
+                return true;
+            },
             (sender, _cmd, _label, args) -> record.onTabComplete(sender, args)
         );
     }

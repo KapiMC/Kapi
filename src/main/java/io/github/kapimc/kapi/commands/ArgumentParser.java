@@ -7,6 +7,7 @@
 
 package io.github.kapimc.kapi.commands;
 
+import io.github.kapimc.kapi.data.Option;
 import io.github.kapimc.kapi.data.Result;
 import io.github.kapimc.kapi.data.TriFunction;
 import org.bukkit.command.CommandSender;
@@ -14,32 +15,28 @@ import org.bukkit.command.CommandSender;
 import java.lang.reflect.Parameter;
 import java.util.Deque;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public interface ArgumentParser<T> {
     
-    boolean canParse(Deque<String> args);
-    
-    Result<T,String> parse(Deque<String> args, CommandSender sender, Parameter parameter);
+    Option<T> parse(Deque<String> args, CommandSender sender, Parameter parameter);
     
     List<String> suggestions(Deque<String> args, CommandSender sender, Parameter parameter);
     
     int priority();
     
+    Option<String> representation(Parameter parameter);
+    
     static <T> ArgumentParser<T> of(
-        Predicate<Deque<String>> canParse,
-        TriFunction<Deque<String>,CommandSender,Parameter,Result<T,String>> parse,
+        TriFunction<Deque<String>,CommandSender,Parameter,Option<T>> parse,
         TriFunction<Deque<String>,CommandSender,Parameter,List<String>> suggest,
+        Function<Parameter,Option<String>> representation,
         int priority
     ) {
         return new ArgumentParser<>() {
             @Override
-            public boolean canParse(Deque<String> args) {
-                return canParse.test(args);
-            }
-            
-            @Override
-            public Result<T,String> parse(Deque<String> args, CommandSender sender, Parameter parameter) {
+            public Option<T> parse(Deque<String> args, CommandSender sender, Parameter parameter) {
                 return parse.apply(args, sender, parameter);
             }
             
@@ -51,6 +48,11 @@ public interface ArgumentParser<T> {
             @Override
             public int priority() {
                 return priority;
+            }
+            
+            @Override
+            public Option<String> representation(Parameter parameter) {
+                return representation.apply(parameter);
             }
         };
     }

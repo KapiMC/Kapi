@@ -10,6 +10,7 @@ package io.github.kapimc.kapi.commands;
 import io.github.kapimc.kapi.annotations.Kapi;
 import io.github.kapimc.kapi.data.Option;
 import io.github.kapimc.kapi.data.Result;
+import io.github.kapimc.kapi.utility.Utils;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
@@ -76,10 +77,15 @@ public class ArgumentRegistry {
     private void addBuiltInParsers() {
         // TODO: add built-in parsers
         add(String.class, ArgumentParser.of(
-            args -> !args.isEmpty(),
-            (args, sender, parameter) -> Result.ok(args.removeFirst()),
+            (args, sender, parameter) -> Option.of(args.pollFirst()),
             (args, sender, parameter) -> List.of(),
-            0
+            p -> Option.some("text"), 0
+        ));
+        
+        add(int.class, ArgumentParser.of(
+            (args, sender, parameter) -> Option.of(args.pollFirst()).andThen(Utils::parseInt),
+            (args, sender, parameter) -> List.of(),
+            p -> Option.some("integer"), 10
         ));
     }
 }
