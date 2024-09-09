@@ -7,8 +7,8 @@
 
 package io.github.kapimc.kapi.core;
 
-import io.github.kapimc.kapi.annotations.Command;
 import io.github.kapimc.kapi.annotations.Kapi;
+import io.github.kapimc.kapi.commands.Command;
 import io.github.kapimc.kapi.commands.CommandRecord;
 import io.github.kapimc.kapi.commands.CommandProcessor;
 import io.github.kapimc.kapi.utility.Log;
@@ -168,8 +168,12 @@ public abstract class KapiPlugin extends JavaPlugin {
      * @param command an instance of a command class, which must be annotated with {@link Command}
      */
     @Kapi
-    public void registerCommand(Object command) {
+    public void registerCommand(String name, Command command) {
         CommandRecord record = CommandProcessor.process(command);
-        registerCommand(record.name(), record::execute, record::suggest);
+        registerCommand(
+            name,
+            (sender, _cmd, _label, args) -> record.onCommand(sender, args),
+            (sender, _cmd, _label, args) -> record.onTabComplete(sender, args)
+        );
     }
 }

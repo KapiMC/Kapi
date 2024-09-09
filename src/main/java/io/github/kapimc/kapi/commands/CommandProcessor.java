@@ -7,7 +7,6 @@
 
 package io.github.kapimc.kapi.commands;
 
-import io.github.kapimc.kapi.annotations.Command;
 import io.github.kapimc.kapi.annotations.SubCommand;
 import org.bukkit.command.CommandSender;
 
@@ -30,12 +29,8 @@ public class CommandProcessor {
      *                                  than one parameter,
      *                                  or the first parameter is not an instance of {@link CommandSender}
      */
-    public static CommandRecord process(Object instance) {
+    public static CommandRecord process(Command instance) {
         Class<?> commandClass = instance.getClass();
-        if (!commandClass.isAnnotationPresent(Command.class)) {
-            throw new IllegalArgumentException("Class " + commandClass.getName() + " is not annotated with @Command");
-        }
-        Command annotation = commandClass.getAnnotation(Command.class);
         
         List<Method> methods = new ArrayList<>(Arrays.asList(commandClass.getMethods()));
         methods.removeIf(method -> !method.isAnnotationPresent(SubCommand.class));
@@ -55,6 +50,6 @@ public class CommandProcessor {
             }
         }
         
-        return new CommandRecord(annotation.name(), instance, methods);
+        return new CommandRecord(instance, methods);
     }
 }

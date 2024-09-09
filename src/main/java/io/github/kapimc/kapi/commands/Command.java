@@ -5,12 +5,7 @@
  * Created for Kapi: https://github.com/kapimc/kapi
  */
 
-package io.github.kapimc.kapi.annotations;
+package io.github.kapimc.kapi.commands;
 
-import java.lang.annotation.*;
-
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
-public @interface Arg {
+public interface Command {
 }
