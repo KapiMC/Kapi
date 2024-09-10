@@ -42,7 +42,7 @@ public record CommandRecord(Command instance, List<Method> methods) {
                 Parameter parameter = method.getParameters()[i];
                 ArgumentParser<?> parser = getParser(parameter)
                     .expect("Failed to get parser for parameter " + parameter.getType().getName());
-                Option<?> option = parser.parse(argsCopy, sender, parameter);
+                Option<?> option = parser.parse(argsCopy, sender, parameter.getAnnotatedType());
                 option.match(parsedArgs::add, () -> {
                     canParseMethod[0] = false;
                 });
@@ -58,8 +58,7 @@ public record CommandRecord(Command instance, List<Method> methods) {
         }
         
         if (methods.isEmpty()) {
-            // TODO: handle no method (show all potential methods)
-            Log.error("No signature matches the input!", sender);
+            instance.onNoMethodMatches(sender, arguments, this.methods);
             return;
         }
         
@@ -90,8 +89,24 @@ public record CommandRecord(Command instance, List<Method> methods) {
     }
     
     private static int compare(Method m1, Method m2) {
+        Class<?> sender1 = m1.getParameters()[0].getType();
+        Class<?> sender2 = m2.getParameters()[0].getType();
+        
+        // Check which sender is more specific.
+        // More specific means if it is a subclass of the other sender
+        boolean isSender1subclass = !sender1.isAssignableFrom(sender2); // is sender1 = sender2 not fine
+        boolean isSender2subclass = !sender2.isAssignableFrom(sender1); // is sender2 = sender1 not fine
+        assert isSender1subclass || isSender2subclass; // both can't be false at the same time
+        if (isSender1subclass != isSender2subclass) {
+            return isSender1subclass ? -1 : 1;
+        }
+        
+        // If they are the same, we check other parameters
         for (int i = 1; i < m1.getParameterCount(); i++) {
             Parameter p1 = m1.getParameters()[i];
+            if (m2.getParameterCount() >= i) {
+                return -1; // We prioritize the first parameter if the second one is missing
+            }
             Parameter p2 = m2.getParameters()[i];
             ArgumentParser<?> parser1 =
                 getParser(p1).expect("Failed to get parser for parameter " + p1.getType().getName());

@@ -10,7 +10,11 @@ package io.github.kapimc.kapi.commands;
 import io.github.kapimc.kapi.annotations.Kapi;
 import io.github.kapimc.kapi.annotations.SubCommand;
 import io.github.kapimc.kapi.data.Result;
+import io.github.kapimc.kapi.utility.Log;
 import org.bukkit.command.CommandSender;
+
+import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * Represents a command, this class should be extended by all commands.
@@ -26,7 +30,7 @@ import org.bukkit.command.CommandSender;
  * This should never happen unless your logic is flawed.
  */
 @Kapi
-public interface Command {
+public abstract class Command {
     
     /**
      * Checks for requirements before the command is executed.
@@ -41,7 +45,20 @@ public interface Command {
      * @return a result containing nothing or an error message if the requirements aren't met
      */
     @Kapi
-    default Result<Void,String> checkRequirements(CommandSender sender) {
+    public Result<Void,String> checkRequirements(CommandSender sender) {
         return Result.ok(null);
+    }
+    
+    public void onNoMethodMatches(CommandSender sender, String[] args, List<Method> methods) {
+        Log.error("No signature matches the input!", sender);
+        reportSignaturesByParameterName(sender, methods);
+    }
+    
+    protected final void reportSignaturesByParameterName(CommandSender sender, List<Method> methods) {
+        // TODO: implement
+    }
+    
+    protected final void reportSignaturesByParserRepresentation(CommandSender sender, List<Method> methods) {
+        // TODO: implement
     }
 }

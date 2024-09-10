@@ -8,41 +8,40 @@
 package io.github.kapimc.kapi.commands;
 
 import io.github.kapimc.kapi.data.Option;
-import io.github.kapimc.kapi.data.Result;
 import io.github.kapimc.kapi.data.TriFunction;
 import org.bukkit.command.CommandSender;
 
+import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Parameter;
 import java.util.Deque;
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 public interface ArgumentParser<T> {
     
-    Option<T> parse(Deque<String> args, CommandSender sender, Parameter parameter);
+    Option<T> parse(Deque<String> args, CommandSender sender, AnnotatedType type);
     
-    List<String> suggestions(Deque<String> args, CommandSender sender, Parameter parameter);
+    List<String> suggestions(Deque<String> args, CommandSender sender, AnnotatedType type);
     
     int priority();
     
     Option<String> representation(Parameter parameter);
     
     static <T> ArgumentParser<T> of(
-        TriFunction<Deque<String>,CommandSender,Parameter,Option<T>> parse,
-        TriFunction<Deque<String>,CommandSender,Parameter,List<String>> suggest,
+        TriFunction<Deque<String>,CommandSender,AnnotatedType,Option<T>> parse,
+        TriFunction<Deque<String>,CommandSender,AnnotatedType,List<String>> suggest,
         Function<Parameter,Option<String>> representation,
         int priority
     ) {
         return new ArgumentParser<>() {
             @Override
-            public Option<T> parse(Deque<String> args, CommandSender sender, Parameter parameter) {
-                return parse.apply(args, sender, parameter);
+            public Option<T> parse(Deque<String> args, CommandSender sender, AnnotatedType type) {
+                return parse.apply(args, sender, type);
             }
             
             @Override
-            public List<String> suggestions(Deque<String> args, CommandSender sender, Parameter parameter) {
-                return suggest.apply(args, sender, parameter);
+            public List<String> suggestions(Deque<String> args, CommandSender sender, AnnotatedType type) {
+                return suggest.apply(args, sender, type);
             }
             
             @Override

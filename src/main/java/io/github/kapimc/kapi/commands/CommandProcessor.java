@@ -17,7 +17,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CommandProcessor {
+public final class CommandProcessor {
+    
+    private CommandProcessor() {
+        throw new AssertionError("CommandProcessor should not be instantiated");
+    }
     
     /**
      * Processes a command class and returns a {@link CommandRecord}.
