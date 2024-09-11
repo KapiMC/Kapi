@@ -76,10 +76,10 @@ public class ArgumentRegistry {
             return Option.some(parsers.get(clazz));
         }
         if (clazz.isArray()) {
-            return Option.some(ArrayArgumentParser.INSTANCE);
+            return Option.some(parsers.get(Object[].class));
         }
         if (clazz.isEnum()) {
-            return Option.some(EnumArgumentParser.INSTANCE);
+            return Option.some(parsers.get(Enum.class));
         }
         return Option.of(parsers.get(clazz));
     }

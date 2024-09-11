@@ -10,9 +10,7 @@ package io.github.kapimc.kapi.commands;
 import io.github.kapimc.kapi.annotations.SubCommand;
 import org.bukkit.command.CommandSender;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Parameter;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,16 +42,56 @@ public final class CommandProcessor {
                 throw new IllegalArgumentException("Method " + method.getName() + " must be public");
             }
             if (method.getParameterCount() < 1) {
-                throw new IllegalArgumentException(
-                    "Method " + method.getName() + " must have at least one parameter");
+                throw new IllegalArgumentException(String.format(
+                    "Method %s must have at least one parameter",
+                    method.getName()
+                ));
             }
-            Parameter parameter = method.getParameters()[0];
-            if (!CommandSender.class.isAssignableFrom(parameter.getType())) {
-                throw new IllegalArgumentException(
-                    "Method " + method.getName() + " must have the first parameter be an instance of CommandSender");
+            Parameter sender = method.getParameters()[0];
+            if (!CommandSender.class.isAssignableFrom(sender.getType())) {
+                throw new IllegalArgumentException(String.format(
+                    "Method %s must have the first parameter be an instance of CommandSender",
+                    method.getName()
+                ));
+            }
+            
+            for (int i = 1; i < method.getParameterCount(); i++) {
+                Parameter parameter = method.getParameters()[i];
+                if (!isRegisteredType(parameter.getAnnotatedType())) {
+                    throw new IllegalArgumentException(String.format(
+                        "Method %s has an unsupported parameter type: %s",
+                        method.getName(), parameter.getType().getName()
+                    ));
+                }
             }
         }
         
         return new CommandRecord(instance, methods);
+    }
+    
+    private static boolean isRegisteredType(AnnotatedType type) {
+        if (type instanceof AnnotatedParameterizedType parameterizedType) {
+            for (AnnotatedType argument : parameterizedType.getAnnotatedActualTypeArguments()) {
+                if (!isRegisteredType(argument)) {
+                    return false;
+                }
+            }
+        } else if (type instanceof AnnotatedArrayType arrayType) {
+            // Arrays are always supported
+            return isRegisteredType(arrayType.getAnnotatedGenericComponentType());//
+        } else if (type instanceof AnnotatedTypeVariable) {
+            return false;
+        } else if (type instanceof AnnotatedWildcardType) {
+            return false;
+        }
+        
+        if (type.getType() instanceof Class<?> clazz) {
+            return isRegisteredClass(clazz);
+        }
+        return false;
+    }
+    
+    private static boolean isRegisteredClass(Class<?> clazz) {
+        return ArgumentRegistry.getInstance().get(clazz).isSome();
     }
 }

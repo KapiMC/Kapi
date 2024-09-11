@@ -36,13 +36,11 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
     
     @Override
     public Option<Object> parse(Deque<String> args, CommandSender sender, AnnotatedType type) {
-        Log.debug("Parsing array argument", sender);
         Class<?> clazz = getClassFromAnnotatedType(type);
         Log.debug("Class is " + clazz.getSimpleName(), sender);
         if (!(type instanceof AnnotatedArrayType arrayType)) {
             return Option.none();
         }
-        Log.debug("Annotated array type", sender);
         AnnotatedType componentType = arrayType.getAnnotatedGenericComponentType();
         Class<?> componentClass = getClassFromAnnotatedType(componentType);
         Log.debug("Component class is " + componentClass.getSimpleName(), sender);
@@ -51,6 +49,7 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
         
         List<Object> parsedArgs = new ArrayList<>();
         while (true) {
+            Log.debug("Pre parse deque: " + String.join(" ", args), sender);
             Option<?> parsedArg = parser.parse(args, sender, componentType);
             if (parsedArg.isNone()) {
                 Log.debug("No more args", sender);
