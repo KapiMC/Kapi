@@ -10,6 +10,7 @@ package io.github.kapimc.kapi.commands.builtin;
 import io.github.kapimc.kapi.annotations.Kapi;
 import io.github.kapimc.kapi.commands.ArgumentParser;
 import io.github.kapimc.kapi.commands.ArgumentRegistry;
+import io.github.kapimc.kapi.commands.ArgumentRepresentation;
 import io.github.kapimc.kapi.data.Option;
 import io.github.kapimc.kapi.utility.Log;
 import org.bukkit.command.CommandSender;
@@ -35,7 +36,7 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
     }
     
     @Override
-    public Option<Object> parse(Deque<String> args, CommandSender sender, AnnotatedType type) {
+    public Option<Object> parse(AnnotatedType type, String paramName, Deque<String> args, CommandSender sender) {
         Class<?> clazz = getClassFromAnnotatedType(type);
         Log.debug("Class is " + clazz.getSimpleName(), sender);
         if (!(type instanceof AnnotatedArrayType arrayType)) {
@@ -50,7 +51,7 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
         List<Object> parsedArgs = new ArrayList<>();
         while (true) {
             Log.debug("Pre parse deque: " + String.join(" ", args), sender);
-            Option<?> parsedArg = parser.parse(args, sender, componentType);
+            Option<?> parsedArg = parser.parse(componentType, paramName, args, sender);
             if (parsedArg.isNone()) {
                 Log.debug("No more args", sender);
                 break;
@@ -70,18 +71,40 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
     }
     
     @Override
-    public List<String> getSuggestions(Deque<String> args, CommandSender sender, AnnotatedType type) {
-        return List.of();
+    public List<String> getSuggestions(
+        AnnotatedType type, String paramName, Deque<String> args, CommandSender sender
+    ) {
+        assert type instanceof AnnotatedArrayType;
+        AnnotatedArrayType arrayType = (AnnotatedArrayType) type;
+        Class<?> componentType = (Class<?>) arrayType.getAnnotatedGenericComponentType().getType();
+        ArgumentParser<?> parser = ArgumentRegistry.getInstance()
+            .get(componentType)
+            .expect("Failed to get parser for component type " + componentType.getName());
+        return parser.getSuggestions(arrayType.getAnnotatedGenericComponentType(), paramName, args, sender);
     }
     
     @Override
     public int getPriority(AnnotatedType type) {
-        return 50;
+        final int DIFFERENCE = 100;
+        assert type instanceof AnnotatedArrayType;
+        AnnotatedArrayType arrayType = (AnnotatedArrayType) type;
+        Class<?> componentType = (Class<?>) arrayType.getAnnotatedGenericComponentType().getType();
+        ArgumentParser<?> parser = ArgumentRegistry.getInstance()
+            .get(componentType)
+            .expect("Failed to get parser for component type " + componentType.getName());
+        return parser.getPriority(arrayType.getAnnotatedGenericComponentType()) - DIFFERENCE;
     }
     
     @Override
-    public Option<String> getRepresentation(Parameter parameter) {
-        return Option.some(parameter.getType().getSimpleName() + "[]");
+    public Option<ArgumentRepresentation> getRepresentation(AnnotatedType type, String paramName) {
+        assert type instanceof AnnotatedArrayType;
+        AnnotatedArrayType arrayType = (AnnotatedArrayType) type;
+        Class<?> componentType = (Class<?>) arrayType.getAnnotatedGenericComponentType().getType();
+        ArgumentParser<?> parser = ArgumentRegistry.getInstance()
+            .get(componentType)
+            .expect("Failed to get parser for component type " + componentType.getName());
+        return parser.getRepresentation(arrayType.getAnnotatedGenericComponentType(), paramName)
+            .map(s -> s.prefix("[").name(s.getName() + "...").suffix("]"));
     }
     
     private static Class<?> getClassFromAnnotatedType(AnnotatedType annotatedType) {

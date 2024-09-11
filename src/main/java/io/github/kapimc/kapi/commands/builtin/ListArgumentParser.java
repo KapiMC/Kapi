@@ -8,6 +8,7 @@
 package io.github.kapimc.kapi.commands.builtin;
 
 import io.github.kapimc.kapi.commands.ArgumentParser;
+import io.github.kapimc.kapi.commands.ArgumentRepresentation;
 import io.github.kapimc.kapi.data.Option;
 import org.bukkit.command.CommandSender;
 
@@ -18,7 +19,8 @@ import java.util.List;
 
 public class ListArgumentParser implements ArgumentParser<List<?>> {
     @Override
-    public Option<List<?>> parse(Deque<String> args, CommandSender sender, AnnotatedType type) {
+    public Option<List<?>> parse(AnnotatedType type, String paramName, Deque<String> args, CommandSender sender) {
+        // TODO: get type name
         return Option.none();
 //        if (!(type instanceof AnnotatedParameterizedType paramType)) {
 //            return Option.none();
@@ -40,7 +42,10 @@ public class ListArgumentParser implements ArgumentParser<List<?>> {
     }
     
     @Override
-    public List<String> getSuggestions(Deque<String> args, CommandSender sender, AnnotatedType type) {
+    public List<String> getSuggestions(
+        AnnotatedType type, String paramName, Deque<String> args, CommandSender sender
+    ) {
+        // TODO: get type name
         return List.of();
     }
     
@@ -50,7 +55,8 @@ public class ListArgumentParser implements ArgumentParser<List<?>> {
     }
     
     @Override
-    public Option<String> getRepresentation(Parameter parameter) {
-        return Option.some("List<" + parameter.getType().getSimpleName() + ">");
+    public Option<ArgumentRepresentation> getRepresentation(AnnotatedType type, String paramName) {
+        // TODO: get type name
+        return Option.some(ArgumentRepresentation.of("TODO"));
     }
 }

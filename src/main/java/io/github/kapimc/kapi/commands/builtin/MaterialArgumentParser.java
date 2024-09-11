@@ -9,6 +9,7 @@ package io.github.kapimc.kapi.commands.builtin;
 
 import io.github.kapimc.kapi.annotations.Kapi;
 import io.github.kapimc.kapi.commands.ArgumentParser;
+import io.github.kapimc.kapi.commands.ArgumentRepresentation;
 import io.github.kapimc.kapi.data.Option;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -42,14 +43,16 @@ public class MaterialArgumentParser implements ArgumentParser<Material> {
     }
     
     @Override
-    public Option<Material> parse(Deque<String> args, CommandSender sender, AnnotatedType type) {
+    public Option<Material> parse(AnnotatedType type, String paramName, Deque<String> args, CommandSender sender) {
         return Option.of(args.peek())
             .andThen(s -> Option.of(Material.matchMaterial(s)))
             .inspect(ignored -> args.pop());
     }
     
     @Override
-    public List<String> getSuggestions(Deque<String> args, CommandSender sender, AnnotatedType type) {
+    public List<String> getSuggestions(
+        AnnotatedType type, String paramName, Deque<String> args, CommandSender sender
+    ) {
         return Stream.of(Material.values())
             .map(Material::name)
             .map(String::toLowerCase)
@@ -62,7 +65,7 @@ public class MaterialArgumentParser implements ArgumentParser<Material> {
     }
     
     @Override
-    public Option<String> getRepresentation(Parameter parameter) {
-        return Option.some("material");
+    public Option<ArgumentRepresentation> getRepresentation(AnnotatedType type, String paramName) {
+        return Option.some(ArgumentRepresentation.of("<", "material", ">"));
     }
 }

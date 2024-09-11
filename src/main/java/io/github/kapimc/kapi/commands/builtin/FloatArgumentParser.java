@@ -9,6 +9,7 @@ package io.github.kapimc.kapi.commands.builtin;
 
 import io.github.kapimc.kapi.annotations.Kapi;
 import io.github.kapimc.kapi.commands.ArgumentParser;
+import io.github.kapimc.kapi.commands.ArgumentRepresentation;
 import io.github.kapimc.kapi.data.Option;
 import io.github.kapimc.kapi.utility.Utils;
 import org.bukkit.command.CommandSender;
@@ -40,12 +41,14 @@ public class FloatArgumentParser implements ArgumentParser<Float> {
     }
     
     @Override
-    public Option<Float> parse(Deque<String> args, CommandSender sender, AnnotatedType type) {
+    public Option<Float> parse(AnnotatedType type, String paramName, Deque<String> args, CommandSender sender) {
         return Option.of(args.peek()).andThen(Utils::parseFloat).inspect(ignored -> args.pop());
     }
     
     @Override
-    public List<String> getSuggestions(Deque<String> args, CommandSender sender, AnnotatedType type) {
+    public List<String> getSuggestions(
+        AnnotatedType type, String paramName, Deque<String> args, CommandSender sender
+    ) {
         return List.of();
     }
     
@@ -55,7 +58,7 @@ public class FloatArgumentParser implements ArgumentParser<Float> {
     }
     
     @Override
-    public Option<String> getRepresentation(Parameter parameter) {
-        return Option.some("number");
+    public Option<ArgumentRepresentation> getRepresentation(AnnotatedType type, String paramName) {
+        return Option.some(ArgumentRepresentation.of("<", "number", ">"));
     }
 }

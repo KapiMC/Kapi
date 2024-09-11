@@ -9,12 +9,11 @@ package io.github.kapimc.kapi.commands.builtin;
 
 import io.github.kapimc.kapi.annotations.Kapi;
 import io.github.kapimc.kapi.commands.ArgumentParser;
+import io.github.kapimc.kapi.commands.ArgumentRepresentation;
 import io.github.kapimc.kapi.data.Option;
-import io.github.kapimc.kapi.utility.Utils;
 import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.AnnotatedType;
-import java.lang.reflect.Parameter;
 import java.util.Deque;
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class BooleanArgumentParser implements ArgumentParser<Boolean> {
     }
     
     @Override
-    public Option<Boolean> parse(Deque<String> args, CommandSender sender, AnnotatedType type) {
+    public Option<Boolean> parse(AnnotatedType type, String paramName, Deque<String> args, CommandSender sender) {
         if (args.peek() == null) {
             return Option.none();
         }
@@ -53,7 +52,9 @@ public class BooleanArgumentParser implements ArgumentParser<Boolean> {
     }
     
     @Override
-    public List<String> getSuggestions(Deque<String> args, CommandSender sender, AnnotatedType type) {
+    public List<String> getSuggestions(
+        AnnotatedType type, String paramName, Deque<String> args, CommandSender sender
+    ) {
         return List.of("true", "false");
     }
     
@@ -63,7 +64,7 @@ public class BooleanArgumentParser implements ArgumentParser<Boolean> {
     }
     
     @Override
-    public Option<String> getRepresentation(Parameter parameter) {
-        return Option.some("true|false");
+    public Option<ArgumentRepresentation> getRepresentation(AnnotatedType type, String paramName) {
+        return Option.some(ArgumentRepresentation.of("<", "true|false", ">"));
     }
 }

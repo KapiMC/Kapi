@@ -11,18 +11,17 @@ import io.github.kapimc.kapi.data.Option;
 import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.AnnotatedType;
-import java.lang.reflect.Parameter;
 import java.util.Deque;
 import java.util.List;
 
 public interface ArgumentParser<T> {
     
-    Option<T> parse(Deque<String> args, CommandSender sender, AnnotatedType type);
+    Option<T> parse(AnnotatedType type, String paramName, Deque<String> args, CommandSender sender);
     
-    List<String> getSuggestions(Deque<String> args, CommandSender sender, AnnotatedType type);
+    List<String> getSuggestions(AnnotatedType type, String paramName, Deque<String> args, CommandSender sender);
     
     int getPriority(AnnotatedType type);
     
-    Option<String> getRepresentation(Parameter parameter);
+    Option<ArgumentRepresentation> getRepresentation(AnnotatedType type, String paramName);
     
 }

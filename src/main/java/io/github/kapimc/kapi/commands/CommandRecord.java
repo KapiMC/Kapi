@@ -42,7 +42,7 @@ public record CommandRecord(Command instance, List<Method> methods) {
                 Parameter parameter = method.getParameters()[i];
                 ArgumentParser<?> parser = getParser(parameter)
                     .expect("Failed to get parser for parameter " + parameter.getType().getName());
-                Option<?> option = parser.parse(argsCopy, sender, parameter.getAnnotatedType());
+                Option<?> option = parser.parse(parameter.getAnnotatedType(), parameter.getName(), argsCopy, sender);
                 option.match(parsedArgs::add, () -> {
                     canParseMethod[0] = false;
                 });
@@ -101,13 +101,16 @@ public record CommandRecord(Command instance, List<Method> methods) {
                     .expect("Failed to get parser for parameter " + parameter.getType().getName());
                 
                 if (argsCopy.isEmpty()) {
-                    completions.addAll(parser.getSuggestions(argsCopy, sender, parameter.getAnnotatedType()));
+                    completions.addAll(
+                        parser.getSuggestions(parameter.getAnnotatedType(), parameter.getName(), argsCopy, sender));
                     break;
                 }
                 Deque<String> argsCopyCopy = new ArrayDeque<>(argsCopy);
-                Option<?> option = parser.parse(argsCopyCopy, sender, parameter.getAnnotatedType());
+                Option<?> option =
+                    parser.parse(parameter.getAnnotatedType(), parameter.getName(), argsCopyCopy, sender);
                 if (option.isNone()) {
-                    completions.addAll(parser.getSuggestions(argsCopy, sender, parameter.getAnnotatedType()));
+                    completions.addAll(
+                        parser.getSuggestions(parameter.getAnnotatedType(), parameter.getName(), argsCopy, sender));
                     break;
                 }
             }

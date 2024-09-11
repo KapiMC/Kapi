@@ -9,6 +9,7 @@ package io.github.kapimc.kapi.commands.builtin;
 
 import io.github.kapimc.kapi.annotations.Kapi;
 import io.github.kapimc.kapi.commands.ArgumentParser;
+import io.github.kapimc.kapi.commands.ArgumentRepresentation;
 import io.github.kapimc.kapi.data.Option;
 import org.bukkit.command.CommandSender;
 
@@ -43,7 +44,7 @@ public class EnumArgumentParser implements ArgumentParser<Enum<?>> {
     }
     
     @Override
-    public Option<Enum<?>> parse(Deque<String> args, CommandSender sender, AnnotatedType type) {
+    public Option<Enum<?>> parse(AnnotatedType type, String paramName, Deque<String> args, CommandSender sender) {
         if (args.peek() == null) {
             return Option.none();
         }
@@ -70,7 +71,9 @@ public class EnumArgumentParser implements ArgumentParser<Enum<?>> {
     }
     
     @Override
-    public List<String> getSuggestions(Deque<String> args, CommandSender sender, AnnotatedType type) {
+    public List<String> getSuggestions(
+        AnnotatedType type, String paramName, Deque<String> args, CommandSender sender
+    ) {
         return getEnumClass(type).map(clazz -> {
             try {
                 Method values = clazz.getMethod("values");
@@ -88,9 +91,9 @@ public class EnumArgumentParser implements ArgumentParser<Enum<?>> {
     }
     
     @Override
-    public Option<String> getRepresentation(Parameter parameter) {
-        // TODO: get enum name
-        return Option.none();
+    public Option<ArgumentRepresentation> getRepresentation(AnnotatedType type, String paramName) {
+        return getEnumClass(type)
+            .map(clazz -> ArgumentRepresentation.of("<", clazz.getSimpleName(), ">"));
     }
     
     private Option<Class<?>> getEnumClass(AnnotatedType type) {
