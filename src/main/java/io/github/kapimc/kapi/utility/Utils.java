@@ -94,7 +94,7 @@ public final class Utils {
             sb.append(s, last, matcher.start());
             
             String hex = s.substring(matcher.start(), matcher.end());
-            String color = String.valueOf(ChatColor.of(hex));
+            String color = String.valueOf(net.md_5.bungee.api.ChatColor.of(hex));
             sb.append(color);
             
             last = matcher.end();
@@ -173,6 +173,40 @@ public final class Utils {
     public static Option<Long> parseLong(String s, int radix) {
         try {
             return Option.some(Long.parseLong(s, radix));
+        } catch (NumberFormatException e) {
+            return Option.none();
+        }
+    }
+    
+    /**
+     * Parses a string into a short.
+     *
+     * @param s the string to parse
+     * @return the parsed short or None if the string is not a valid short
+     */
+    @Kapi
+    public static Option<Short> parseShort(String s) {
+        try {
+            return Option.some(Short.parseShort(s));
+        } catch (NumberFormatException e) {
+            return Option.none();
+        }
+    }
+    
+    /**
+     * Parses a string into a short.
+     * <p>
+     * The radix indicates the base of the number, for example,
+     * 0-9 for base 10, 0/1 for base 2, 0-9/A-F for base 16, etc.
+     *
+     * @param s     the string to parse
+     * @param radix the radix (base) to use while parsing
+     * @return the parsed short or None if the string is not a valid short
+     */
+    @Kapi
+    public static Option<Short> parseShort(String s, int radix) {
+        try {
+            return Option.some(Short.parseShort(s, radix));
         } catch (NumberFormatException e) {
             return Option.none();
         }
