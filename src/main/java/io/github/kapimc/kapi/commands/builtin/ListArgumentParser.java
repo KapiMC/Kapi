@@ -50,7 +50,7 @@ public class ListArgumentParser implements ArgumentParser<List<?>> {
     }
     
     @Override
-    public Option<String> representation(Parameter parameter) {
+    public Option<String> getRepresentation(Parameter parameter) {
         return Option.some("List<" + parameter.getType().getSimpleName() + ">");
     }
 }

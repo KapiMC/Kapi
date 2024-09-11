@@ -21,6 +21,11 @@ import java.util.stream.Collectors;
 
 public class ArrayArgumentParser implements ArgumentParser<Object> {
     
+    public static final ArrayArgumentParser INSTANCE = new ArrayArgumentParser();
+    
+    private ArrayArgumentParser() {
+    }
+    
     @Override
     public Option<Object> parse(Deque<String> args, CommandSender sender, AnnotatedType type) {
         Log.debug("Parsing array argument", sender);
@@ -68,7 +73,7 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
     }
     
     @Override
-    public Option<String> representation(Parameter parameter) {
+    public Option<String> getRepresentation(Parameter parameter) {
         return Option.some(parameter.getType().getSimpleName() + "[]");
     }
     

@@ -8,7 +8,7 @@
 package io.github.kapimc.kapi.commands;
 
 import io.github.kapimc.kapi.annotations.Kapi;
-import io.github.kapimc.kapi.commands.builtin.ArrayArgumentParser;
+import io.github.kapimc.kapi.commands.builtin.*;
 import io.github.kapimc.kapi.data.Option;
 import io.github.kapimc.kapi.utility.Utils;
 import org.jspecify.annotations.Nullable;
@@ -78,36 +78,23 @@ public class ArgumentRegistry {
     }
     
     private void addBuiltInParsers() {
-        // TODO: add built-in parsers
-        add(String.class, ArgumentParser.of(
-            (args, sender, type) -> Option.of(args.pollFirst()),
-            (args, sender, type) -> List.of(),
-            p -> Option.some("text"), 0
-        ));
+        // Built-in simple parsers
+        add(String.class, StringArgumentParser.INSTANCE);
+        add(boolean.class, BooleanArgumentParser.INSTANCE);
+        add(Boolean.class, BooleanArgumentParser.INSTANCE);
+        add(double.class, DoubleArgumentParser.INSTANCE);
+        add(Double.class, DoubleArgumentParser.INSTANCE);
+        add(float.class, FloatArgumentParser.INSTANCE);
+        add(Float.class, FloatArgumentParser.INSTANCE);
+        add(long.class, LongArgumentParser.INSTANCE);
+        add(Long.class, LongArgumentParser.INSTANCE);
+        add(int.class, IntegerArgumentParser.INSTANCE);
+        add(Integer.class, IntegerArgumentParser.INSTANCE);
+        add(short.class, ShortArgumentParser.INSTANCE);
+        add(Short.class, ShortArgumentParser.INSTANCE);
         
-        add(int.class, ArgumentParser.of(
-            (args, sender, type) -> Option.of(args.peek()).andThen(Utils::parseInt).inspect(i -> args.pop()),
-            (args, sender, type) -> List.of(),
-            p -> Option.some("integer"), 200
-        ));
-        add(Integer.class, ArgumentParser.of(
-            (args, sender, type) -> Option.of(args.peek()).andThen(Utils::parseInt).inspect(i -> args.pop()),
-            (args, sender, type) -> List.of(),
-            p -> Option.some("integer"), 200
-        ));
-        
-        add(double.class, ArgumentParser.of(
-            (args, sender, type) -> Option.of(args.pollFirst()).andThen(Utils::parseDouble),
-            (args, sender, type) -> List.of(),
-            p -> Option.some("double"), 100
-        ));
-        add(Double.class, ArgumentParser.of(
-            (args, sender, type) -> Option.of(args.pollFirst()).andThen(Utils::parseDouble),
-            (args, sender, type) -> List.of(),
-            p -> Option.some("double"), 100
-        ));
-        
-        add(Object[].class, new ArrayArgumentParser());
+        // Built-in collection parsers
+        add(Object[].class, ArrayArgumentParser.INSTANCE);
     }
     
 }
