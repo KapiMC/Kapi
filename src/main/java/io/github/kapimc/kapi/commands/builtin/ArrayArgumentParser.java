@@ -18,10 +18,10 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
-public class ArrayArgumentParser implements ArgumentParser<Object[]> {
+public class ArrayArgumentParser implements ArgumentParser<Object> {
     
     @Override
-    public Option<Object[]> parse(Deque<String> args, CommandSender sender, AnnotatedType type) {
+    public Option<Object> parse(Deque<String> args, CommandSender sender, AnnotatedType type) {
         Log.debug("Parsing array argument", sender);
         Class<?> clazz = getClassFromAnnotatedType(type);
         Log.debug("Class is " + clazz.getSimpleName(), sender);
@@ -46,7 +46,7 @@ public class ArrayArgumentParser implements ArgumentParser<Object[]> {
             parsedArgs.add(parsedArg.unwrap());
         }
         
-        Object[] array = (Object[]) Array.newInstance(componentClass, parsedArgs.size());
+        Object array = Array.newInstance(componentClass, parsedArgs.size());
         for (int i = 0; i < parsedArgs.size(); i++) {
             Array.set(array, i, parsedArgs.get(i));
         }
