@@ -83,9 +83,37 @@ public record CommandRecord(Command instance, List<Method> methods) {
     }
     
     public List<String> onTabComplete(CommandSender sender, String[] arguments) {
+        List<String> completions = new ArrayList<>();
         Deque<String> args = new ArrayDeque<>(Arrays.asList(arguments));
         
-        return List.of();
+        for (Method method : this.methods) {
+            Deque<String> argsCopy = new ArrayDeque<>(args);
+            
+            Class<?> senderClass = method.getParameters()[0].getType();
+            if (!senderClass.isInstance(sender)) {
+                continue;
+            }
+            
+            // Skipping the first parameter, which is the CommandSender
+            for (int i = 1; i < method.getParameterCount(); i++) {
+                Parameter parameter = method.getParameters()[i];
+                ArgumentParser<?> parser = getParser(parameter)
+                    .expect("Failed to get parser for parameter " + parameter.getType().getName());
+                
+                if (argsCopy.isEmpty()) {
+                    completions.addAll(parser.getSuggestions(argsCopy, sender, parameter.getAnnotatedType()));
+                    break;
+                }
+                Deque<String> argsCopyCopy = new ArrayDeque<>(argsCopy);
+                Option<?> option = parser.parse(argsCopyCopy, sender, parameter.getAnnotatedType());
+                if (option.isNone()) {
+                    completions.addAll(parser.getSuggestions(argsCopy, sender, parameter.getAnnotatedType()));
+                    break;
+                }
+            }
+        }
+        
+        return completions;
     }
     
     private static int compare(Method m1, Method m2) {

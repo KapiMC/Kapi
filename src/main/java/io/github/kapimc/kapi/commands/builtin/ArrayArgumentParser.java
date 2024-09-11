@@ -58,7 +58,7 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
     }
     
     @Override
-    public List<String> suggestions(Deque<String> args, CommandSender sender, AnnotatedType type) {
+    public List<String> getSuggestions(Deque<String> args, CommandSender sender, AnnotatedType type) {
         return List.of();
     }
     

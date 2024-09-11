@@ -21,7 +21,7 @@ public interface ArgumentParser<T> {
     
     Option<T> parse(Deque<String> args, CommandSender sender, AnnotatedType type);
     
-    List<String> suggestions(Deque<String> args, CommandSender sender, AnnotatedType type);
+    List<String> getSuggestions(Deque<String> args, CommandSender sender, AnnotatedType type);
     
     int getPriority(AnnotatedType type);
     
@@ -40,7 +40,7 @@ public interface ArgumentParser<T> {
             }
             
             @Override
-            public List<String> suggestions(Deque<String> args, CommandSender sender, AnnotatedType type) {
+            public List<String> getSuggestions(Deque<String> args, CommandSender sender, AnnotatedType type) {
                 return suggest.apply(args, sender, type);
             }
             
