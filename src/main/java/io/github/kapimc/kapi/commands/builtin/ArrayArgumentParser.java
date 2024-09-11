@@ -17,6 +17,7 @@ import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ArrayArgumentParser implements ArgumentParser<Object> {
     
@@ -52,6 +53,7 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
         }
         
         Log.debug("Parsed args size: " + parsedArgs.size(), sender);
+        Log.debug("Deque: " + String.join(" ", args), sender);
         return Option.some(array);
     }
     
@@ -61,7 +63,7 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
     }
     
     @Override
-    public int priority() {
+    public int getPriority(AnnotatedType type) {
         return 50;
     }
     

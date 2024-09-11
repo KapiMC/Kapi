@@ -108,12 +108,12 @@ public record CommandRecord(Command instance, List<Method> methods) {
                 return -1; // We prioritize the first parameter if the second one is missing
             }
             Parameter p2 = m2.getParameters()[i];
-            ArgumentParser<?> parser1 =
-                getParser(p1).expect("Failed to get parser for parameter " + p1.getType().getName());
-            ArgumentParser<?> parser2 =
-                getParser(p2).expect("Failed to get parser for parameter " + p2.getType().getName());
+            ArgumentParser<?> parser1 = getParser(p1)
+                .expect("Failed to get parser for parameter " + p1.getType().getName());
+            ArgumentParser<?> parser2 = getParser(p2)
+                .expect("Failed to get parser for parameter " + p2.getType().getName());
             // Flip so the highest priority is first
-            int compare = -(parser1.priority() - parser2.priority());
+            int compare = -(parser1.getPriority(p1.getAnnotatedType()) - parser2.getPriority(p2.getAnnotatedType()));
             if (compare != 0) {
                 return compare;
             }

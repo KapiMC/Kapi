@@ -8,14 +8,11 @@
 package io.github.kapimc.kapi.commands.builtin;
 
 import io.github.kapimc.kapi.commands.ArgumentParser;
-import io.github.kapimc.kapi.commands.ArgumentRegistry;
 import io.github.kapimc.kapi.data.Option;
 import org.bukkit.command.CommandSender;
 
-import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Parameter;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
@@ -48,7 +45,7 @@ public class ListArgumentParser implements ArgumentParser<List<?>> {
     }
     
     @Override
-    public int priority() {
+    public int getPriority(AnnotatedType type) {
         return 50;
     }
     

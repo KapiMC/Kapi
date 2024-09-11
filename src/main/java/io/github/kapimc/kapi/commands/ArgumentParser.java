@@ -23,7 +23,7 @@ public interface ArgumentParser<T> {
     
     List<String> suggestions(Deque<String> args, CommandSender sender, AnnotatedType type);
     
-    int priority();
+    int getPriority(AnnotatedType type);
     
     Option<String> representation(Parameter parameter);
     
@@ -45,7 +45,7 @@ public interface ArgumentParser<T> {
             }
             
             @Override
-            public int priority() {
+            public int getPriority(AnnotatedType type) {
                 return priority;
             }
             

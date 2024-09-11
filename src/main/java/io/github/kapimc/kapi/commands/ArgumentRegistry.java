@@ -86,12 +86,12 @@ public class ArgumentRegistry {
         ));
         
         add(int.class, ArgumentParser.of(
-            (args, sender, type) -> Option.of(args.pollFirst()).andThen(Utils::parseInt),
+            (args, sender, type) -> Option.of(args.peek()).andThen(Utils::parseInt).inspect(i -> args.pop()),
             (args, sender, type) -> List.of(),
             p -> Option.some("integer"), 200
         ));
         add(Integer.class, ArgumentParser.of(
-            (args, sender, type) -> Option.of(args.pollFirst()).andThen(Utils::parseInt),
+            (args, sender, type) -> Option.of(args.peek()).andThen(Utils::parseInt).inspect(i -> args.pop()),
             (args, sender, type) -> List.of(),
             p -> Option.some("integer"), 200
         ));
