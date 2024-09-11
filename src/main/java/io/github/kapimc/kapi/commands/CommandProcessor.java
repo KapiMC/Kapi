@@ -8,6 +8,7 @@
 package io.github.kapimc.kapi.commands;
 
 import io.github.kapimc.kapi.annotations.SubCommand;
+import io.github.kapimc.kapi.utility.Log;
 import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.*;
@@ -76,6 +77,11 @@ public final class CommandProcessor {
                     return false;
                 }
             }
+            if (parameterizedType.getType() instanceof ParameterizedType pType &&
+                pType.getRawType() instanceof Class<?> clazz) {
+                return isRegisteredClass(clazz);
+            }
+            return false;
         } else if (type instanceof AnnotatedArrayType arrayType) {
             // Arrays are always supported
             return isRegisteredType(arrayType.getAnnotatedGenericComponentType());//
@@ -83,12 +89,11 @@ public final class CommandProcessor {
             return false;
         } else if (type instanceof AnnotatedWildcardType) {
             return false;
-        }
-        
-        if (type.getType() instanceof Class<?> clazz) {
+        } else if (type.getType() instanceof Class<?> clazz) {
             return isRegisteredClass(clazz);
+        } else {
+            return false;
         }
-        return false;
     }
     
     private static boolean isRegisteredClass(Class<?> clazz) {

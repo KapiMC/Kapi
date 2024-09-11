@@ -10,7 +10,6 @@ package io.github.kapimc.kapi.commands;
 import io.github.kapimc.kapi.annotations.Kapi;
 import io.github.kapimc.kapi.commands.builtin.*;
 import io.github.kapimc.kapi.data.Option;
-import io.github.kapimc.kapi.utility.Utils;
 import org.bukkit.Material;
 import org.jspecify.annotations.Nullable;
 
@@ -103,6 +102,7 @@ public class ArgumentRegistry {
         
         // Built-in collection parsers
         add(Object[].class, ArrayArgumentParser.INSTANCE);
+        add(List.class, ListArgumentParser.INSTANCE);
         
         // Built-in Minecraft specific parsers
         add(Material.class, MaterialArgumentParser.INSTANCE);

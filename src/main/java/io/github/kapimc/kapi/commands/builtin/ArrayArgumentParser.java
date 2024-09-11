@@ -79,7 +79,7 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
         Class<?> componentType = (Class<?>) arrayType.getAnnotatedGenericComponentType().getType();
         ArgumentParser<?> parser = ArgumentRegistry.getInstance()
             .get(componentType)
-            .expect("Failed to get parser for component type " + componentType.getName());
+            .expect("Failed to get parser for component type " + componentType.getSimpleName());
         return parser.getSuggestions(arrayType.getAnnotatedGenericComponentType(), paramName, args, sender);
     }
     
@@ -91,7 +91,7 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
         Class<?> componentType = (Class<?>) arrayType.getAnnotatedGenericComponentType().getType();
         ArgumentParser<?> parser = ArgumentRegistry.getInstance()
             .get(componentType)
-            .expect("Failed to get parser for component type " + componentType.getName());
+            .expect("Failed to get parser for component type " + componentType.getSimpleName());
         return parser.getPriority(arrayType.getAnnotatedGenericComponentType()) - DIFFERENCE;
     }
     
@@ -102,7 +102,7 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
         Class<?> componentType = (Class<?>) arrayType.getAnnotatedGenericComponentType().getType();
         ArgumentParser<?> parser = ArgumentRegistry.getInstance()
             .get(componentType)
-            .expect("Failed to get parser for component type " + componentType.getName());
+            .expect("Failed to get parser for component type " + componentType.getSimpleName());
         return parser.getRepresentation(arrayType.getAnnotatedGenericComponentType(), paramName)
             .map(s -> s.prefix("[").name(s.getName() + "...").suffix("]"));
     }
