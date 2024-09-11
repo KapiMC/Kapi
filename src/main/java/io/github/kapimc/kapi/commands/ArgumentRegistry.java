@@ -71,8 +71,14 @@ public class ArgumentRegistry {
     }
     
     public Option<ArgumentParser<?>> get(Class<?> clazz) {
+        if (parsers.containsKey(clazz)) {
+            return Option.some(parsers.get(clazz));
+        }
         if (clazz.isArray()) {
-            return Option.some(parsers.get(Object[].class));
+            return Option.some(ArrayArgumentParser.INSTANCE);
+        }
+        if (clazz.isEnum()) {
+            return Option.some(EnumArgumentParser.INSTANCE);
         }
         return Option.of(parsers.get(clazz));
     }
@@ -92,9 +98,12 @@ public class ArgumentRegistry {
         add(Integer.class, IntegerArgumentParser.INSTANCE);
         add(short.class, ShortArgumentParser.INSTANCE);
         add(Short.class, ShortArgumentParser.INSTANCE);
+        add(Enum.class, EnumArgumentParser.INSTANCE);
         
         // Built-in collection parsers
         add(Object[].class, ArrayArgumentParser.INSTANCE);
+        
+        // Built-in complex parsers
     }
     
 }
