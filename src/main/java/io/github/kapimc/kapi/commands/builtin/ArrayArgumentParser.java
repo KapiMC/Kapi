@@ -7,6 +7,7 @@
 
 package io.github.kapimc.kapi.commands.builtin;
 
+import io.github.kapimc.kapi.annotations.Kapi;
 import io.github.kapimc.kapi.commands.ArgumentParser;
 import io.github.kapimc.kapi.commands.ArgumentRegistry;
 import io.github.kapimc.kapi.data.Option;
@@ -17,10 +18,17 @@ import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
-import java.util.stream.Collectors;
 
+/**
+ * Argument parser for arrays of any type.
+ */
+@Kapi
 public class ArrayArgumentParser implements ArgumentParser<Object> {
     
+    /**
+     * The singleton instance of this parser.
+     */
+    @Kapi
     public static final ArrayArgumentParser INSTANCE = new ArrayArgumentParser();
     
     private ArrayArgumentParser() {

@@ -11,6 +11,7 @@ import io.github.kapimc.kapi.annotations.Kapi;
 import io.github.kapimc.kapi.commands.builtin.*;
 import io.github.kapimc.kapi.data.Option;
 import io.github.kapimc.kapi.utility.Utils;
+import org.bukkit.Material;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
@@ -84,7 +85,7 @@ public class ArgumentRegistry {
     }
     
     private void addBuiltInParsers() {
-        // Built-in simple parsers
+        // Built-in Java specific parsers
         add(String.class, StringArgumentParser.INSTANCE);
         add(boolean.class, BooleanArgumentParser.INSTANCE);
         add(Boolean.class, BooleanArgumentParser.INSTANCE);
@@ -103,7 +104,8 @@ public class ArgumentRegistry {
         // Built-in collection parsers
         add(Object[].class, ArrayArgumentParser.INSTANCE);
         
-        // Built-in complex parsers
+        // Built-in Minecraft specific parsers
+        add(Material.class, MaterialArgumentParser.INSTANCE);
     }
     
 }
