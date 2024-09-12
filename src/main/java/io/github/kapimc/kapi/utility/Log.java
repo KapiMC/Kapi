@@ -11,6 +11,7 @@ package io.github.kapimc.kapi.utility;
 import io.github.kapimc.kapi.annotations.Kapi;
 import io.github.kapimc.kapi.core.KapiPlugin;
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -25,8 +26,15 @@ public final class Log {
      */
     @Kapi
     public enum Level {
+        
         /**
-         * Lowest log level, logs debug, info, warnings and errors.
+         * Lowest log level, logs kapi, debug, info, warnings and errors.
+         * Used internally by Kapi for logging messages.
+         */
+        KAPI,
+        
+        /**
+         * low log level, logs debug, info, warnings and errors.
          */
         @Kapi
         DEBUG,
@@ -52,6 +60,7 @@ public final class Log {
         
         private ChatColor getColor() {
             return switch (this) {
+                case KAPI -> ChatColor.BLUE;
                 case DEBUG -> ChatColor.DARK_GREEN;
                 case INFO -> ChatColor.WHITE;
                 case WARN -> ChatColor.YELLOW;
@@ -88,6 +97,9 @@ public final class Log {
     /**
      * Logs the message to the console with the given level
      * if the level is higher or equal to the current log level.
+     * <p>
+     * Supports color codes such as &amp;c for red,
+     * see {@link Utils#col(String)} for more information.
      *
      * @param level   the log level to log the message with
      * @param message the message to log
@@ -106,7 +118,8 @@ public final class Log {
      * Broadcasts the message to all players on the server with the given level
      * if the level is higher or equal to the current log level.
      * <p>
-     * Supports color codes such as &amp;c for red.
+     * Supports color codes such as &amp;c for red,
+     * see {@link Utils#col(String)} for more information.
      *
      * @param level   the log level to broadcast the message with
      * @param message the message to broadcast
@@ -124,9 +137,10 @@ public final class Log {
      * Broadcasts the message to all players on the server with the given level
      * if the level is higher or equal to the current log level.
      * <p>
-     * Supports color codes such as &amp;c for red.
+     * Supports color codes such as &amp;c for red,
+     * see {@link Utils#col(String)} for more information.
      * <p>
-     * This method uses the server's {@code broadcastMessage} API.
+     * This method uses the {@link Server#broadcastMessage(String)} method internally.
      *
      * @param level   the log level to broadcast the message with
      * @param message the message to broadcast
@@ -135,6 +149,17 @@ public final class Log {
     public static void broadcast(Level level, String message) {
         if (level.ordinal() < currentLevel.ordinal()) return;
         KapiPlugin.get().getServer().broadcastMessage(level.getColor() + Utils.col(message));
+    }
+    
+    /**
+     * Logs the message to the console with {@link Level#KAPI},
+     * see {@link Log#log(Level, String)} for more information.
+     *
+     * @param message the message to log
+     */
+    @Kapi
+    public static void kapi(String message) {
+        log(Level.KAPI, message);
     }
     
     /**
@@ -182,6 +207,17 @@ public final class Log {
     }
     
     /**
+     * Broadcasts the message to all players on the server with {@link Level#KAPI},
+     * see {@link Log#broadcast(Level, String)} for more information.
+     *
+     * @param message the message to broadcast
+     */
+    @Kapi
+    public static void broadcastKapi(String message) {
+        broadcast(Level.KAPI, message);
+    }
+    
+    /**
      * Broadcasts the message to all players on the server with {@link Level#DEBUG},
      * see {@link Log#broadcast(Level, String)} for more information.
      *
@@ -223,6 +259,17 @@ public final class Log {
     @Kapi
     public static void broadcastError(String message) {
         broadcast(Level.ERROR, message);
+    }
+    
+    /**
+     * Logs the message to the console with {@link Level#KAPI},
+     * see {@link Log#log(Level, String)} for more information.
+     *
+     * @param message the message to log
+     */
+    @Kapi
+    public static void kapi(String message, CommandSender... senders) {
+        log(Level.KAPI, message, senders);
     }
     
     /**
