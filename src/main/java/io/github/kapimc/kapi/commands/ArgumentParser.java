@@ -48,13 +48,6 @@ public interface ArgumentParser<T> {
      * the "inner" type of the array or generic class and potentially even
      * the annotations of the inner type.
      * <p>
-     * The parameter name generally shouldn't be used, the only case where it is used
-     * by Kapi is for the {@link Literal} type, where the parameter name
-     * may determine the string that represents the literal.
-     * Note that method parameter names may or may not exist depending on the class bytecode,
-     * such as in cases where symbols are stripped for obfuscation or reduced bytecode size.
-     * In such cases, the name will be in the format of {@code argN} where N is the parameter index.
-     * <p>
      * The sender may be used in certain cases, for example,
      * a {@link Location} argument may need to get the world from the sender,
      * or alternatively, to support relative coordinates such as {@code ~10},

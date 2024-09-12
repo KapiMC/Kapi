@@ -106,6 +106,8 @@ public class ArgumentRegistry {
         
         // Built-in Minecraft specific parsers
         add(Material.class, MaterialArgumentParser.INSTANCE);
+        
+        // Built-in Kapi specific parsers
     }
     
 }
