@@ -68,6 +68,11 @@ public abstract class Command {
     
     /**
      * Reports the available subcommands to the sender.
+     * <p>
+     * The order of the methods is determined by the reverse
+     * order of the order the methods were declared in.
+     * So the method at the top of the class will be the last in this list,
+     * and the method at the bottom of the class will be the first in this list.
      *
      * @param label   the label of the command
      * @param sender  the sender of the command

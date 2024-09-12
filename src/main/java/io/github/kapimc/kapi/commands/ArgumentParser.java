@@ -133,7 +133,7 @@ public interface ArgumentParser<T> {
      * may be shown, where each parameter of the subcommand method is represented
      * by this representation.
      * <p>
-     * The convention is to use '<' and '>' for the prefix and suffix of the representation
+     * The convention is to use '&lt;' and '&gt;' for the prefix and suffix of the representation
      * if the argument is "required" or '[' and ']' if it is "optional".
      *
      * @param type      the type of the argument
