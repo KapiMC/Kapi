@@ -40,7 +40,7 @@ public class StringArgumentParser implements ArgumentParser<String> {
     }
     
     @Override
-    public Option<String> parse(AnnotatedType type, String paramName, CommandSender sender, Deque<String> args) {
+    public Option<String> parse(AnnotatedType type, CommandSender sender, Deque<String> args) {
         String arg = args.pollFirst();
         if (type.isAnnotationPresent(Literal.class)) {
             Literal literal = type.getAnnotation(Literal.class);
@@ -68,7 +68,7 @@ public class StringArgumentParser implements ArgumentParser<String> {
     }
     
     @Override
-    public List<String> getSuggestions(AnnotatedType type, String paramName, CommandSender sender) {
+    public List<String> getSuggestions(AnnotatedType type, CommandSender sender) {
         if (type.isAnnotationPresent(Literal.class)) {
             return List.of(type.getAnnotation(Literal.class).value());
         }
@@ -84,7 +84,7 @@ public class StringArgumentParser implements ArgumentParser<String> {
     }
     
     @Override
-    public Option<ArgumentRepresentation> getRepresentation(AnnotatedType type, String paramName) {
+    public Option<ArgumentRepresentation> getRepresentation(AnnotatedType type) {
         if (type.isAnnotationPresent(Literal.class)) {
             return Option.some(ArgumentRepresentation.of(type.getAnnotation(Literal.class).value()));
         }

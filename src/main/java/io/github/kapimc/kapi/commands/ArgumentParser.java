@@ -68,30 +68,28 @@ public interface ArgumentParser<T> {
      * The return value should be either a Some option containing the parsed argument,
      * or a None if the argument can't be parsed.
      *
-     * @param type      the type of the argument
-     * @param paramName the name of the parameter that is being parsed
-     * @param sender    the sender of the command
-     * @param args      the arguments of the command
+     * @param type   the type of the argument
+     * @param sender the sender of the command
+     * @param args   the arguments of the command
      * @return the parsed argument or None if the arguments can't be parsed
      */
     @Kapi
-    Option<T> parse(AnnotatedType type, String paramName, CommandSender sender, Deque<String> args);
+    Option<T> parse(AnnotatedType type, CommandSender sender, Deque<String> args);
     
     /**
      * Gets suggestions for the argument.
      * This is used for tab completion, and is called when the user presses tab.
      * <p>
      * For more detailed information on each parameter of this method,
-     * see {@link #parse(AnnotatedType, String, CommandSender, Deque)}'s
+     * see {@link #parse(AnnotatedType, CommandSender, Deque)}'s
      * documentation.
      *
-     * @param type      the type of the argument
-     * @param paramName the name of the parameter that is being parsed
-     * @param sender    the sender of the command
+     * @param type   the type of the argument
+     * @param sender the sender of the command
      * @return a list of suggestions for the argument (can be empty)
      */
     @Kapi
-    List<String> getSuggestions(AnnotatedType type, String paramName, CommandSender sender);
+    List<String> getSuggestions(AnnotatedType type, CommandSender sender);
     
     /**
      * Gets the priority of the argument.
@@ -129,12 +127,11 @@ public interface ArgumentParser<T> {
      * The convention is to use '&lt;' and '&gt;' for the prefix and suffix of the representation
      * if the argument is "required" or '[' and ']' if it is "optional".
      *
-     * @param type      the type of the argument
-     * @param paramName the name of the parameter that is being
+     * @param type the type of the argument
      * @return the representation of the argument, or None for no representation
      * @see ArgumentRepresentation
      */
-    Option<ArgumentRepresentation> getRepresentation(AnnotatedType type, String paramName);
+    Option<ArgumentRepresentation> getRepresentation(AnnotatedType type);
     
     /**
      * Whether this parser can parse the given type on failure.

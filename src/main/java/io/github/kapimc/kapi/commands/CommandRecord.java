@@ -42,7 +42,7 @@ public record CommandRecord(Command instance, List<Method> methods) {
                 Parameter parameter = method.getParameters()[i];
                 ArgumentParser<?> parser = ArgumentRegistry.getInstance().get(parameter.getType())
                     .expect("Failed to get parser for parameter " + parameter.getType().getName());
-                Option<?> option = parser.parse(parameter.getAnnotatedType(), parameter.getName(), sender, argsCopy);
+                Option<?> option = parser.parse(parameter.getAnnotatedType(), sender, argsCopy);
                 option.match(parsedArgs::add, () -> {
                     canParseMethod[0] = false;
                 });
@@ -102,21 +102,21 @@ public record CommandRecord(Command instance, List<Method> methods) {
                 
                 if (argsCopy.isEmpty() || argsCopy.peek().isEmpty()) {
                     completions.addAll(
-                        parser.getSuggestions(parameter.getAnnotatedType(), parameter.getName(), sender));
+                        parser.getSuggestions(parameter.getAnnotatedType(), sender));
                     break;
                 }
                 Deque<String> argsCopyCopy = new ArrayDeque<>(argsCopy);
                 Option<?> option =
-                    parser.parse(parameter.getAnnotatedType(), parameter.getName(), sender, argsCopyCopy);
+                    parser.parse(parameter.getAnnotatedType(), sender, argsCopyCopy);
                 if (option.isNone()) {
                     completions.addAll(
-                        parser.getSuggestions(parameter.getAnnotatedType(), parameter.getName(), sender));
+                        parser.getSuggestions(parameter.getAnnotatedType(), sender));
                     break;
                 }
                 
                 if (option.isSome() && parser.isParseableOnFailure()) {
                     completions.addAll(
-                        parser.getSuggestions(parameter.getAnnotatedType(), parameter.getName(), sender));
+                        parser.getSuggestions(parameter.getAnnotatedType(), sender));
                     // Don't break here, we still want to continue and potentially suggest the next parameter
                 }
             }

@@ -35,7 +35,7 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
     }
     
     @Override
-    public Option<Object> parse(AnnotatedType type, String paramName, CommandSender sender, Deque<String> args) {
+    public Option<Object> parse(AnnotatedType type, CommandSender sender, Deque<String> args) {
         if (!(type instanceof AnnotatedArrayType arrayType)) {
             return Option.none();
         }
@@ -46,7 +46,7 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
         
         List<Object> parsedArgs = new ArrayList<>();
         while (true) {
-            Option<?> parsedArg = parser.parse(componentType, paramName, sender, args);
+            Option<?> parsedArg = parser.parse(componentType, sender, args);
             if (parsedArg.isNone()) {
                 break;
             }
@@ -62,14 +62,14 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
     }
     
     @Override
-    public List<String> getSuggestions(AnnotatedType type, String paramName, CommandSender sender) {
+    public List<String> getSuggestions(AnnotatedType type, CommandSender sender) {
         assert type instanceof AnnotatedArrayType;
         AnnotatedArrayType arrayType = (AnnotatedArrayType) type;
         Class<?> componentType = (Class<?>) arrayType.getAnnotatedGenericComponentType().getType();
         ArgumentParser<?> parser = ArgumentRegistry.getInstance()
             .get(componentType)
             .expect("Failed to get parser for component type " + componentType.getSimpleName());
-        return parser.getSuggestions(arrayType.getAnnotatedGenericComponentType(), paramName, sender);
+        return parser.getSuggestions(arrayType.getAnnotatedGenericComponentType(), sender);
     }
     
     @Override
@@ -85,14 +85,14 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
     }
     
     @Override
-    public Option<ArgumentRepresentation> getRepresentation(AnnotatedType type, String paramName) {
+    public Option<ArgumentRepresentation> getRepresentation(AnnotatedType type) {
         assert type instanceof AnnotatedArrayType;
         AnnotatedArrayType arrayType = (AnnotatedArrayType) type;
         Class<?> componentType = (Class<?>) arrayType.getAnnotatedGenericComponentType().getType();
         ArgumentParser<?> parser = ArgumentRegistry.getInstance()
             .get(componentType)
             .expect("Failed to get parser for component type " + componentType.getSimpleName());
-        return parser.getRepresentation(arrayType.getAnnotatedGenericComponentType(), paramName)
+        return parser.getRepresentation(arrayType.getAnnotatedGenericComponentType())
             .map(s -> s.prefix("[").name(s.getName() + "...").suffix("]"));
     }
     

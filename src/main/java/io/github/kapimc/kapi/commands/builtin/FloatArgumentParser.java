@@ -40,12 +40,12 @@ public class FloatArgumentParser implements ArgumentParser<Float> {
     }
     
     @Override
-    public Option<Float> parse(AnnotatedType type, String paramName, CommandSender sender, Deque<String> args) {
+    public Option<Float> parse(AnnotatedType type, CommandSender sender, Deque<String> args) {
         return Option.of(args.peek()).andThen(Utils::parseFloat).inspect(ignored -> args.pop());
     }
     
     @Override
-    public List<String> getSuggestions(AnnotatedType type, String paramName, CommandSender sender) {
+    public List<String> getSuggestions(AnnotatedType type, CommandSender sender) {
         return List.of();
     }
     
@@ -55,7 +55,7 @@ public class FloatArgumentParser implements ArgumentParser<Float> {
     }
     
     @Override
-    public Option<ArgumentRepresentation> getRepresentation(AnnotatedType type, String paramName) {
+    public Option<ArgumentRepresentation> getRepresentation(AnnotatedType type) {
         return Option.some(ArgumentRepresentation.of("<", "number", ">"));
     }
 }

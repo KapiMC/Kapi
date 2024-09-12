@@ -37,14 +37,14 @@ public class ListArgumentParser implements ArgumentParser<List<?>> {
     }
     
     @Override
-    public Option<List<?>> parse(AnnotatedType type, String paramName, CommandSender sender, Deque<String> args) {
+    public Option<List<?>> parse(AnnotatedType type, CommandSender sender, Deque<String> args) {
         List<Object> parsedArgs = new ArrayList<>();
         
         ArgumentParser<?> parser = ArgumentRegistry.getInstance().get(get(getInner(type)))
             .expect("Failed to get argument parser for type " + get(getInner(type)).getSimpleName());
         
         while (true) {
-            Option<?> parsedArg = parser.parse(getInner(type), paramName, sender, args);
+            Option<?> parsedArg = parser.parse(getInner(type), sender, args);
             if (parsedArg.isNone()) {
                 break;
             }
@@ -55,10 +55,10 @@ public class ListArgumentParser implements ArgumentParser<List<?>> {
     }
     
     @Override
-    public List<String> getSuggestions(AnnotatedType type, String paramName, CommandSender sender) {
+    public List<String> getSuggestions(AnnotatedType type, CommandSender sender) {
         ArgumentParser<?> parser = ArgumentRegistry.getInstance().get(get(getInner(type)))
             .expect("Failed to get argument parser for type " + get(getInner(type)).getSimpleName());
-        return parser.getSuggestions(getInner(type), paramName, sender);
+        return parser.getSuggestions(getInner(type), sender);
     }
     
     @Override
@@ -70,12 +70,12 @@ public class ListArgumentParser implements ArgumentParser<List<?>> {
     }
     
     @Override
-    public Option<ArgumentRepresentation> getRepresentation(AnnotatedType type, String paramName) {
+    public Option<ArgumentRepresentation> getRepresentation(AnnotatedType type) {
         AnnotatedType innerType = getInner(type);
         ArgumentParser<?> parser = ArgumentRegistry.getInstance()
             .get(get(innerType))
             .expect("Failed to get parser for generic type " + get(type).getSimpleName());
-        return parser.getRepresentation(innerType, paramName)
+        return parser.getRepresentation(innerType)
             .map(s -> s.prefix("[").name(s.getName() + "...").suffix("]"));
     }
     

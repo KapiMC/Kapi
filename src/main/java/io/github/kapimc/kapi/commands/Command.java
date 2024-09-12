@@ -115,7 +115,7 @@ public abstract class Command {
     protected static String fromParserRepresentation(Parameter parameter) {
         ArgumentParser<?> parser = ArgumentRegistry.getInstance().get(parameter.getType())
             .expect("Failed to get parser for parameter " + parameter.getType().getSimpleName());
-        return parser.getRepresentation(parameter.getAnnotatedType(), parameter.getName())
+        return parser.getRepresentation(parameter.getAnnotatedType())
             .unwrapOr(ArgumentRepresentation.of("<", "?", ">"))
             .getRepresentation();
     }

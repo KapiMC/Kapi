@@ -43,7 +43,7 @@ public class EnumArgumentParser implements ArgumentParser<Enum<?>> {
     }
     
     @Override
-    public Option<Enum<?>> parse(AnnotatedType type, String paramName, CommandSender sender, Deque<String> args) {
+    public Option<Enum<?>> parse(AnnotatedType type, CommandSender sender, Deque<String> args) {
         if (args.peek() == null) {
             return Option.none();
         }
@@ -70,7 +70,7 @@ public class EnumArgumentParser implements ArgumentParser<Enum<?>> {
     }
     
     @Override
-    public List<String> getSuggestions(AnnotatedType type, String paramName, CommandSender sender) {
+    public List<String> getSuggestions(AnnotatedType type, CommandSender sender) {
         return getEnumClass(type).map(clazz -> {
             try {
                 Method values = clazz.getMethod("values");
@@ -88,7 +88,7 @@ public class EnumArgumentParser implements ArgumentParser<Enum<?>> {
     }
     
     @Override
-    public Option<ArgumentRepresentation> getRepresentation(AnnotatedType type, String paramName) {
+    public Option<ArgumentRepresentation> getRepresentation(AnnotatedType type) {
         return getEnumClass(type)
             .map(clazz -> ArgumentRepresentation.of("<", clazz.getSimpleName(), ">"));
     }
