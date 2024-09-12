@@ -25,6 +25,9 @@ import java.lang.annotation.*;
  *     <li>It must have a {@link CommandSender} (or subclass of it) as the first parameter
  *     <li>All parameters (except the first) must have a type that is registered with {@link ArgumentRegistry}
  * </ul>
+ * <p>
+ * Subcommands are methods that will be automatically
+ * called when the command's input matches all the method's parameters.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

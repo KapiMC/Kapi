@@ -16,6 +16,7 @@ import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.AnnotatedType;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
@@ -73,7 +74,7 @@ public class ListArgumentParser implements ArgumentParser<List<?>> {
         AnnotatedType innerType = getInner(type);
         ArgumentParser<?> parser = ArgumentRegistry.getInstance()
             .get(get(innerType))
-            .expect("Failed to get parser for component type " + get(type).getSimpleName());
+            .expect("Failed to get parser for generic type " + get(type).getSimpleName());
         return parser.getRepresentation(innerType, paramName)
             .map(s -> s.prefix("[").name(s.getName() + "...").suffix("]"));
     }
@@ -85,7 +86,13 @@ public class ListArgumentParser implements ArgumentParser<List<?>> {
     
     private static Class<?> get(AnnotatedType type) {
         assert type.getType() instanceof Class<?>;
-        return (Class<?>) type.getType();
+        if (type.getType() instanceof Class<?> clazz) {
+            return clazz;
+        } else if (type.getType() instanceof ParameterizedType parameterizedType) {
+            assert parameterizedType.getRawType() instanceof Class<?>;
+            return (Class<?>) parameterizedType.getRawType();
+        }
+        throw new AssertionError("Invalid Type in ListArgumentParser#get(AnnotatedType)");
     }
     
     private static AnnotatedType getInner(AnnotatedType type) {

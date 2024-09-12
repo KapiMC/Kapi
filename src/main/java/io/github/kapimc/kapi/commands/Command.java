@@ -51,11 +51,31 @@ public abstract class Command {
         return Result.ok(null);
     }
     
+    /**
+     * Called when no {@link SubCommand} methods match the input.
+     * <p>
+     * This method is usually used to report the available subcommands to the sender.
+     *
+     * @param label   the label of the command
+     * @param sender  the sender of the command
+     * @param args    the arguments of the command
+     * @param methods all the {@link SubCommand} methods of the command
+     */
+    @Kapi
     public void onNoMethodMatches(String label, CommandSender sender, String[] args, List<Method> methods) {
         reportAvailableMethods(label, sender, methods, Command::fromParserRepresentation);
     }
     
-    protected final void reportAvailableMethods(
+    /**
+     * Reports the available subcommands to the sender.
+     *
+     * @param label   the label of the command
+     * @param sender  the sender of the command
+     * @param methods all the {@link SubCommand} methods of the command
+     * @param mapper  a function that maps a {@link Parameter} to a string
+     */
+    @Kapi
+    protected static void reportAvailableMethods(
         String label, CommandSender sender, List<Method> methods, Function<Parameter,String> mapper
     ) {
         StringBuilder builder = new StringBuilder();
@@ -73,10 +93,20 @@ public abstract class Command {
         Log.error(builder.toString(), sender);
     }
     
+    /**
+     * @param parameter the parameter to get the name of
+     * @return the name of the parameter
+     */
+    @Kapi
     protected static String fromParameterName(Parameter parameter) {
         return parameter.getName();
     }
     
+    /**
+     * @param parameter the parameter to get the parser representation of
+     * @return the representation of the parameter
+     */
+    @Kapi
     protected static String fromParserRepresentation(Parameter parameter) {
         ArgumentParser<?> parser = ArgumentRegistry.getInstance().get(parameter.getType())
             .expect("Failed to get parser for parameter " + parameter.getType().getSimpleName());

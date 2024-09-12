@@ -7,7 +7,7 @@
 
 /**
  * Contains built-in argument parsers.
- * These are added to the {@link io.github.kapimc.kapi.commands.ArgumentRegistry} automatically.
+ * These are added to the {@link io.github.kapimc.kapi.commands.ArgumentRegistry} by default.
  * Can be overridden by plugins by registering their own parsers in the registry.
  */
 @NullMarked

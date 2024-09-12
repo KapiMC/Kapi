@@ -36,7 +36,6 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
     
     @Override
     public Option<Object> parse(AnnotatedType type, String paramName, CommandSender sender, Deque<String> args) {
-        Class<?> clazz = getClassFromAnnotatedType(type);
         if (!(type instanceof AnnotatedArrayType arrayType)) {
             return Option.none();
         }
