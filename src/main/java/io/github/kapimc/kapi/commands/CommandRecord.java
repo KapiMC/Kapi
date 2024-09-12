@@ -10,7 +10,6 @@ package io.github.kapimc.kapi.commands;
 import io.github.kapimc.kapi.data.Option;
 import io.github.kapimc.kapi.data.Pair;
 import io.github.kapimc.kapi.utility.Log;
-import org.bukkit.Particle;
 import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.InvocationTargetException;
@@ -41,7 +40,7 @@ public record CommandRecord(Command instance, List<Method> methods) {
             // Skipping the first parameter, which is the CommandSender
             for (int i = 1; i < method.getParameterCount(); i++) {
                 Parameter parameter = method.getParameters()[i];
-                ArgumentParser<?> parser = getParser(parameter)
+                ArgumentParser<?> parser = ArgumentRegistry.getInstance().get(parameter.getType())
                     .expect("Failed to get parser for parameter " + parameter.getType().getName());
                 Option<?> option = parser.parse(parameter.getAnnotatedType(), parameter.getName(), sender, argsCopy);
                 option.match(parsedArgs::add, () -> {
@@ -63,10 +62,10 @@ public record CommandRecord(Command instance, List<Method> methods) {
             return;
         }
         
-        methods.sort((a, b) -> compare(a.getFirst(), b.getFirst()));
+        methods.sort((a, b) -> CommandProcessor.compare(a.getFirst(), b.getFirst()));
         Method method = methods.get(0).getFirst();
         List<Object> parsedArgs = methods.get(0).getSecond();
-        if (methods.size() > 1 && compare(method, methods.get(1).getFirst()) == 0) {
+        if (methods.size() > 1 && CommandProcessor.compare(method, methods.get(1).getFirst()) == 0) {
             throw new IllegalStateException(
                 "Multiple methods with the same priority. input: " +
                     String.join(" ", args));
@@ -98,7 +97,7 @@ public record CommandRecord(Command instance, List<Method> methods) {
             // Skipping the first parameter, which is the CommandSender
             for (int i = 1; i < method.getParameterCount(); i++) {
                 Parameter parameter = method.getParameters()[i];
-                ArgumentParser<?> parser = getParser(parameter)
+                ArgumentParser<?> parser = ArgumentRegistry.getInstance().get(parameter.getType())
                     .expect("Failed to get parser for parameter " + parameter.getType().getName());
                 
                 if (argsCopy.isEmpty() || argsCopy.peek().isEmpty()) {
@@ -124,43 +123,5 @@ public record CommandRecord(Command instance, List<Method> methods) {
         }
         
         return completions;
-    }
-    
-    private static int compare(Method m1, Method m2) {
-        Class<?> sender1 = m1.getParameters()[0].getType();
-        Class<?> sender2 = m2.getParameters()[0].getType();
-        
-        // Check which sender is more specific.
-        // More specific means if it is a subclass of the other sender
-        boolean isSender1subclass = !sender1.isAssignableFrom(sender2); // is sender1 = sender2 not fine
-        boolean isSender2subclass = !sender2.isAssignableFrom(sender1); // is sender2 = sender1 not fine
-        assert isSender1subclass || isSender2subclass; // both can't be false at the same time
-        if (isSender1subclass != isSender2subclass) {
-            return isSender1subclass ? -1 : 1;
-        }
-        
-        // If they are the same, we check other parameters
-        for (int i = 1; i < m1.getParameterCount(); i++) {
-            Parameter p1 = m1.getParameters()[i];
-            if (m2.getParameterCount() >= i) {
-                return -1; // We prioritize the first parameter if the second one is missing
-            }
-            Parameter p2 = m2.getParameters()[i];
-            ArgumentParser<?> parser1 = getParser(p1)
-                .expect("Failed to get parser for parameter " + p1.getType().getName());
-            ArgumentParser<?> parser2 = getParser(p2)
-                .expect("Failed to get parser for parameter " + p2.getType().getName());
-            // Flip so the highest priority is first
-            int compare = -(parser1.getPriority(p1.getAnnotatedType()) - parser2.getPriority(p2.getAnnotatedType()));
-            if (compare != 0) {
-                return compare;
-            }
-        }
-        return 0;
-    }
-    
-    private static Option<ArgumentParser<?>> getParser(Parameter parameter) {
-        ArgumentRegistry registry = ArgumentRegistry.getInstance();
-        return registry.get(parameter.getType());
     }
 }
