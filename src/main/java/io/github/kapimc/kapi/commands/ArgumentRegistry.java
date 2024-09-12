@@ -108,6 +108,7 @@ public class ArgumentRegistry {
         add(Material.class, MaterialArgumentParser.INSTANCE);
         
         // Built-in Kapi specific parsers
+        add(Option.class, OptionArgumentParser.INSTANCE);
     }
     
 }
