@@ -12,7 +12,6 @@ import io.github.kapimc.kapi.commands.ArgumentParser;
 import io.github.kapimc.kapi.commands.ArgumentRegistry;
 import io.github.kapimc.kapi.commands.ArgumentRepresentation;
 import io.github.kapimc.kapi.data.Option;
-import io.github.kapimc.kapi.utility.Log;
 import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.*;
@@ -38,25 +37,20 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
     @Override
     public Option<Object> parse(AnnotatedType type, String paramName, CommandSender sender, Deque<String> args) {
         Class<?> clazz = getClassFromAnnotatedType(type);
-        Log.debug("Class is " + clazz.getSimpleName(), sender);
         if (!(type instanceof AnnotatedArrayType arrayType)) {
             return Option.none();
         }
         AnnotatedType componentType = arrayType.getAnnotatedGenericComponentType();
         Class<?> componentClass = getClassFromAnnotatedType(componentType);
-        Log.debug("Component class is " + componentClass.getSimpleName(), sender);
         ArgumentParser<?> parser = ArgumentRegistry.getInstance().get(componentClass)
             .expect("THIS Failed to get parser for component type " + componentClass.getSimpleName());
         
         List<Object> parsedArgs = new ArrayList<>();
         while (true) {
-            Log.debug("Pre parse deque: " + String.join(" ", args), sender);
             Option<?> parsedArg = parser.parse(componentType, paramName, sender, args);
             if (parsedArg.isNone()) {
-                Log.debug("No more args", sender);
                 break;
             }
-            Log.debug("Parsed arg " + parsedArg.unwrap(), sender);
             parsedArgs.add(parsedArg.unwrap());
         }
         
@@ -65,8 +59,6 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
             Array.set(array, i, parsedArgs.get(i));
         }
         
-        Log.debug("Parsed args size: " + parsedArgs.size(), sender);
-        Log.debug("Deque: " + String.join(" ", args), sender);
         return Option.some(array);
     }
     

@@ -14,7 +14,9 @@ import io.github.kapimc.kapi.utility.Log;
 import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Represents a command, this class should be extended by all commands.
@@ -49,16 +51,37 @@ public abstract class Command {
         return Result.ok(null);
     }
     
-    public void onNoMethodMatches(CommandSender sender, String[] args, List<Method> methods) {
-        Log.error("No signature matches the input!", sender);
-        reportSignaturesByParameterName(sender, methods);
+    public void onNoMethodMatches(String label, CommandSender sender, String[] args, List<Method> methods) {
+        reportAvailableMethods(label, sender, methods, Command::fromParserRepresentation);
     }
     
-    protected final void reportSignaturesByParameterName(CommandSender sender, List<Method> methods) {
-        // TODO: implement
+    protected final void reportAvailableMethods(
+        String label, CommandSender sender, List<Method> methods, Function<Parameter,String> mapper
+    ) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("No subcommands match! Available subcommands:");
+        for (Method method : methods) {
+            builder.append("&r\n/");
+            builder.append(label);
+            
+            for (int i = 1; i < method.getParameterCount(); i++) {
+                builder.append(" ");
+                builder.append(mapper.apply(method.getParameters()[i]));
+            }
+        }
+        
+        Log.error(builder.toString(), sender);
     }
     
-    protected final void reportSignaturesByParserRepresentation(CommandSender sender, List<Method> methods) {
-        // TODO: implement
+    protected static String fromParameterName(Parameter parameter) {
+        return parameter.getName();
+    }
+    
+    protected static String fromParserRepresentation(Parameter parameter) {
+        ArgumentParser<?> parser = ArgumentRegistry.getInstance().get(parameter.getType())
+            .expect("Failed to get parser for parameter " + parameter.getType().getSimpleName());
+        return parser.getRepresentation(parameter.getAnnotatedType(), parameter.getName())
+            .unwrapOr(ArgumentRepresentation.of("<", "?", ">"))
+            .getRepresentation();
     }
 }

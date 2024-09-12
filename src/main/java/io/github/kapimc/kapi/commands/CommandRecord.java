@@ -22,7 +22,7 @@ public record CommandRecord(Command instance, List<Method> methods) {
     // IntelliJ doesn't support Jspecify's generics.
     // So we suppress it, can be removed once IntelliJ supports Jspecify's generics
     @SuppressWarnings("DataFlowIssue")
-    public void onCommand(CommandSender sender, String[] arguments) {
+    public void onCommand(CommandSender sender, String[] arguments, String label) {
         Deque<String> args = new ArrayDeque<>(Arrays.asList(arguments));
         List<Pair<Method,List<Object>>> methods = new ArrayList<>();
         
@@ -58,7 +58,7 @@ public record CommandRecord(Command instance, List<Method> methods) {
         }
         
         if (methods.isEmpty()) {
-            instance.onNoMethodMatches(sender, arguments, this.methods);
+            instance.onNoMethodMatches(label, sender, arguments, this.methods);
             return;
         }
         
