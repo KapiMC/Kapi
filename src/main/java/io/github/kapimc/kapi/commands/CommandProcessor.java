@@ -8,7 +8,6 @@
 package io.github.kapimc.kapi.commands;
 
 import io.github.kapimc.kapi.annotations.SubCommand;
-import io.github.kapimc.kapi.utility.Log;
 import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.*;

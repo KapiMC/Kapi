@@ -10,6 +10,7 @@ package io.github.kapimc.kapi.commands;
 import io.github.kapimc.kapi.data.Option;
 import io.github.kapimc.kapi.data.Pair;
 import io.github.kapimc.kapi.utility.Log;
+import org.bukkit.Particle;
 import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.InvocationTargetException;
@@ -42,7 +43,7 @@ public record CommandRecord(Command instance, List<Method> methods) {
                 Parameter parameter = method.getParameters()[i];
                 ArgumentParser<?> parser = getParser(parameter)
                     .expect("Failed to get parser for parameter " + parameter.getType().getName());
-                Option<?> option = parser.parse(parameter.getAnnotatedType(), parameter.getName(), argsCopy, sender);
+                Option<?> option = parser.parse(parameter.getAnnotatedType(), parameter.getName(), sender, argsCopy);
                 option.match(parsedArgs::add, () -> {
                     canParseMethod[0] = false;
                 });
@@ -100,18 +101,24 @@ public record CommandRecord(Command instance, List<Method> methods) {
                 ArgumentParser<?> parser = getParser(parameter)
                     .expect("Failed to get parser for parameter " + parameter.getType().getName());
                 
-                if (argsCopy.isEmpty()) {
+                if (argsCopy.isEmpty() || argsCopy.peek().isEmpty()) {
                     completions.addAll(
-                        parser.getSuggestions(parameter.getAnnotatedType(), parameter.getName(), argsCopy, sender));
+                        parser.getSuggestions(parameter.getAnnotatedType(), parameter.getName(), sender));
                     break;
                 }
                 Deque<String> argsCopyCopy = new ArrayDeque<>(argsCopy);
                 Option<?> option =
-                    parser.parse(parameter.getAnnotatedType(), parameter.getName(), argsCopyCopy, sender);
+                    parser.parse(parameter.getAnnotatedType(), parameter.getName(), sender, argsCopyCopy);
                 if (option.isNone()) {
                     completions.addAll(
-                        parser.getSuggestions(parameter.getAnnotatedType(), parameter.getName(), argsCopy, sender));
+                        parser.getSuggestions(parameter.getAnnotatedType(), parameter.getName(), sender));
                     break;
+                }
+                
+                if (option.isSome() && parser.isParseableOnFailure()) {
+                    completions.addAll(
+                        parser.getSuggestions(parameter.getAnnotatedType(), parameter.getName(), sender));
+                    // Don't break here, we still want to continue and potentially suggest the next parameter
                 }
             }
         }

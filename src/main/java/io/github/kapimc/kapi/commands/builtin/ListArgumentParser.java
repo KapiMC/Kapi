@@ -14,10 +14,8 @@ import io.github.kapimc.kapi.commands.ArgumentRepresentation;
 import io.github.kapimc.kapi.data.Option;
 import org.bukkit.command.CommandSender;
 
-import java.lang.reflect.AnnotatedArrayType;
 import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.AnnotatedType;
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
@@ -38,14 +36,14 @@ public class ListArgumentParser implements ArgumentParser<List<?>> {
     }
     
     @Override
-    public Option<List<?>> parse(AnnotatedType type, String paramName, Deque<String> args, CommandSender sender) {
+    public Option<List<?>> parse(AnnotatedType type, String paramName, CommandSender sender, Deque<String> args) {
         List<Object> parsedArgs = new ArrayList<>();
         
         ArgumentParser<?> parser = ArgumentRegistry.getInstance().get(get(getInner(type)))
             .expect("Failed to get argument parser for type " + get(getInner(type)).getSimpleName());
         
         while (true) {
-            Option<?> parsedArg = parser.parse(getInner(type), paramName, args, sender);
+            Option<?> parsedArg = parser.parse(getInner(type), paramName, sender, args);
             if (parsedArg.isNone()) {
                 break;
             }
@@ -56,12 +54,10 @@ public class ListArgumentParser implements ArgumentParser<List<?>> {
     }
     
     @Override
-    public List<String> getSuggestions(
-        AnnotatedType type, String paramName, Deque<String> args, CommandSender sender
-    ) {
+    public List<String> getSuggestions(AnnotatedType type, String paramName, CommandSender sender) {
         ArgumentParser<?> parser = ArgumentRegistry.getInstance().get(get(getInner(type)))
             .expect("Failed to get argument parser for type " + get(getInner(type)).getSimpleName());
-        return parser.getSuggestions(getInner(type), paramName, args, sender);
+        return parser.getSuggestions(getInner(type), paramName, sender);
     }
     
     @Override
@@ -80,6 +76,11 @@ public class ListArgumentParser implements ArgumentParser<List<?>> {
             .expect("Failed to get parser for component type " + get(type).getSimpleName());
         return parser.getRepresentation(innerType, paramName)
             .map(s -> s.prefix("[").name(s.getName() + "...").suffix("]"));
+    }
+    
+    @Override
+    public boolean isParseableOnFailure() {
+        return true;
     }
     
     private static Class<?> get(AnnotatedType type) {

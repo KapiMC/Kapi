@@ -16,7 +16,6 @@ import org.bukkit.command.CommandSender;
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
@@ -44,7 +43,7 @@ public class EnumArgumentParser implements ArgumentParser<Enum<?>> {
     }
     
     @Override
-    public Option<Enum<?>> parse(AnnotatedType type, String paramName, Deque<String> args, CommandSender sender) {
+    public Option<Enum<?>> parse(AnnotatedType type, String paramName, CommandSender sender, Deque<String> args) {
         if (args.peek() == null) {
             return Option.none();
         }
@@ -71,9 +70,7 @@ public class EnumArgumentParser implements ArgumentParser<Enum<?>> {
     }
     
     @Override
-    public List<String> getSuggestions(
-        AnnotatedType type, String paramName, Deque<String> args, CommandSender sender
-    ) {
+    public List<String> getSuggestions(AnnotatedType type, String paramName, CommandSender sender) {
         return getEnumClass(type).map(clazz -> {
             try {
                 Method values = clazz.getMethod("values");

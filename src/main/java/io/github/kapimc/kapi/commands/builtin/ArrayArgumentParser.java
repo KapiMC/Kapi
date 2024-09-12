@@ -36,7 +36,7 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
     }
     
     @Override
-    public Option<Object> parse(AnnotatedType type, String paramName, Deque<String> args, CommandSender sender) {
+    public Option<Object> parse(AnnotatedType type, String paramName, CommandSender sender, Deque<String> args) {
         Class<?> clazz = getClassFromAnnotatedType(type);
         Log.debug("Class is " + clazz.getSimpleName(), sender);
         if (!(type instanceof AnnotatedArrayType arrayType)) {
@@ -51,7 +51,7 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
         List<Object> parsedArgs = new ArrayList<>();
         while (true) {
             Log.debug("Pre parse deque: " + String.join(" ", args), sender);
-            Option<?> parsedArg = parser.parse(componentType, paramName, args, sender);
+            Option<?> parsedArg = parser.parse(componentType, paramName, sender, args);
             if (parsedArg.isNone()) {
                 Log.debug("No more args", sender);
                 break;
@@ -71,16 +71,14 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
     }
     
     @Override
-    public List<String> getSuggestions(
-        AnnotatedType type, String paramName, Deque<String> args, CommandSender sender
-    ) {
+    public List<String> getSuggestions(AnnotatedType type, String paramName, CommandSender sender) {
         assert type instanceof AnnotatedArrayType;
         AnnotatedArrayType arrayType = (AnnotatedArrayType) type;
         Class<?> componentType = (Class<?>) arrayType.getAnnotatedGenericComponentType().getType();
         ArgumentParser<?> parser = ArgumentRegistry.getInstance()
             .get(componentType)
             .expect("Failed to get parser for component type " + componentType.getSimpleName());
-        return parser.getSuggestions(arrayType.getAnnotatedGenericComponentType(), paramName, args, sender);
+        return parser.getSuggestions(arrayType.getAnnotatedGenericComponentType(), paramName, sender);
     }
     
     @Override
@@ -105,6 +103,11 @@ public class ArrayArgumentParser implements ArgumentParser<Object> {
             .expect("Failed to get parser for component type " + componentType.getSimpleName());
         return parser.getRepresentation(arrayType.getAnnotatedGenericComponentType(), paramName)
             .map(s -> s.prefix("[").name(s.getName() + "...").suffix("]"));
+    }
+    
+    @Override
+    public boolean isParseableOnFailure() {
+        return true;
     }
     
     private static Class<?> getClassFromAnnotatedType(AnnotatedType annotatedType) {

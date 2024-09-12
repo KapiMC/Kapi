@@ -40,14 +40,12 @@ public class StringArgumentParser implements ArgumentParser<String> {
     }
     
     @Override
-    public Option<String> parse(AnnotatedType type, String paramName, Deque<String> args, CommandSender sender) {
+    public Option<String> parse(AnnotatedType type, String paramName, CommandSender sender, Deque<String> args) {
         return Option.of(args.pollFirst());
     }
     
     @Override
-    public List<String> getSuggestions(
-        AnnotatedType type, String paramName, Deque<String> args, CommandSender sender
-    ) {
+    public List<String> getSuggestions(AnnotatedType type, String paramName, CommandSender sender) {
         return List.of();
     }
     

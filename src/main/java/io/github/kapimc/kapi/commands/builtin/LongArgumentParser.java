@@ -15,7 +15,6 @@ import io.github.kapimc.kapi.utility.Utils;
 import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.AnnotatedType;
-import java.lang.reflect.Parameter;
 import java.util.Deque;
 import java.util.List;
 
@@ -41,14 +40,12 @@ public class LongArgumentParser implements ArgumentParser<Long> {
     }
     
     @Override
-    public Option<Long> parse(AnnotatedType type, String paramName, Deque<String> args, CommandSender sender) {
+    public Option<Long> parse(AnnotatedType type, String paramName, CommandSender sender, Deque<String> args) {
         return Option.of(args.peek()).andThen(Utils::parseLong).inspect(ignored -> args.pop());
     }
     
     @Override
-    public List<String> getSuggestions(
-        AnnotatedType type, String paramName, Deque<String> args, CommandSender sender
-    ) {
+    public List<String> getSuggestions(AnnotatedType type, String paramName, CommandSender sender) {
         return List.of();
     }
     

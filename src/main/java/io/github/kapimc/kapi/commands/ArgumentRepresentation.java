@@ -104,7 +104,7 @@ public class ArgumentRepresentation {
     }
     
     /**
-     * Get the representation of the argument.
+     * Get the representation of the argument,
      * in the format of {@code prefix + name + suffix}.
      *
      * @return the representation of the argument

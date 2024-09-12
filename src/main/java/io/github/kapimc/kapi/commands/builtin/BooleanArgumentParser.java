@@ -39,7 +39,7 @@ public class BooleanArgumentParser implements ArgumentParser<Boolean> {
     }
     
     @Override
-    public Option<Boolean> parse(AnnotatedType type, String paramName, Deque<String> args, CommandSender sender) {
+    public Option<Boolean> parse(AnnotatedType type, String paramName, CommandSender sender, Deque<String> args) {
         if (args.peek() == null) {
             return Option.none();
         }
@@ -52,9 +52,7 @@ public class BooleanArgumentParser implements ArgumentParser<Boolean> {
     }
     
     @Override
-    public List<String> getSuggestions(
-        AnnotatedType type, String paramName, Deque<String> args, CommandSender sender
-    ) {
+    public List<String> getSuggestions(AnnotatedType type, String paramName, CommandSender sender) {
         return List.of("true", "false");
     }
     

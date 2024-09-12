@@ -15,7 +15,6 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.AnnotatedType;
-import java.lang.reflect.Parameter;
 import java.util.Deque;
 import java.util.List;
 import java.util.stream.Stream;
@@ -43,16 +42,14 @@ public class MaterialArgumentParser implements ArgumentParser<Material> {
     }
     
     @Override
-    public Option<Material> parse(AnnotatedType type, String paramName, Deque<String> args, CommandSender sender) {
+    public Option<Material> parse(AnnotatedType type, String paramName, CommandSender sender, Deque<String> args) {
         return Option.of(args.peek())
             .andThen(s -> Option.of(Material.matchMaterial(s)))
             .inspect(ignored -> args.pop());
     }
     
     @Override
-    public List<String> getSuggestions(
-        AnnotatedType type, String paramName, Deque<String> args, CommandSender sender
-    ) {
+    public List<String> getSuggestions(AnnotatedType type, String paramName, CommandSender sender) {
         return Stream.of(Material.values())
             .map(Material::name)
             .map(String::toLowerCase)
