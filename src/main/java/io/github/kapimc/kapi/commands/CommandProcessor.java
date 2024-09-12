@@ -33,6 +33,7 @@ public final class CommandProcessor {
      */
     public static CommandRecord process(Command instance) {
         Class<?> commandClass = instance.getClass();
+        String commandName = commandClass.getSimpleName();
         
         List<Method> methods = new ArrayList<>(Arrays.asList(commandClass.getMethods()));
         methods.removeIf(method -> !method.isAnnotationPresent(SubCommand.class));
@@ -43,15 +44,15 @@ public final class CommandProcessor {
             }
             if (method.getParameterCount() < 1) {
                 throw new IllegalArgumentException(String.format(
-                    "Method %s must have at least one parameter",
-                    method.getName()
+                    "Method %s in %s class must have at least one parameter",
+                    method.getName(), commandName
                 ));
             }
             Parameter sender = method.getParameters()[0];
             if (!CommandSender.class.isAssignableFrom(sender.getType())) {
                 throw new IllegalArgumentException(String.format(
-                    "Method %s must have the first parameter be an instance of CommandSender",
-                    method.getName()
+                    "Method %s in %s class must have the first parameter be an instance of CommandSender",
+                    method.getName(), commandName
                 ));
             }
             
@@ -59,8 +60,19 @@ public final class CommandProcessor {
                 Parameter parameter = method.getParameters()[i];
                 if (!isRegisteredType(parameter.getAnnotatedType())) {
                     throw new IllegalArgumentException(String.format(
-                        "Method %s has an unsupported parameter type: %s",
-                        method.getName(), parameter.getType().getName()
+                        "Method %s in %s class has an unsupported parameter of type %s",
+                        method.getName(), commandName, parameter.getType().getName()
+                    ));
+                }
+            }
+        }
+        
+        for (int i = 0; i < methods.size(); i++) {
+            for (int j = i + 1; j < methods.size(); j++) {
+                if (compare(methods.get(i), methods.get(j)) == 0) {
+                    throw new IllegalArgumentException(String.format(
+                        "Ambiguous methods %s and %s in %s class, methods with the same priority are not allowed!",
+                        methods.get(i).getName(), methods.get(j).getName(), commandName
                     ));
                 }
             }
@@ -115,7 +127,12 @@ public final class CommandProcessor {
      * If one of the priorities is higher, this method returns either -1 or 1, depending on which one is higher.
      * If they are equal, the next parameter is checked, and so on until all parameters are checked.
      * <p>
-     * If
+     * If both methods match in priority but one method has more parameters than the other,
+     * the method with the extra parameters is considered less specific, so the other method
+     * will be chosen.
+     * For example, {@code foo(CommandSender)} and {@code bar(CommandSender, int[])},
+     * given an empty input, both can match (bar will get an empty array as its second parameter),
+     * but {@code foo} is more specific because it has no extra parameters, so it will be chosen.
      *
      * @param m1 the first method
      * @param m2 the second method
@@ -138,7 +155,7 @@ public final class CommandProcessor {
         for (int i = 1; i < m1.getParameterCount(); i++) {
             Parameter p1 = m1.getParameters()[i];
             if (m2.getParameterCount() == i) {
-                return 0; // m1 has more parameters than m2
+                return 1; // m1 has more parameters than m2
             }
             Parameter p2 = m2.getParameters()[i];
             ArgumentParser<?> parser1 = ArgumentRegistry.getInstance().get(p1.getType())
@@ -152,7 +169,7 @@ public final class CommandProcessor {
             }
         }
         if (m1.getParameterCount() < m2.getParameterCount()) {
-            return 0; // m2 has more parameters than m1
+            return -1; // m2 has more parameters than m1
         }
         return 0;
     }
