@@ -11,8 +11,6 @@ import java.lang.annotation.*;
 
 /**
  * Used on a {@link String} type, to make the string a literal argument.
- * <p>
- * If not specified, the name will be the literal's parameter name.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
