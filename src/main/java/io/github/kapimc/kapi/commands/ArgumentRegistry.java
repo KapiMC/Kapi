@@ -10,7 +10,9 @@ package io.github.kapimc.kapi.commands;
 import io.github.kapimc.kapi.annotations.Kapi;
 import io.github.kapimc.kapi.commands.builtin.*;
 import io.github.kapimc.kapi.data.Option;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
@@ -106,6 +108,8 @@ public class ArgumentRegistry {
         
         // Built-in Minecraft specific parsers
         add(Material.class, MaterialArgumentParser.INSTANCE);
+        add(Player.class, PlayerArgumentParser.INSTANCE);
+        add(Location.class, LocationArgumentParser.INSTANCE);
         
         // Built-in Kapi specific parsers
         add(Option.class, OptionArgumentParser.INSTANCE);
