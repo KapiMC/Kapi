@@ -72,6 +72,19 @@ public class ArgumentRegistry {
         return parsers.put(clazz, parser) == null;
     }
     
+    /**
+     * Gets the parser for the given class.
+     * <p>
+     * Special cases:
+     * <ul>
+     *     <li>If the class is an array, the parser for {@link Object Object[]} is returned
+     *     <li>If the class is an enum, the parser for {@link Enum} is returned
+     * </ul>
+     * Special cases only apply if the exact class wasn't registered.
+     *
+     * @param clazz the class to get the parser for
+     * @return the parser for the given class or None if no parser is registered
+     */
     public Option<ArgumentParser<?>> get(Class<?> clazz) {
         if (parsers.containsKey(clazz)) {
             return Option.some(parsers.get(clazz));

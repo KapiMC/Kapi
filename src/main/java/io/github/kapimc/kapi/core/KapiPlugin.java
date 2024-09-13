@@ -14,6 +14,7 @@ import io.github.kapimc.kapi.commands.CommandProcessor;
 import io.github.kapimc.kapi.utility.Log;
 import io.github.kapimc.kapi.utility.TaskBuilder;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.event.Listener;
@@ -133,7 +134,7 @@ public abstract class KapiPlugin extends JavaPlugin {
      * @param executor the executor for the command
      */
     @Kapi
-    public void registerCommand(String name, org.bukkit.command.CommandExecutor executor) {
+    public void registerCommand(String name, CommandExecutor executor) {
         PluginCommand command = getCommand(name);
         if (command == null) {
             throw new IllegalArgumentException(
@@ -151,7 +152,7 @@ public abstract class KapiPlugin extends JavaPlugin {
      * @param completer the tab completer for the command or null
      */
     @Kapi
-    public void registerCommand(String name, org.bukkit.command.CommandExecutor executor, TabCompleter completer) {
+    public void registerCommand(String name, CommandExecutor executor, TabCompleter completer) {
         PluginCommand command = getCommand(name);
         if (command == null) {
             throw new IllegalArgumentException(

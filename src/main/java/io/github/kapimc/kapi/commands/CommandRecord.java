@@ -17,8 +17,22 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
 
+/**
+ * Represents a record of an immutable command,
+ * used to execute a command.
+ *
+ * @param instance the command instance
+ * @param methods  the methods of the command
+ */
 public record CommandRecord(Command instance, List<Method> methods) {
     
+    /**
+     * Executes the command.
+     *
+     * @param sender    the sender of the command
+     * @param arguments the arguments of the command
+     * @param label     the name or alias of the command
+     */
     // IntelliJ doesn't support Jspecify's generics.
     // So we suppress it, can be removed once IntelliJ supports Jspecify's generics
     @SuppressWarnings("DataFlowIssue")
@@ -82,6 +96,13 @@ public record CommandRecord(Command instance, List<Method> methods) {
         }
     }
     
+    /**
+     * Gets the completions of the command.
+     *
+     * @param sender    the sender of the command
+     * @param arguments the arguments of the command
+     * @return the completions of the command
+     */
     public List<String> onTabComplete(CommandSender sender, String[] arguments) {
         List<String> completions = new ArrayList<>();
         Deque<String> args = new ArrayDeque<>(Arrays.asList(arguments));

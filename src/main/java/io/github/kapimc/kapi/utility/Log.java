@@ -266,6 +266,7 @@ public final class Log {
      * see {@link Log#log(Level, String)} for more information.
      *
      * @param message the message to log
+     * @param senders the senders to log the message to
      */
     @Kapi
     public static void kapi(String message, CommandSender... senders) {

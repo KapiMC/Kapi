@@ -15,6 +15,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Processes a command class and returns a {@link CommandRecord}.
+ * <p>
+ * Also contains some helper methods for the command system.
+ */
 public final class CommandProcessor {
     
     private CommandProcessor() {
