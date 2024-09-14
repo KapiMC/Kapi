@@ -22,7 +22,7 @@ public enum MaterialGroup{
     
     
     @Kapi
-    SWORD(Set.of(
+    SWORDS(Set.of(
         Material.WOODEN_SWORD,
         Material.STONE_SWORD,
         Material.IRON_SWORD,
@@ -32,7 +32,7 @@ public enum MaterialGroup{
     )),
     
     @Kapi
-    PICKAXE(Set.of(
+    PICKAXES(Set.of(
         Material.WOODEN_PICKAXE,
         Material.STONE_PICKAXE,
         Material.IRON_PICKAXE,
@@ -42,7 +42,7 @@ public enum MaterialGroup{
     )),
     
     @Kapi
-    AXE(Set.of(
+    AXES(Set.of(
         Material.WOODEN_AXE,
         Material.STONE_AXE,
         Material.IRON_AXE,
@@ -52,7 +52,7 @@ public enum MaterialGroup{
     )),
     
     @Kapi
-    SHOVEL(Set.of(
+    SHOVELS(Set.of(
         Material.WOODEN_SHOVEL,
         Material.STONE_SHOVEL,
         Material.IRON_SHOVEL,
@@ -62,7 +62,7 @@ public enum MaterialGroup{
     )),
     
     @Kapi
-    HOE(Set.of(
+    HOES(Set.of(
         Material.WOODEN_HOE,
         Material.STONE_HOE,
         Material.IRON_HOE,
