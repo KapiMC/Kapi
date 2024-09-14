@@ -20,7 +20,9 @@ import java.util.Set;
 @Kapi
 public enum MaterialGroup{
     
-    
+    /**
+     * The swords of all 5 basic materials, wood, stone, iron, gold, diamond and netherite
+     */
     @Kapi
     SWORDS(Set.of(
         Material.WOODEN_SWORD,
@@ -31,6 +33,9 @@ public enum MaterialGroup{
         Material.NETHERITE_SWORD
     )),
     
+    /**
+     * The pickaxes of all 5 basic materials, wood, stone, iron, gold, diamond and netherite
+     */
     @Kapi
     PICKAXES(Set.of(
         Material.WOODEN_PICKAXE,
@@ -41,6 +46,9 @@ public enum MaterialGroup{
         Material.NETHERITE_PICKAXE
     )),
     
+    /**
+     * The axes of all 5 basic materials, wood, stone, iron, gold, diamond and netherite
+     */
     @Kapi
     AXES(Set.of(
         Material.WOODEN_AXE,
@@ -51,6 +59,9 @@ public enum MaterialGroup{
         Material.NETHERITE_AXE
     )),
     
+    /**
+     * The shovels of all 5 basic materials, wood, stone, iron, gold, diamond and netherite
+     */
     @Kapi
     SHOVELS(Set.of(
         Material.WOODEN_SHOVEL,
@@ -61,6 +72,9 @@ public enum MaterialGroup{
         Material.NETHERITE_SHOVEL
     )),
     
+    /**
+     * The hoes of all 5 basic materials, wood, stone, iron, gold, diamond and netherite
+     */
     @Kapi
     HOES(Set.of(
         Material.WOODEN_HOE,
@@ -68,7 +82,8 @@ public enum MaterialGroup{
         Material.IRON_HOE,
         Material.GOLDEN_HOE,
         Material.DIAMOND_HOE,
-        Material.NETHERITE_HOE));
+        Material.NETHERITE_HOE
+    ));
     
     private final Set<Material> materials;
     
