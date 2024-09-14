@@ -11,12 +11,9 @@ import io.github.kapimc.kapi.annotations.Kapi;
 import io.github.kapimc.kapi.core.KapiPlugin;
 import io.github.kapimc.kapi.data.Result;
 import io.github.kapimc.kapi.utility.TaskBuilder;
-import org.jooq.*;
-import org.jooq.impl.DSL;
 
 import java.io.File;
 import java.sql.*;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
