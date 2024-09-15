@@ -68,8 +68,6 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
     }
     
     /**
-     * Creates a query builder for dropping a SQL table.
-     *
      * @param table the name of the table
      * @return a new SqlQuery that drops the table if it exists
      */
@@ -110,11 +108,127 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
     public static UpdateQueryBuilder update(String table) {
         return new UpdateQueryBuilder(table);
     }
-
+    
+    /**
+     * @param index the name of the index
+     * @return a new SqlQuery that drops the index
+     */
+    @Kapi
+    public static SqlQuery dropIndex(String index) {
+        return new SqlQuery("DROP INDEX IF EXISTS " + index + ";");
+    }
+    
+    /**
+     * @param index the name of the index
+     * @return a new SqlQuery that re-indexes the index
+     */
+    @Kapi
+    public static SqlQuery reindex(String index) {
+        return new SqlQuery("REINDEX INDEX " + index + ";");
+    }
+    
+    /**
+     * Creates a query builder for creating an index.
+     *
+     * @param index the name of the index
+     * @return a new CreateIndexQueryBuilder
+     */
+    @Kapi
+    public static CreateIndexQueryBuilder createIndex(String index) {
+        return new CreateIndexQueryBuilder(index);
+    }
+    
+    /**
+     * Creates a query builder for creating a unique index.
+     *
+     * @param index the name of the index
+     * @return a new CreateIndexQueryBuilder
+     */
+    @Kapi
+    public static CreateIndexQueryBuilder createUniqueIndex(String index) {
+        return new CreateIndexQueryBuilder(index, "UNIQUE");
+    }
+    
+    /**
+     * Creates a query builder for creating a full-text index.
+     *
+     * @param index the name of the index
+     * @return a new CreateIndexQueryBuilder
+     */
+    @Kapi
+    public static CreateIndexQueryBuilder createFullTextIndex(String index) {
+        return new CreateIndexQueryBuilder(index, "FULLTEXT");
+    }
+    
+    /**
+     * Creates a query builder for creating a spatial index.
+     *
+     * @param index the name of the index
+     * @return a new CreateIndexQueryBuilder
+     */
+    @Kapi
+    public static CreateIndexQueryBuilder createSpatialIndex(String index) {
+        return new CreateIndexQueryBuilder(index, "SPATIAL");
+    }
+    
+    /**
+     * Creates a query builder for creating a clustered index.
+     *
+     * @param index the name of the index
+     * @return a new CreateIndexQueryBuilder
+     */
+    @Kapi
+    public static CreateIndexQueryBuilder createClusteredIndex(String index) {
+        return new CreateIndexQueryBuilder(index, "CLUSTERED");
+    }
 
 //    public static class SelectQueryBuilder extends QueryBuilder<SelectQueryBuilder> {
 //
 //    }
+    
+    /**
+     * Creates a query builder for creating an index.
+     */
+    @Kapi
+    public static class CreateIndexQueryBuilder extends QueryBuilder<CreateIndexQueryBuilder> {
+        
+        private CreateIndexQueryBuilder(String name, String type) {
+            sql.append("CREATE ").append(type).append(" INDEX IF NOT EXISTS ").append(name).append(" ON ");
+        }
+        
+        private CreateIndexQueryBuilder(String name) {
+            sql.append("CREATE INDEX IF NOT EXISTS ").append(name).append(" ON ");
+        }
+        
+        /**
+         * {@inheritDoc}
+         */
+        @Kapi
+        @Override
+        public SqlQuery build() {
+            sql.append(";");
+            return new SqlQuery(sql.toString());
+        }
+        
+        /**
+         * Adds a list of columns from a table, to index.
+         *
+         * @param table   the name of the table
+         * @param columns the columns to index
+         * @return this, for chaining
+         */
+        @Kapi
+        public CreateIndexQueryBuilder on(String table, String... columns) {
+            sql.append(table).append(" (");
+            for (int i = 0; i < columns.length; i++) {
+                if (i != 0) sql.append(", ");
+                sql.append(columns[i]);
+            }
+            sql.append(")");
+            return this;
+        }
+        
+    }
     
     /**
      * Creates a query builder for updating rows in a SQL table.
