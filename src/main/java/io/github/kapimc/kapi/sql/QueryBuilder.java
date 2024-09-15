@@ -51,10 +51,6 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
         sql.append(raw);
         return self();
     }
-
-//    public static SelectQueryBuilder select() {
-//        return new SelectQueryBuilder();
-//    }
     
     /**
      * Creates a query builder for creating a SQL table.
@@ -181,10 +177,138 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
     public static CreateIndexQueryBuilder createClusteredIndex(String index) {
         return new CreateIndexQueryBuilder(index, "CLUSTERED");
     }
-
-//    public static class SelectQueryBuilder extends QueryBuilder<SelectQueryBuilder> {
-//
-//    }
+    
+    /**
+     * Creates a query builder for selecting columns from a table.
+     *
+     * @param columns the columns to select
+     * @return a new SelectQueryBuilder
+     */
+    @Kapi
+    public static SelectQueryBuilder select(String... columns) {
+        return new SelectQueryBuilder(columns);
+    }
+    
+    /**
+     * Creates a query builder for selecting all columns from a table.
+     *
+     * @param table the name of the table
+     * @return a new SelectQueryBuilder
+     */
+    @Kapi
+    public static SelectQueryBuilder selectFrom(String table) {
+        return new SelectQueryBuilder("*").from(table);
+    }
+    
+    public static class SelectQueryBuilder extends QueryBuilder<SelectQueryBuilder> {
+        
+        private final List<Object> values = new ArrayList<>();
+        
+        private SelectQueryBuilder(String... columns) {
+            sql.append("SELECT ").append(String.join(", ", columns));
+        }
+        
+        /**
+         * {@inheritDoc}
+         */
+        @Kapi
+        @Override
+        public SqlQuery build() {
+            sql.append(";");
+            return new SqlQuery(sql.toString(), values.toArray());
+        }
+        
+        /**
+         * Adds the table to select from.
+         * <p>
+         * This should only be used once.
+         *
+         * @param table the name of the table
+         * @return this, for chaining
+         */
+        @Kapi
+        public SelectQueryBuilder from(String table) {
+            sql.append(" FROM ").append(table);
+            return this;
+        }
+        
+        /**
+         * Adds a condition to filter the results.
+         * <p>
+         * This should only be used once.
+         *
+         * @param condition    the condition to add
+         * @param placeholders optional placeholders for any {@code ?} in the condition
+         * @return this, for chaining
+         */
+        @Kapi
+        public SelectQueryBuilder where(String condition, Object... placeholders) {
+            sql.append(" WHERE ").append(condition);
+            this.values.addAll(Arrays.asList(placeholders));
+            return this;
+        }
+        
+        /**
+         * Groups the results by the given columns.
+         * <p>
+         * This should only be used once.
+         *
+         * @param columns the columns to group by
+         * @return this, for chaining
+         */
+        @Kapi
+        public SelectQueryBuilder groupBy(String... columns) {
+            sql.append(" GROUP BY ").append(String.join(", ", columns));
+            return this;
+        }
+        
+        /**
+         * Adds a condition to filter the groups.
+         * <p>
+         * This should only be used once.
+         *
+         * @param condition    the condition to add
+         * @param placeholders optional placeholders for any {@code ?} in the condition
+         * @return this, for chaining
+         */
+        @Kapi
+        public SelectQueryBuilder having(String condition, Object... placeholders) {
+            sql.append(" HAVING ").append(condition);
+            this.values.addAll(Arrays.asList(placeholders));
+            return this;
+        }
+        
+        /**
+         * Orders the results by the given columns.
+         * <p>
+         * You may add {@code ASC} or {@code DESC} to the end of the column name to specify the order.
+         * If nothing was specified, it will default to {@code ASC}.
+         * <p>
+         * This should only be used once.
+         *
+         * @param columns the columns to order by
+         * @return this, for chaining
+         */
+        @Kapi
+        public SelectQueryBuilder orderBy(String... columns) {
+            sql.append(" ORDER BY ").append(String.join(", ", columns));
+            return this;
+        }
+        
+        /**
+         * Limits the number of results returned.
+         * <p>
+         * This should only be used once.
+         *
+         * @param limit the maximum number of results to return
+         * @return this, for chaining
+         */
+        @Kapi
+        public SelectQueryBuilder limit(int limit) {
+            sql.append(" LIMIT ").append(limit);
+            return this;
+        }
+    }
     
     /**
      * Creates a query builder for creating an index.
