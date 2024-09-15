@@ -130,7 +130,7 @@ public enum MaterialGroup{
         Material.TRIDENT,
         Material.BOW,
         Material.CROSSBOW
-        // TODO: add mace when updating to 1.21+
+        // NOTE: add mace when updating to 1.21+
     )),
     /**
      * {@link #WEAPONS Weapons} that are used to deal damage within a player's reach distance
@@ -150,7 +150,7 @@ public enum MaterialGroup{
         Material.DIAMOND_AXE,
         Material.NETHERITE_AXE,
         Material.TRIDENT
-        // TODO: add mace when updating to 1.21+
+        // NOTE: add mace when updating to 1.21+
     )),
     /**
      * {@link #WEAPONS Weapons} Weapons that launch (as) projectiles and are more effective at range
@@ -171,7 +171,7 @@ public enum MaterialGroup{
         Material.ARROW,
         Material.TIPPED_ARROW,
         Material.SPECTRAL_ARROW,
-        // TODO: Add wind burst when updating to 1.21+
+        // NOTE: Add wind burst when updating to 1.21+
         Material.SNOWBALL,
         Material.EGG
     )),
@@ -184,7 +184,7 @@ public enum MaterialGroup{
         Material.ARROW,
         Material.TIPPED_ARROW,
         Material.SPECTRAL_ARROW
-        // TODO: Add wind burst when updating to 1.21+
+        // NOTE: Add wind burst when updating to 1.21+
     )),
     /**
      * {@link #PROJECTILES Projectiles} that do not deal damage to players
