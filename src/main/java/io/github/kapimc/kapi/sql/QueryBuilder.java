@@ -30,15 +30,15 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
     }
     
     /**
-     * Builds the QueryBuilder into a SQL query.
+     * Builds the QueryBuilder into a SQL sql.
      *
-     * @return the built SQL query
+     * @return the built SQL sql
      */
     @Kapi
     public abstract SqlQuery build();
     
     /**
-     * Appends raw SQL to the query.
+     * Appends raw SQL to the sql.
      * <p>
      * This should only be used when necessary,
      * as it can lead to SQL injection vulnerabilities.
@@ -53,7 +53,7 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
     }
     
     /**
-     * Creates a query builder for creating a SQL table.
+     * Creates a sql builder for creating a SQL table.
      *
      * @param table the name of the table
      * @return a new CreateTableQueryBuilder
@@ -73,7 +73,7 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
     }
     
     /**
-     * Creates a query builder for inserting values into a SQL table.
+     * Creates a sql builder for inserting values into a SQL table.
      *
      * @param table the name of the table
      * @return a new InsertIntoQueryBuilder
@@ -84,7 +84,7 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
     }
     
     /**
-     * Creates a query builder for deleting rows from a SQL table.
+     * Creates a sql builder for deleting rows from a SQL table.
      *
      * @param table the name of the table
      * @return a new DeleteFromQueryBuilder
@@ -95,7 +95,7 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
     }
     
     /**
-     * Creates a query builder for updating rows in a SQL table.
+     * Creates a sql builder for updating rows in a SQL table.
      *
      * @param table the name of the table
      * @return a new UpdateQueryBuilder
@@ -124,7 +124,7 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
     }
     
     /**
-     * Creates a query builder for creating an index.
+     * Creates a sql builder for creating an index.
      *
      * @param index the name of the index
      * @return a new CreateIndexQueryBuilder
@@ -135,7 +135,7 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
     }
     
     /**
-     * Creates a query builder for creating a unique index.
+     * Creates a sql builder for creating a unique index.
      *
      * @param index the name of the index
      * @return a new CreateIndexQueryBuilder
@@ -146,7 +146,7 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
     }
     
     /**
-     * Creates a query builder for creating a full-text index.
+     * Creates a sql builder for creating a full-text index.
      *
      * @param index the name of the index
      * @return a new CreateIndexQueryBuilder
@@ -157,7 +157,7 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
     }
     
     /**
-     * Creates a query builder for creating a spatial index.
+     * Creates a sql builder for creating a spatial index.
      *
      * @param index the name of the index
      * @return a new CreateIndexQueryBuilder
@@ -168,7 +168,7 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
     }
     
     /**
-     * Creates a query builder for creating a clustered index.
+     * Creates a sql builder for creating a clustered index.
      *
      * @param index the name of the index
      * @return a new CreateIndexQueryBuilder
@@ -179,7 +179,7 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
     }
     
     /**
-     * Creates a query builder for selecting columns from a table.
+     * Creates a sql builder for selecting columns from a table.
      *
      * @param columns the columns to select
      * @return a new SelectQueryBuilder
@@ -190,7 +190,7 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
     }
     
     /**
-     * Creates a query builder for selecting all columns from a table.
+     * Creates a sql builder for selecting all columns from a table.
      *
      * @param table the name of the table
      * @return a new SelectQueryBuilder
@@ -311,7 +311,7 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
     }
     
     /**
-     * Creates a query builder for creating an index.
+     * Creates a sql builder for creating an index.
      */
     @Kapi
     public static class CreateIndexQueryBuilder extends QueryBuilder<CreateIndexQueryBuilder> {
@@ -360,7 +360,7 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
     }
     
     /**
-     * Creates a query builder for updating rows in a SQL table.
+     * Creates a sql builder for updating rows in a SQL table.
      */
     @Kapi
     public static class UpdateQueryBuilder extends QueryBuilder<UpdateQueryBuilder> {
@@ -419,6 +419,14 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
             return this;
         }
         
+        public UpdateQueryBuilder setQuery(String column, SqlQuery query) {
+            if (!firstSet) sql.append(", ");
+            sql.append(column).append(" = (").append(query.sql()).deleteCharAt(sql.length() - 1).append(")");
+            this.values.addAll(Arrays.asList(query.values()));
+            firstSet = false;
+            return this;
+        }
+        
         /**
          * Adds a condition to the update statement.
          *
@@ -435,7 +443,7 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
     }
     
     /**
-     * Creates a query builder for deleting rows from a SQL table.
+     * Creates a sql builder for deleting rows from a SQL table.
      */
     @Kapi
     public static class DeleteFromQueryBuilder extends QueryBuilder<DeleteFromQueryBuilder> {
@@ -468,7 +476,7 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
     }
     
     /**
-     * A query builder for inserting values into a SQL table.
+     * A sql builder for inserting values into a SQL table.
      */
     @Kapi
     public static class InsertIntoQueryBuilder extends QueryBuilder<InsertIntoQueryBuilder> {
@@ -555,11 +563,22 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
             return this;
         }
         
-        // TODO: Add support for SELECT queries (after it's implemented)
+        /**
+         * Inserts the results of a SELECT query into the table.
+         *
+         * @param query the SELECT query to insert
+         * @return this, for chaining
+         */
+        @Kapi
+        public InsertIntoQueryBuilder select(SqlQuery query) {
+            sql.append(query.sql()).deleteCharAt(sql.length() - 1);
+            this.values.addAll(Arrays.asList(query.values()));
+            return this;
+        }
     }
     
     /**
-     * A query builder for creating SQL tables.
+     * A sql builder for creating SQL tables.
      */
     @Kapi
     public static class CreateTableQueryBuilder extends QueryBuilder<CreateTableQueryBuilder> {

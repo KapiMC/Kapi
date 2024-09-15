@@ -16,11 +16,11 @@ import java.sql.SQLException;
 /**
  * A query to be executed on a database.
  *
- * @param query the query to execute
- * @param args  the arguments to use in the query
+ * @param sql    the query to execute
+ * @param values the arguments to use in the query
  */
 @Kapi
-public record SqlQuery(String query, Object... args) {
+public record SqlQuery(String sql, Object... values) {
     
     /**
      * Executes the query on the given database.
@@ -31,7 +31,7 @@ public record SqlQuery(String query, Object... args) {
      */
     @Kapi
     public Result<Integer,SQLException> executeUpdate(SqliteDB db) {
-        return db.executeUpdate(query, args);
+        return db.executeUpdate(sql, values);
     }
     
     /**
@@ -43,6 +43,6 @@ public record SqlQuery(String query, Object... args) {
      */
     @Kapi
     public Result<ResultSet,SQLException> executeQuery(SqliteDB db) {
-        return db.executeQuery(query, args);
+        return db.executeQuery(sql, values);
     }
 }

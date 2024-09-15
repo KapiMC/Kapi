@@ -65,7 +65,7 @@ public record CommandRecord(Command instance, List<Method> methods) {
                 }
             }
             
-            // Empty deque means all args were parsed (no leftovers)
+            // Empty deque means all values were parsed (no leftovers)
             if (canParseMethod[0] && argsCopy.isEmpty()) {
                 methods.add(Pair.of(method, parsedArgs));
             }
