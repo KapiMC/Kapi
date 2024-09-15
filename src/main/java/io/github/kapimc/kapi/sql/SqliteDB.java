@@ -108,17 +108,17 @@ public class SqliteDB {
     }
     
     /**
-     * Executes a given SQL sql.
+     * Executes a given SQL query.
      * <p>
-     * Must be a sql that returns a result set, like a SELECT statement,
+     * Must be a query that returns a result set, like a SELECT statement,
      * otherwise a {@link SQLException} is guaranteed to be returned.
      * <p>
      * Tip: for asynchronous operations, use {@link TaskBuilder#async()}
      * to create a new async task.
      *
-     * @param sql    the SQL sql to execute
-     * @param params zero or more placeholders for the SQL sql
-     * @return the result of the sql or a {@link SQLException} if an error occurred
+     * @param sql    the SQL query to execute
+     * @param params zero or more placeholders for the SQL query
+     * @return the result of the query or a {@link SQLException} if an error occurred
      */
     @Kapi
     public Result<ResultSet,SQLException> executeQuery(String sql, Object... params) {
