@@ -336,6 +336,11 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
         
         /**
          * Adds a list of columns from a table, to index.
+         * <p>
+         * You may add {@code ASC} or {@code DESC} to the end of the column name to specify the order.
+         * If nothing was specified, it will default to {@code ASC}.
+         * <p>
+         * This should only be used once.
          *
          * @param table   the name of the table
          * @param columns the columns to index
