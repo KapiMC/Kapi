@@ -94,6 +94,50 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
 //    }
     
     /**
+     * Creates a query builder for deleting rows from a SQL table.
+     *
+     * @param table the name of the table
+     * @return a new DeleteFromQueryBuilder
+     */
+    @Kapi
+    public static DeleteFromQueryBuilder deleteFrom(String table) {
+        return new DeleteFromQueryBuilder(table);
+    }
+    
+    /**
+     * Creates a query builder for deleting rows from a SQL table.
+     */
+    @Kapi
+    public static class DeleteFromQueryBuilder extends QueryBuilder<DeleteFromQueryBuilder> {
+        
+        private DeleteFromQueryBuilder(String table) {
+            sql.append("DELETE FROM ").append(table).append(" WHERE ");
+        }
+        
+        /**
+         * {@inheritDoc}
+         */
+        @Kapi
+        @Override
+        public SqlQuery build() {
+            sql.append(";");
+            return new SqlQuery(sql.toString());
+        }
+        
+        /**
+         * Adds a condition to the delete statement.
+         *
+         * @param condition the condition to add
+         * @return this, for chaining
+         */
+        @Kapi
+        public DeleteFromQueryBuilder where(String condition) {
+            sql.append(condition);
+            return this;
+        }
+    }
+    
+    /**
      * A query builder for inserting values into a SQL table.
      */
     @Kapi
