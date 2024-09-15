@@ -91,8 +91,7 @@ public class SqliteDB {
      *
      * @param sql    the SQL statement to execute
      * @param params zero or more placeholders for the SQL statement
-     * @return the number of rows affected by the statement or
-     *     a {@link SQLException} if an error occurred
+     * @return the number of rows affected by the statement or a {@link SQLException} if an error occurred
      */
     @Kapi
     public Result<Integer,SQLException> executeUpdate(String sql, Object... params) {
@@ -131,6 +130,72 @@ public class SqliteDB {
                 throw new RuntimeException(e);
             }
         });
+    }
+    
+    /**
+     * Executes an SQL statement.
+     * <p>
+     * Must be either an INSERT, UPDATE, or DELETE statement,
+     * or another statement that returns nothing.
+     * <p>
+     * Tip: for asynchronous operations, use {@link TaskBuilder#async()}
+     * to create a new async task.
+     *
+     * @param query the SQL statement to execute
+     * @return the number of rows affected by the statement or a {@link SQLException} if an error occurred
+     */
+    @Kapi
+    public Result<Integer,SQLException> executeUpdate(SqlQuery query) {
+        return executeUpdate(query.sql(), query.values());
+    }
+    
+    /**
+     * Executes a given SQL query.
+     * <p>
+     * Must be a query that returns a result set, like a SELECT statement,
+     * otherwise a {@link SQLException} is guaranteed to be returned.
+     * <p>
+     * Tip: for asynchronous operations, use {@link TaskBuilder#async()}
+     * to create a new async task.
+     *
+     * @param query the SQL query to execute
+     * @return the result of the query or a {@link SQLException} if an error occurred
+     */
+    @Kapi
+    public Result<ResultSet,SQLException> executeQuery(SqlQuery query) {
+        return executeQuery(query.sql(), query.values());
+    }
+    
+    /**
+     * Executes a transaction.
+     * <p>
+     * The queries are executed in the order they are given.
+     * If any query fails, the transaction is rolled back.
+     * <p>
+     * All queries must be either an INSERT, UPDATE, or DELETE statement,
+     * or another statement that returns nothing.
+     *
+     * @param queries the queries to execute
+     * @return true if the transaction was successful, false otherwise
+     */
+    @Kapi
+    public boolean transaction(SqlQuery... queries) {
+        try (Connection connection = DriverManager.getConnection(url)) {
+            connection.setAutoCommit(false);
+            for (SqlQuery query : queries) {
+                try (PreparedStatement stmt = connection.prepareStatement(query.sql())) {
+                    setParameters(stmt, query.values());
+                    stmt.executeUpdate();
+                } catch (SQLException e) {
+                    connection.rollback();
+                    return false;
+                }
+            }
+            connection.commit();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
     }
     
     private <T> Result<T,SQLException> operate(Function<Connection,Result<T,SQLException>> consumer) {
