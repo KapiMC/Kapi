@@ -95,11 +95,11 @@ publishing.repositories {
 
 tasks {
     signing {
-        useInMemoryPgpKeys(
-            System.getenv("GPG_KEY"),
-            Base64.getEncoder().encodeToString(file("kapi_publishing_keyring.gpg").readBytes()),
-            System.getenv("GPG_PASSPHRASE")
-        )
+//        useInMemoryPgpKeys(
+//            System.getenv("GPG_KEY"),
+//            Base64.getEncoder().encodeToString(file("kapi_publishing_keyring.gpg").readBytes()),
+//            System.getenv("GPG_PASSPHRASE")
+//        )
         sign(publishing.publications["maven"])
     }
 }
