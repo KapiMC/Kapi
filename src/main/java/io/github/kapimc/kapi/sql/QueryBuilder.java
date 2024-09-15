@@ -9,6 +9,8 @@ package io.github.kapimc.kapi.sql;
 
 import io.github.kapimc.kapi.annotations.Kapi;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class QueryBuilder<T extends QueryBuilder<T>> {
@@ -49,10 +51,10 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
         sql.append(raw);
         return self();
     }
-    
-    public static SelectQueryBuilder select() {
-        return new SelectQueryBuilder();
-    }
+
+//    public static SelectQueryBuilder select() {
+//        return new SelectQueryBuilder();
+//    }
     
     /**
      * Creates a query builder for creating a SQL table.
@@ -65,8 +67,121 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
         return new CreateTableQueryBuilder(table);
     }
     
-    public static class SelectQueryBuilder extends QueryBuilder<SelectQueryBuilder> {
+    /**
+     * Creates a query builder for dropping a SQL table.
+     *
+     * @param table the name of the table
+     * @return a new SqlQuery that drops the table if it exists
+     */
+    @Kapi
+    public static SqlQuery dropTable(String table) {
+        return new SqlQuery("DROP TABLE IF EXISTS " + table + ";");
+    }
     
+    /**
+     * Creates a query builder for inserting values into a SQL table.
+     *
+     * @param table the name of the table
+     * @return a new InsertIntoQueryBuilder
+     */
+    @Kapi
+    public static InsertIntoQueryBuilder insertInto(String table) {
+        return new InsertIntoQueryBuilder(table);
+    }
+
+//    public static class SelectQueryBuilder extends QueryBuilder<SelectQueryBuilder> {
+//
+//    }
+    
+    /**
+     * A query builder for inserting values into a SQL table.
+     */
+    @Kapi
+    public static class InsertIntoQueryBuilder extends QueryBuilder<InsertIntoQueryBuilder> {
+        
+        private final List<Object> values = new ArrayList<>();
+        
+        private InsertIntoQueryBuilder(String table) {
+            sql.append("INSERT INTO ").append(table).append(" (");
+        }
+        
+        /**
+         * {@inheritDoc}
+         */
+        @Kapi
+        @Override
+        public SqlQuery build() {
+            sql.append(";");
+            return new SqlQuery(sql.toString(), values.toArray());
+        }
+        
+        /**
+         * Adds columns to the insert statement.
+         * <p>
+         * Must be called immediately after {@link #insertInto(String)}.
+         *
+         * @param columns the columns to insert into
+         * @return this, for chaining
+         */
+        @Kapi
+        public InsertIntoQueryBuilder columns(String... columns) {
+            for (int i = 0; i < columns.length; i++) {
+                if (i != 0) sql.append(", ");
+                sql.append(columns[i]);
+            }
+            sql.append(")\n");
+            return this;
+        }
+        
+        /**
+         * Adds values to the insert statement.
+         * <p>
+         * This can be used multiple times to add multiple rows.
+         *
+         * @param values the values to insert
+         * @return this, for chaining
+         */
+        @Kapi
+        public InsertIntoQueryBuilder values(Object... values) {
+            if (sql.charAt(sql.length() - 1) == '\n') {
+                sql.append("VALUES ");
+            }
+            if (sql.charAt(sql.length() - 1) == ')') {
+                sql.append(", ");
+            }
+            sql.append("(");
+            for (int i = 0; i < values.length; i++) {
+                if (i != 0) sql.append(", ");
+                sql.append("?");
+                this.values.add(values[i]);
+            }
+            sql.append(")");
+            return this;
+        }
+        
+        /**
+         * Adds values to the insert statement.
+         * <p>
+         * This can be used multiple times to add multiple rows.
+         *
+         * @param values       the values to insert, requires commas between each value but no surrounding parentheses
+         * @param placeholders optional placeholders for any {@code ?} in the values
+         * @return this, for chaining
+         */
+        @Kapi
+        public InsertIntoQueryBuilder values(String values, Object... placeholders) {
+            if (sql.charAt(sql.length() - 1) == '\n') {
+                sql.append("VALUES ");
+            }
+            if (sql.charAt(sql.length() - 1) == ')') {
+                sql.append(", ");
+            }
+            sql.append("(").append(values).append(")");
+            this.values.addAll(Arrays.asList(placeholders));
+            return this;
+        }
+        
+        // TODO: Add support for SELECT queries (after it's implemented)
     }
     
     /**
