@@ -88,10 +88,6 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
     public static InsertIntoQueryBuilder insertInto(String table) {
         return new InsertIntoQueryBuilder(table);
     }
-
-//    public static class SelectQueryBuilder extends QueryBuilder<SelectQueryBuilder> {
-//
-//    }
     
     /**
      * Creates a query builder for deleting rows from a SQL table.
@@ -102,6 +98,97 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
     @Kapi
     public static DeleteFromQueryBuilder deleteFrom(String table) {
         return new DeleteFromQueryBuilder(table);
+    }
+    
+    /**
+     * Creates a query builder for updating rows in a SQL table.
+     *
+     * @param table the name of the table
+     * @return a new UpdateQueryBuilder
+     */
+    @Kapi
+    public static UpdateQueryBuilder update(String table) {
+        return new UpdateQueryBuilder(table);
+    }
+
+
+//    public static class SelectQueryBuilder extends QueryBuilder<SelectQueryBuilder> {
+//
+//    }
+    
+    /**
+     * Creates a query builder for updating rows in a SQL table.
+     */
+    @Kapi
+    public static class UpdateQueryBuilder extends QueryBuilder<UpdateQueryBuilder> {
+        
+        private final List<Object> values = new ArrayList<>();
+        private boolean firstSet = true;
+        
+        private UpdateQueryBuilder(String table) {
+            sql.append("UPDATE ").append(table).append(" SET ");
+        }
+        
+        /**
+         * {@inheritDoc}
+         */
+        @Kapi
+        @Override
+        public SqlQuery build() {
+            sql.append(";");
+            return new SqlQuery(sql.toString(), values.toArray());
+        }
+        
+        /**
+         * Adds a condition to the update statement.
+         *
+         * @param column the column to set
+         * @param value  the value to set
+         * @return this, for chaining
+         */
+        @Kapi
+        public UpdateQueryBuilder set(String column, Object value) {
+            if (!firstSet) sql.append(", ");
+            sql.append(column).append(" = ?");
+            this.values.add(value);
+            firstSet = false;
+            return this;
+        }
+        
+        /**
+         * Adds a condition to the update statement.
+         * <p>
+         * Allows inserting raw values to allow for things like nested queries.
+         * This should only be used when necessary,
+         * as it can lead to SQL injection vulnerabilities.
+         *
+         * @param column       the column to set
+         * @param value        the value to set
+         * @param placeholders optional placeholders for any {@code ?} in the value
+         * @return this, for chaining
+         */
+        @Kapi
+        public UpdateQueryBuilder setRaw(String column, String value, Object... placeholders) {
+            if (!firstSet) sql.append(", ");
+            sql.append(column).append(" = ").append(value);
+            this.values.addAll(Arrays.asList(placeholders));
+            firstSet = false;
+            return this;
+        }
+        
+        /**
+         * Adds a condition to the update statement.
+         *
+         * @param condition    the condition to add
+         * @param placeholders optional placeholders for any {@code ?} in the condition
+         * @return this, for chaining
+         */
+        @Kapi
+        public UpdateQueryBuilder where(String condition, Object... placeholders) {
+            sql.append(" WHERE ").append(condition);
+            this.values.addAll(Arrays.asList(placeholders));
+            return this;
+        }
     }
     
     /**
