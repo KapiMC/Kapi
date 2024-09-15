@@ -110,6 +110,9 @@ public enum MaterialGroup{
         Material.DIAMOND_HOE,
         Material.NETHERITE_HOE
     )),
+    /**
+     * Items that are intended for use in combat.
+     */
     @Kapi
     WEAPONS(Set.of(
         Material.WOODEN_SWORD,
@@ -130,7 +133,7 @@ public enum MaterialGroup{
         // TODO: add mace when updating to 1.21+
     )),
     /**
-     * Weapons that are used to deal damage within a player's reach distance
+     * {@link #WEAPONS Weapons} that are used to deal damage within a player's reach distance
      */
     @Kapi
     MELEE_WEAPONS(Set.of(
@@ -150,17 +153,52 @@ public enum MaterialGroup{
         // TODO: add mace when updating to 1.21+
     )),
     /**
-     * Weapons that launch (as) projectiles and are more effective at range
+     * {@link #WEAPONS Weapons} Weapons that launch (as) projectiles and are more effective at range
      */
     @Kapi
     RANGED_WEAPONS(Set.of(
         Material.BOW,
         Material.CROSSBOW,
         Material.TRIDENT
+        
+    )),
+    /**
+     * Projectiles are thrown ore launched using {@link #RANGED_WEAPONS ranged weapons} or by hand
+     */
+    @Kapi
+    PROJECTILES(Set.of(
+        Material.TRIDENT,
+        Material.ARROW,
+        Material.TIPPED_ARROW,
+        Material.SPECTRAL_ARROW,
+        // TODO: Add wind burst when updating to 1.21+
+        Material.SNOWBALL,
+        Material.EGG
+    )),
+    /**
+     * {@link #PROJECTILES Projectiles} that deal damage players
+     */
+    @Kapi
+    DAMAGE_PROJECTILES(Set.of(
+        Material.TRIDENT,
+        Material.ARROW,
+        Material.TIPPED_ARROW,
+        Material.SPECTRAL_ARROW
+        // TODO: Add wind burst when updating to 1.21+
+    )),
+    /**
+     * {@link #PROJECTILES Projectiles} that do not deal damage to players
+     */
+    @Kapi
+    SAFE_PROJECTILES(Set.of(
+        Material.SNOWBALL,
+        Material.EGG
     )),
     
+    
     /**
-     * Both the stone and deepslate varients of all ores as well as the nether ores including ancient debris
+     * Both the {@link #STONE_ORES Stone} and {@link #DEEPSLATE_ORES Deepslate} varients of all ores,
+     * as well as the {@link #NETHER_ORES nether} ores including ancient debris
      */
     @Kapi
     ORES(Set.of(
@@ -222,7 +260,7 @@ public enum MaterialGroup{
         Material.ANCIENT_DEBRIS
     )),
     /**
-     * ALl ores that typically require smelting to obtain the useful product or drop raw varients
+     * ALl {@link #ORES ores} that typically require smelting to obtain the useful product or drop raw varients
      */
     @Kapi
     SMELTABLE_ORES(Set.of(
@@ -237,7 +275,7 @@ public enum MaterialGroup{
         Material.ANCIENT_DEBRIS
     )),
     /**
-     * All ores that typically do not require smelting to obtain the useful product and do not drop raw varients
+     * All {@link #ORES ores} that typically do not require smelting to obtain the useful product and do not drop raw varients
      */
     @Kapi
     UNSMELTABLE_ORES(Set.of(
@@ -252,6 +290,9 @@ public enum MaterialGroup{
         Material.DEEPSLATE_REDSTONE_ORE,
         Material.DEEPSLATE_DIAMOND_ORE
     ));
+    /**
+     * Useful product of ores
+     */
     
     private final Set<Material> materials;
     
