@@ -289,10 +289,50 @@ public enum MaterialGroup{
         Material.DEEPSLATE_LAPIS_ORE,
         Material.DEEPSLATE_REDSTONE_ORE,
         Material.DEEPSLATE_DIAMOND_ORE
-    ));
+    )),
     /**
-     * Useful product of ores
+     * The raw drops of all {@link #ORES ores}
      */
+    @Kapi
+    RAW_RESOURCES(Set.of(
+        Material.COAL,
+        Material.RAW_COPPER,
+        Material.LAPIS_LAZULI,
+        Material.RAW_GOLD,
+        Material.RAW_IRON,
+        Material.REDSTONE,
+        Material.DIAMOND,
+        Material.EMERALD,
+        Material.QUARTZ,
+        Material.GOLD_NUGGET,
+        Material.ANCIENT_DEBRIS
+    )),
+    /**
+     * The smelted (if needed) varients of {@link #RAW_RESOURCES raw resources}, includes netherite scrap, not netherite ingot
+     */
+    @Kapi
+    INGOTS(Set.of(
+        Material.IRON_INGOT,
+        Material.GOLD_INGOT,
+        Material.COPPER_INGOT,
+        Material.NETHERITE_SCRAP
+    )),
+    /**
+     * All the final useful products of {@link #ORES ores}
+     */
+    @Kapi
+    ORE_PRODUCTS(Set.of(
+        Material.IRON_INGOT,
+        Material.GOLD_INGOT,
+        Material.COPPER_INGOT,
+        Material.NETHERITE_INGOT,
+        Material.COAL,
+        Material.LAPIS_LAZULI,
+        Material.REDSTONE,
+        Material.DIAMOND,
+        Material.EMERALD,
+        Material.QUARTZ
+    ));
     
     private final Set<Material> materials;
     
