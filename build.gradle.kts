@@ -23,6 +23,7 @@ dependencies {
     api("dev.triumphteam:triumph-gui:3.1.10")
     api("org.jspecify:jspecify:1.0.0")
     api("org.jetbrains:annotations:24.1.0")
+    implementation("org.xerial:sqlite-jdbc:3.46.0.0")
     compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.3")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
