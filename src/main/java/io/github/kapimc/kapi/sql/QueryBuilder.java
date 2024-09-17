@@ -559,7 +559,7 @@ public abstract class QueryBuilder<T extends QueryBuilder<T>> {
          * @return this, for chaining
          */
         @Kapi
-        public InsertIntoQueryBuilder values(String values, Object... placeholders) {
+        public InsertIntoQueryBuilder valuesRaw(String values, Object... placeholders) {
             if (sql.charAt(sql.length() - 1) == '\n') {
                 sql.append("VALUES ");
             }

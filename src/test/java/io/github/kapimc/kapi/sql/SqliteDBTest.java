@@ -30,7 +30,7 @@ class SqliteDBTest {
             Map.of("name", "Rust + NeoVim GigaChad", "age", Integer.MAX_VALUE)
         );
         
-        SqliteDB db = SqliteDB.createUnchecked("jdbc:sqlite::memory:");
+        SqliteDB db = SqliteDB.createUnchecked("jdbc:sqlite:file:memdb?mode=memory&cache=shared");
         assertNotNull(db);
         SqlQuery query = QueryBuilder.createTable(table)
             .columnAutoPrimaryKey("id")
@@ -60,8 +60,9 @@ class SqliteDBTest {
                 String name = rs.getString("name");
                 int age = rs.getInt("age");
                 
-                assertEquals(data.get(id).get("name"), name);
-                assertEquals(data.get(id).get("age"), age);
+                // -1 because SQLite starts at 1, indexes start at 0
+                assertEquals(data.get(id - 1).get("name"), name);
+                assertEquals(data.get(id - 1).get("age"), age);
             }
         }
     }
