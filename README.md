@@ -31,11 +31,12 @@ allowing you to build both simple and complex plugins with ease.
 
 # ✨ Features
 
+- 🤖 **Commands**: Use method parameters as command arguments, with automatic parsing and method selection based on input
 - 📚 **Templating System**: Easily create and manage impressive visual effects
 - 📦 **ECS**: Add dynamic behaviour to your visual effects, enhancing interactivity with the world and players
 - 🎨 **Particles & Block Displays Helpers**: Reduce boilerplate and improve productivity
 - 📐 **Math Library**: A powerful math library built for game-specific calculations
-- 💾 **Config Management**: Seamless and persistent data storage for your plugin
+- 💾 **Config Management**: Simplified handling of YAML configs and SQLite databases
 - 🛠️ **Utility Collection**: Essential tools and helpers to streamline your plugin development
 
 # 🚀 Getting Started
