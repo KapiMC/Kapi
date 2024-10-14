@@ -9,6 +9,7 @@ package io.github.kapimc.kapi.engine.renderable;
 
 import io.github.kapimc.kapi.annotations.Kapi;
 import io.github.kapimc.kapi.data.BlockDisplayData;
+import io.github.kapimc.kapi.utility.Log;
 import org.bukkit.Color;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
@@ -65,7 +66,11 @@ public final class BlockDisplayRender extends BlockDisplayData implements Render
     @Kapi
     @Override
     public void render(World world, Vector point) {
-        // No need to render, the entity will automatically render itself
+        Log.kapi("Rendering block display in world " + world.getName() + " at " + point);
+        if (entity == null) {
+            throw new IllegalStateException("Cannot render a block display that has not been spawned");
+        }
+        entity.teleport(point.toLocation(world));
     }
     
     @Kapi

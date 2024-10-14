@@ -65,7 +65,10 @@ public final class ItemDisplayRender extends ItemDisplayData implements Renderab
     @Kapi
     @Override
     public void render(World world, Vector point) {
-        // No need to render, the entity will automatically render itself
+        if (entity == null) {
+            throw new IllegalStateException("Cannot render an item display that has not been spawned");
+        }
+        entity.teleport(point.toLocation(world));
     }
     
     @Kapi

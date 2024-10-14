@@ -75,7 +75,10 @@ public final class TextDisplayRender extends TextDisplayData implements Renderab
     @Kapi
     @Override
     public void render(World world, Vector point) {
-        // No need to render, the entity will automatically render itself
+        if (entity == null) {
+            throw new IllegalStateException("Cannot render a text display that has not been spawned");
+        }
+        entity.teleport(point.toLocation(world));
     }
     
     @Kapi
