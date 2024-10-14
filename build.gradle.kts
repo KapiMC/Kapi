@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "io.github.kapimc"
-version = "0.2.0"
+version = "0.2.1"
 description = "A powerful, easy-to-use, and flexible framework for making Spigot Plugins."
 
 repositories {

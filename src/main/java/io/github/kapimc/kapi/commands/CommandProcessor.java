@@ -7,7 +7,9 @@
 
 package io.github.kapimc.kapi.commands;
 
+import io.github.kapimc.kapi.annotations.Literal;
 import io.github.kapimc.kapi.annotations.SubCommand;
+import io.github.kapimc.kapi.utility.Log;
 import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.*;
@@ -144,6 +146,7 @@ public final class CommandProcessor {
      * @return -1 if m1 has a higher priority, 0 if they are equal, 1 if m2 has a higher priority
      */
     public static int compare(Method m1, Method m2) {
+        Log.kapi("Comparing methods " + m1.getName() + " and " + m2.getName());
         Class<?> sender1 = m1.getParameters()[0].getType();
         Class<?> sender2 = m2.getParameters()[0].getType();
         
@@ -158,6 +161,7 @@ public final class CommandProcessor {
         
         // If they are the same, we check other parameters
         for (int i = 1; i < m1.getParameterCount(); i++) {
+            Log.kapi("Comparing parameters at index " + i);
             Parameter p1 = m1.getParameters()[i];
             if (m2.getParameterCount() == i) {
                 return 1; // m1 has more parameters than m2
@@ -170,12 +174,53 @@ public final class CommandProcessor {
             // Flip so the highest priority is first
             int compare = -(parser1.getPriority(p1.getAnnotatedType()) - parser2.getPriority(p2.getAnnotatedType()));
             if (compare != 0) {
+                Log.kapi("Returning Compare: " + compare);
                 return compare;
+            }
+            Log.kapi("Parameters have equal priority");
+            
+            // NOTE: Kotlin seems to not include annotations on parameters
+            // From my research, Kotlin parameter/type use annotations seem to be stored as Kotlin-specific metadata
+            // Using @Literal annotations in Kotlin is currently not possible as far as I know
+            // If you know a fix that doesn't involve using Kotlin's reflection
+            // or a workaround a Kotlin developer can use to add this annotation
+            // Please reach out with a PR/issue so it can be fixed/ or documented
+            
+            // Special case for literal annotation checking
+            if (p1.getAnnotatedType().isAnnotationPresent(Literal.class)) {
+                Log.kapi("Literal parameters");
+                Literal literal1 = p1.getAnnotatedType().getAnnotation(Literal.class);
+                Literal literal2 = p2.getAnnotatedType().getAnnotation(Literal.class);
+                if (!literal1.caseSensitive() && literal2.caseSensitive()) {
+                    if (!literal1.value().equals(literal2.value())) {
+                        Log.kapi("Case Sensitive Name Mismatch");
+                        return -1; // Arbitrary, can be either -1 or 1, but not 0
+                    }
+                    for (String alias : literal1.aliases()) {
+                        if (!alias.equals(literal2.value())) {
+                            Log.kapi("Case Sensitive Alias Mismatch");
+                            return -1; // Arbitrary, can be either -1 or 1, but not 0
+                        }
+                    }
+                } else {
+                    if (!literal1.value().equalsIgnoreCase(literal2.value())) {
+                        Log.kapi("Case Insensitive Name Mismatch");
+                        return -1; // Arbitrary, can be either -1 or 1, but not 0
+                    }
+                    for (String alias : literal1.aliases()) {
+                        if (!alias.equalsIgnoreCase(literal2.value())) {
+                            Log.kapi("Case Insensitive Alias Mismatch");
+                            return -1; // Arbitrary, can be either -1 or 1, but not 0
+                        }
+                    }
+                }
+                Log.kapi("Parameter literals conflict!");
             }
         }
         if (m1.getParameterCount() < m2.getParameterCount()) {
             return -1; // m2 has more parameters than m1
         }
+        Log.kapi("Methods " + m1.getName() + " and " + m2.getName() + " have equal priority");
         return 0;
     }
 }

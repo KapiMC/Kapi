@@ -36,7 +36,7 @@ public abstract class KapiPlugin extends JavaPlugin {
      * Follows semantic versioning.
      */
     @Kapi
-    public static final String VERSION = "0.2.0";
+    public static final String VERSION = "0.2.1";
     
     private static @Nullable KapiPlugin plugin;
     
