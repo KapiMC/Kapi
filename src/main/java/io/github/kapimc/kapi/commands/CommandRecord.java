@@ -41,6 +41,7 @@ public record CommandRecord(Command instance, List<Method> methods) {
         List<Pair<Method,List<Object>>> methods = new ArrayList<>();
         
         for (Method method : this.methods) {
+            Log.kapi("Processing method " + method.getName());
             final boolean[] canParseMethod = {true};
             List<Object> parsedArgs = new ArrayList<>();
             Deque<String> argsCopy = new ArrayDeque<>(args);
@@ -54,19 +55,22 @@ public record CommandRecord(Command instance, List<Method> methods) {
             // Skipping the first parameter, which is the CommandSender
             for (int i = 1; i < method.getParameterCount(); i++) {
                 Parameter parameter = method.getParameters()[i];
-                ArgumentParser<?> parser = ArgumentRegistry.getInstance().get(parameter.getType())
+                ArgumentParser<?> parser = ArgumentRegistry.getInstance()
+                    .get(parameter.getType())
                     .expect("Failed to get parser for parameter " + parameter.getType().getName());
                 Option<?> option = parser.parse(parameter.getAnnotatedType(), sender, argsCopy);
                 option.match(parsedArgs::add, () -> {
                     canParseMethod[0] = false;
                 });
                 if (!canParseMethod[0]) {
+                    Log.kapi("Failed to parse method " + method.getName());
                     break;
                 }
             }
             
             // Empty deque means all values were parsed (no leftovers)
             if (canParseMethod[0] && argsCopy.isEmpty()) {
+                Log.kapi("Successfully parsed method " + method.getName());
                 methods.add(Pair.of(method, parsedArgs));
             }
         }
@@ -81,8 +85,7 @@ public record CommandRecord(Command instance, List<Method> methods) {
         List<Object> parsedArgs = methods.get(0).getSecond();
         if (methods.size() > 1 && CommandProcessor.compare(method, methods.get(1).getFirst()) == 0) {
             throw new IllegalStateException(
-                "Multiple methods with the same priority. input: " +
-                    String.join(" ", args));
+                "Multiple methods with the same priority. input: " + String.join(" ", args));
         }
         
         // Execute the command
@@ -118,26 +121,27 @@ public record CommandRecord(Command instance, List<Method> methods) {
             // Skipping the first parameter, which is the CommandSender
             for (int i = 1; i < method.getParameterCount(); i++) {
                 Parameter parameter = method.getParameters()[i];
-                ArgumentParser<?> parser = ArgumentRegistry.getInstance().get(parameter.getType())
+                ArgumentParser<?> parser = ArgumentRegistry.getInstance()
+                    .get(parameter.getType())
                     .expect("Failed to get parser for parameter " + parameter.getType().getName());
                 
                 if (argsCopy.isEmpty() || argsCopy.peek().isEmpty()) {
-                    completions.addAll(
-                        parser.getSuggestions(parameter.getAnnotatedType(), sender));
+                    completions.addAll(parser.getSuggestions(parameter.getAnnotatedType(), sender));
                     break;
                 }
                 Deque<String> argsCopyCopy = new ArrayDeque<>(argsCopy);
-                Option<?> option =
-                    parser.parse(parameter.getAnnotatedType(), sender, argsCopyCopy);
+                Option<?> option = parser.parse(parameter.getAnnotatedType(), sender, argsCopyCopy);
                 if (option.isNone()) {
-                    completions.addAll(
-                        parser.getSuggestions(parameter.getAnnotatedType(), sender));
+                    argsCopyCopy.pollFirst();
+                    boolean empty = argsCopyCopy.isEmpty() || argsCopyCopy.peek().isEmpty();
+                    if (!empty) {
+                        completions.addAll(parser.getSuggestions(parameter.getAnnotatedType(), sender));
+                    }
                     break;
                 }
                 
                 if (option.isSome() && parser.isParseableOnFailure()) {
-                    completions.addAll(
-                        parser.getSuggestions(parameter.getAnnotatedType(), sender));
+                    completions.addAll(parser.getSuggestions(parameter.getAnnotatedType(), sender));
                     // Don't break here, we still want to continue and potentially suggest the next parameter
                 }
             }
